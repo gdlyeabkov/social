@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body>
+    <div id="app">
+
+        <!-- header -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">VueSuperShop</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="/">
+                                Домой
+                            </a>
+                        </li>
+                        <% if(userlogin){ %>
+                            <li class="nav-item">
+                                <a class="nav-item" href="/users/bucket">
+                                    Корзина
+                                </a>
+                            </li>
+                       <% } %>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- <form onsubmit="return null" class="form-signin text-center"> -->
+            <img class="mb-4" src="https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/vue-dot-js-256.png" alt="" width="72" height="72">
+            <h1 class="h3 mb-3 font-weight-normal">Зарегестрируйтесь</h1>
+            
+            <label for="inputEmail" class="sr-only">Email</label>
+            <input type="email" id="inputEmail" class="useremail form-control" placeholder="Email address" required="" autofocus="">
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" class="userpassword form-control" placeholder="Password" required="">
+            <label for="inputEmail" class="sr-only">Age</label>
+            <input type="text" id="inputEmail" class="userage form-control" placeholder="Age" required="" autofocus="">
+            <label for="inputEmail" class="sr-only">Name</label>
+            <input type="text" id="inputEmail" class="username form-control" placeholder="Name" required="" autofocus="">
+            
+            <div class="checkbox mb-3">
+            </div>
+            <button class="btn btn-lg btn-primary btn-block registerBtn">Зарегестрироваться</button>
+            
+            <MyFooter/>
+      
+          <!-- </form> -->
+            
+            
+        <!-- footer -->
+        <p class="mt-5 mb-3 text-muted">© {{ new Date().toLocaleDateString() }}</p> 
+    </div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+
+<script>
+    
+    document.querySelector('.registerBtn').addEventListener('click', async function(){
+        let useremail = document.querySelector('.useremail').value
+        let userpassword = document.querySelector('.userpassword').value
+        let userage = Number(document.querySelector('.userage').value)
+        let username = document.querySelector('.username').value
+    
+        localStorage.setItem("userlogin", "true")
+
+        location.href = `/users/usercreatesuccess?useremail=${useremail}&userpassword=${userpassword}&username=${username}&userage=${userage}`
+        //`/users/usercreatesuccess?useremail=rodion@mail.ru&userpassword=rodionpassword&username=rodion&userage="  class="btn btn-lg btn-primary btn-block registerBtn">
+    })
+    //location.href = "/users/usercreatesuccess?useremail=${useremail}&userpassword=${userpassword}&username=${username}&userage=${userage}"
+</script>
+</html>

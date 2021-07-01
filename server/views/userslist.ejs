@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body>
+    <div id="app">
+
+
+        <!-- header -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">VueSuperShop</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+
+                        <% if(auth) { %>
+                        <li class="nav-item">
+                            <a href="/?auth=true&guest=false&sender=<%= touser.split('@')[0] %>">
+                                Домой
+                            </a>
+                        </li>
+                        <% } else{ %>  
+                        <li class="nav-item">
+                            <a href="/users/login">
+                                Вход
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a href=/users/register>
+                                Регистрация
+                            </a>
+                        </li>
+                        <% } %>
+                        <% if(auth) { %>
+                            <li>
+                                <span class="badge bg-primary"><%= touser.split('@')[0]  %></span>
+                            </li>
+                            <li>
+                                <span class="badge bg-primary"><a class="badge bg-primary" href="/users/logout">Выйти</a></span>
+                            </li>
+                        <% } else{ %>  
+                            
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        <p>Пользователи: </p>
+        <% if(allUsers != null && allUsers.length >= 1) { %>
+            <% allUsers.forEach(function(user) { %>
+                <div class="card">
+                    <h5 class="card-header">
+                        <% if (auth){ %>
+                            <a href="/?guest=true&touser=<%= touser %>&auth=true&sender=<%= user.email.split('@')[0] %>"><%= user.email %></a>
+                        <% } else { %>
+                            <a href="#"><%= user.email %></a>
+                        <% } %>
+                        
+                    </h5>
+                    <div class="card-body">
+                      <h5 class="card-title"><%= user.age %></h5>
+                      <a href="/users/friends/add?touser=<%= touser %>&useremail=<%= user.email %>&userage=<%= user.age.toString() %>" class="btn btn-primary">Добавить в друзья</a>
+                      <!-- <a href="/users/friends/delete?touser=<%= touser %>&useremail=<%= user.email  %>" class="btn btn-primary">Удалить из друзей</a> -->
+                      <p><p>Ещё не в друзьях</p></p>
+                      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    </div> 
+                  </div>
+            <% }); %>
+        <% } else {%>
+            <p>Недругов нет</p>    
+        <% } %>
+
+        <% if(friendsOfUser != null && friendsOfUser.length >= 1) { %>
+            <% friendsOfUser.forEach(function(friend) { %>
+                <div class="card">
+                    <h5 class="card-header">
+                        <% if (auth){ %>
+                            <a href="/?guest=true&auth=true&sender=<%= friend.split('@')[0] %>"><%= friend.split('@')[0] %></a>
+                        <% } else { %>
+                            <a href="#"><%= friend.split('@')[0] %></a>
+                        <% } %>
+                        
+                    </h5>
+                    <div class="card-body">
+                      <h5 class="card-title"><%= 20 %></h5>
+                      <!-- <a href="/users/friends/add?touser=<%= touser %>&useremail=<%= friend.email %>&userage=<%= friend.age %>" class="btn btn-primary">Добавить в друзья</a> -->
+                      <p>Уже в друзьях</p>
+                      <a href="/users/friends/delete?touser=<%= touser %>&useremail=<%= friend  %>" class="btn btn-primary">Удалить из друзей</a>
+                      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    </div> 
+                  </div>
+            <% }); %>
+        <% } else {%>
+            <p>Друзей нет</p>    
+        <% } %>
+        
+
+        <!-- footer -->
+        <p class="mt-5 mb-3 text-muted">© {{ new Date().toLocaleDateString() }}</p> 
+    </div>
+</body>
+
+<script>
+
+</script>
+</html>

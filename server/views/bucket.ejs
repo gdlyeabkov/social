@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body>
+    <div id="app">
+
+        <!-- header -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">VueSuperShop</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="/?useremail=<%= user.email %>&error=no">
+                                Домой
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-item" href="/users/bucket?useremail=<%= user.email %>">
+                                Корзина
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/users/login">
+                                Вход
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/users/register">
+                                Регистрация
+                            </a>
+                        <% if(auth) { %>
+                            <li>
+                                <span class="badge bg-primary"><%= user  %></span>
+                            </li>
+                            <li>
+                                <span class="badge bg-primary"><a class="badge bg-primary" href="/users/logout">Выйти</a></span>
+                            </li>
+                        <% } else{ %>  
+                            
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <% if(user.productsInBucket.length > 0){ %>
+            <% allProductsInBucketOfThisUser.forEach(function(product) { %>
+                <div class="card">
+                    <h5 class="card-header"><%= product.name %></h5>
+                    <div class="card-body">
+                        <h5 class="card-header"><%= product.price %></h5>
+                      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                      <a href="/users/bucket/delete?useremail=<%= user.email %>&productname=<%= product.name %>" class="btn btn-primary">удалить из корзины</a>
+                    </div>
+                  </div>
+            <% }); %>
+            КОРЗИНА
+            <!-- user.productsInBucket['productOne']['price'] -->
+            <% user.productsInBucket.forEach(function(product) { %>
+                <%= product %>
+            <% }); %>
+            <%= user.productsInBucket[user.productsInBucket.length - 1].name %>
+            <%=  myProductsInBucket.forEach(function(q){ 
+                String(q.get('name'))
+            })%>
+            
+            
+            <p><%= new Map(user.productsInBucket[1]).get('price')  %></p>
+            <% } %>
+            <!-- дальше работает -->
+            <% if(user.productsInBucket.length > 0){ %>
+                <% user.productsInBucket.forEach(function (w){  %>
+                    <div class="card">
+                        <h5 class="card-header"><%= new Map(w).get('name')  %></h5>
+                        <div class="card-body">
+                            <h5 class="card-header"><%= new Map(w).get('price')  %></h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="/users/bucket/delete?useremail=<%= user.email %>&productname=<%= new Map(w).get('name') %>" class="btn btn-primary">удалить из корзины</a>
+                        </div>
+                    </div>
+                <% }) %>
+                <a href="/users/bucket/buy?useremail=<%= user.email %>"  class="form-control btn btn-primary">
+                    Оформить заказ    
+                </a>  
+            <% } else {%>
+                <a href="/?useremail=<%= user.email %>&error=no"  class="form-control btn btn-primary">
+                    У вас нет ещё ни одного товара в корзине    
+                </a>
+            <% }%>
+    
+        <!-- footer -->
+        <p class="mt-5 mb-3 text-muted">© {{ new Date().toLocaleDateString() }}</p> 
+    </div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data:() => ({
+            a:'asd'
+        }),
+        methods:{
+            myq(){
+                console.log(this.a)
+            }
+        }
+    })
+</script>
+</html>

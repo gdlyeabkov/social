@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body>
+    <div id="app">
+
+                        <!-- header -->
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                            <div class="container-fluid">
+                                <a class="navbar-brand" href="#">VueSuperShop</a>
+                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                                </button>
+                                <div class="collapse navbar-collapse" id="navbarNav">
+                                    <ul class="navbar-nav">
+                
+                                        <% if(auth) { %>
+                                        <li class="nav-item">
+                                            <a href="/?auth=true&sender=<%= touser.split('@')[0] %>">
+                                                Домой
+                                            </a>
+                                        </li>
+                                        <% } else{ %>  
+                                        <li class="nav-item">
+                                            <a href="/users/login">
+                                                Вход
+                                            </a>
+                                        </li>
+                                        
+                                        <li class="nav-item">
+                                            <a href=/users/register>
+                                                Регистрация
+                                            </a>
+                                        </li>
+                                        <% } %>
+                                        <% if(auth) { %>
+                                            <li>
+                                                <span class="badge bg-primary"><%= touser.split('@')[0]  %></span>
+                                            </li>
+                                            <li>
+                                                <span class="badge bg-primary"><a class="badge bg-primary" href="/users/logout">Выйти</a></span>
+                                            </li>
+                                        <% } else{ %>  
+                                            
+                                        <% } %>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+       
+        <input type="text" class="previousgroupname form-control" disabled required="" autofocus="" value="<%= groupname%>">
+        <% if (imageurl.includes('empty')) { %>  
+            <img width="85px" height="85px" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" />
+        <%} else if (!imageurl.includes('empty')) { %>
+            <img width="85px" height="85px" src="<%= imageurl %>" />
+        <% } %>
+        <label for="inputPhoto" class="sr-only">Photo</label>
+        <input value="<%= imageurl %>" type="text" id="inputPhoto" class="imageurl form-control" placeholder="Photo" required="" autofocus="">
+        <label for="inputName" class="sr-only">Name</label>
+        <input value="<%= groupname %>" type="text" id="inputName" class="groupname form-control" placeholder="Name" required="" autofocus="">
+        <label for="inputDescription" class="sr-only">Description</label>
+        <input value="<%= groupdescription %>" type="text" id="inputDescription" class="groupdescription form-control" placeholder="Description" required="" autofocus="">
+        <label for="inputAccess" class="sr-only">Access</label>
+        <input value="<%= groupaccess %>" type="text" id="inputAccess" class="groupaccess form-control" placeholder="Access" required="" autofocus="">
+        <button class="btn btn-lg btn-primary btn-block editBtn">Сохранить</button>
+       
+        <input type="text" class="sender form-control" disabled required="" autofocus="" value="<%= touser %>">
+        <!-- footer -->
+        <p class="mt-5 mb-3 text-muted">© {{ new Date().toLocaleDateString() }}</p> 
+    </div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+
+<script>
+    document.querySelector('.editBtn').addEventListener('click', async function(){
+        
+        let previousgroupname = document.querySelector('.previousgroupname').value
+
+        let imageurl = document.querySelector('.imageurl').value
+        let groupname = document.querySelector('.groupname').value
+        let groupdescription = document.querySelector('.groupdescription').value
+        let groupaccess = document.querySelector('.groupaccess').value
+        
+        let touser = document.querySelector('.sender').value
+
+        localStorage.setItem("userlogin", "true")
+        location.href = `/users/groups/editsuccess?previousgroupname=${previousgroupname}&groupname=${groupname}&imageurl=${imageurl}&groupdescription=${groupdescription}&groupaccess=${groupaccess}&touser=${touser}`
+        //`/users/usercreatesuccess?useremail=rodion@mail.ru&userpassword=rodionpassword&username=rodion&userage="  class="btn btn-lg btn-primary btn-block registerBtn">
+    })
+</script>
+</html>

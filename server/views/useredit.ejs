@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body>
+    <div id="app">
+
+        <!-- header -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">VueSuperShop</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+
+                        <% if(auth) { %>
+                        <li class="nav-item">
+                            <a href="/?auth=true&guest=false&sender=<%= email.split('@')[0] %>">
+                                Домой
+                            </a>
+                        </li>
+                        <% } else{ %>  
+                        <li class="nav-item">
+                            <a href="/users/login">
+                                Вход
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a href=/users/register>
+                                Регистрация
+                            </a>
+                        </li>
+                        <% } %>
+                        <% if(auth) { %>
+                            <li>
+                                <span class="badge bg-primary"><%= name  %></span>
+                            </li>
+                            <li>
+                                <span class="badge bg-primary"><a class="badge bg-primary" href="/users/logout">Выйти</a></span>
+                            </li>
+                        <% } else{ %>  
+                            
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </nav>       
+
+        <input type="text" class="touser form-control" disabled required="" autofocus="" value="<%= touser %>">
+        <% if (imageurl.includes('empty')) { %>  
+            <img width="85px" height="85px" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" />
+        <%} else if (!imageurl.includes('empty')) { %>
+            <img width="85px" height="85px" src="<%= imageurl %>" />
+        <% } %>
+        <label for="inputPhoto" class="sr-only">Photo</label>
+        <input value="<%= imageurl %>" type="text" id="inputPhoto" class="userphoto form-control" placeholder="Photo" required="" autofocus="">
+        <label for="inputName" class="sr-only">Name</label>
+        <input value="<%= name %>" type="text" id="inputName" class="username form-control" placeholder="Name" required="" autofocus="">
+        <label for="inputAge" class="sr-only">Age</label>
+        <input value="<%= age %>" type="text" id="inputAge" class="userage form-control" placeholder="Age" required="" autofocus="">
+        <label for="inputEmail" class="sr-only">Email</label>
+        <input disabled value="<%= email %>" type="email" id="inputEmail" class="useremail form-control" placeholder="Email" required="" autofocus="">
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input value="<%= password %>" type="password" id="inputPassword" class="userpassword form-control" placeholder="Password" required="" autofocus="">
+        <button class="btn btn-lg btn-primary btn-block editBtn">Сохранить</button>
+        <!-- footer -->
+        <p class="mt-5 mb-3 text-muted">© {{ new Date().toLocaleDateString() }}</p> 
+    </div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+
+<script>
+    document.querySelector('.editBtn').addEventListener('click', async function(){
+        let touser = document.querySelector('.touser').value
+        let userphoto = document.querySelector('.userphoto').value
+        let username = document.querySelector('.username').value
+        let userage = document.querySelector('.userage').value
+        //let useremail = document.querySelector('.useremail').value
+        let useremail = document.querySelector('.username').value[0].toLowerCase() + document.querySelector('.username').value.slice(1) + '@mail.ru'
+        let userpassword = document.querySelector('.userpassword').value
+        localStorage.setItem("userlogin", "true")
+        location.href = `/users/editsuccess?touser=${touser}&imageurl=${userphoto}&name=${username}&age=${userage}&email=${useremail}&password=${userpassword}`
+        //`/users/usercreatesuccess?useremail=rodion@mail.ru&userpassword=rodionpassword&username=rodion&userage="  class="btn btn-lg btn-primary btn-block registerBtn">
+    })
+</script>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body>
+    <div id="app">
+
+        <!-- header -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">VueSuperShop</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="/?useremail=<%= user.email %>&error=no">
+                                Домой
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-item" href="/users/bucket">
+                                Корзина
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/users/login">
+                                Вход
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/users/register">
+                                Регистрация
+                            </a>
+                        <% if(auth) { %>
+                            <li>
+                                <span class="badge bg-primary"><%= user  %></span>
+                            </li>
+                            <li>
+                                <span class="badge bg-primary"><a class="badge bg-primary" href="/users/logout">Выйти</a></span>
+                            </li>
+                        <% } else{ %>  
+                            
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        <a href="#" class="form-control btn btn-primary">
+            <%= success ? "Заказ оформлен" : "Вам не хватает денег" %>
+        </a>    
+    
+        <!-- footer -->
+        <p class="mt-5 mb-3 text-muted">© {{ new Date().toLocaleDateString() }}</p> 
+    </div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+
+<script>
+   
+</script>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body>
+    <% allOrders.forEach(function(order) { %>
+        <div class="card">
+            <h5 class="card-header">
+                <a href="#"><%= order.ownername %></a>
+            </h5>
+            <div class="card-body">
+                <h5 class="card-title"><%= order.price %></h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            </div> 
+        </div>
+    <% }); %>
+</body>
+<script src="https://unpkg.com/vue"></script>
+
+<script>
+    
+</script>
+</html>

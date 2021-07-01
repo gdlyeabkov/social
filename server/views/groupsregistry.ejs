@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body>
+    <div id="app">
+
+        <!-- header -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">VueSuperShop</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="/?auth=true&guest=false&sender=<%= touser.split('@')[0] %>">
+                                Домой
+                            </a>
+                        </li>
+                        <% if(userlogin){ %>
+                            <li class="nav-item">
+                                <a class="nav-item" href="/users/bucket">
+                                    Корзина
+                                </a>
+                                <input value="<%= touser %>" type="text" id="inputPassword" class="touser form-control" placeholder="Description" disabled>
+                            </li>
+                       <% } %>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- <form onsubmit="return null" class="form-signin text-center"> -->
+            <img class="mb-4" src="https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/vue-dot-js-256.png" alt="" width="72" height="72">
+            <h1 class="h3 mb-3 font-weight-normal">Создание новой группы</h1>
+            
+            <label for="inputEmail" class="sr-only">Name</label>
+            <input type="text" id="inputEmail" class="groupname form-control" placeholder="Name" required="" autofocus="">
+            <label for="inputPassword" class="sr-only">Description</label>
+            <input type="text" id="inputPassword" class="groupdescription form-control" placeholder="Description" required="">
+            <label for="inputPassword" class="sr-only">Access</label>
+            <input type="text" id="inputPassword" class="groupaccess form-control" placeholder="Access" required="">
+            <label for="inputPassword" class="sr-only">Image Url</label>
+            <input type="text" id="inputPassword" class="groupimageurl form-control" placeholder="imageurl" required="">
+                
+            
+            <div class="checkbox mb-3">
+            </div>
+            <button class="btn btn-lg btn-primary btn-block registerBtn">Создать группу</button>
+            
+            <MyFooter/>
+      
+          <!-- </form> -->
+            
+            
+        <!-- footer -->
+        <p class="mt-5 mb-3 text-muted">© {{ new Date().toLocaleDateString() }}</p> 
+    </div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+
+<script>
+    
+    document.querySelector('.registerBtn').addEventListener('click', async function(){
+        let groupname = document.querySelector('.groupname').value
+        let groupdescription = document.querySelector('.groupdescription').value
+        let groupaccess = document.querySelector('.groupaccess').value
+        let groupimageurl = document.querySelector('.groupimageurl').value
+        let touser = document.querySelector('.touser').value
+
+        localStorage.setItem("userlogin", "true")
+
+        location.href = `/users/groups/groupcreatesuccess?touser=${touser}&groupaccess=${groupaccess}&groupdescription=${groupdescription}&groupname=${groupname}&imageurl=${groupimageurl}`
+        //`/users/usercreatesuccess?useremail=rodion@mail.ru&userpassword=rodionpassword&username=rodion&userage="  class="btn btn-lg btn-primary btn-block registerBtn">
+    })
+    //location.href = "/users/usercreatesuccess?useremail=${useremail}&userpassword=${userpassword}&username=${username}&userage=${userage}"
+</script>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body>
+    <div id="app">
+
+        <!-- header -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">VueSuperShop</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+
+                        <% if(auth) { %>
+                        <li class="nav-item">
+                            <a href="/?auth=true&guest=false&sender=<%= sender %>">
+                                Домой
+                            </a>
+                        </li>
+                        <% } else{ %>  
+                        <li class="nav-item">
+                            <a href="/users/login">
+                                Вход
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a href=/users/register>
+                                Регистрация
+                            </a>
+                        </li>
+                        <% } %>
+                        <% if(auth) { %>
+                            <li>
+                                <span class="badge bg-primary"><%= sender  %></span>
+                            </li>
+                            <li>
+                                <span class="badge bg-primary"><a class="badge bg-primary" href="/users/logout">Выйти</a></span>
+                            </li>
+                        <% } else{ %>  
+                            
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <% if (imageurl.includes('empty')) { %>  
+            <img width="85px" height="85px" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" />
+        <%} else if (!imageurl.includes('empty')) { %>
+            <img width="85px" height="85px" src="<%= imageurl %>" />
+        <% } %>
+        <a href="/users/edit?touser=<%= sender + '@mail.ru' %>&imageurl=<%= imageurl %>&name=<%= name %>&age=<%= age %>&email=<%= sender + '@mail.ru' %>&password=<%= password %>">Редактировать профиль</a>
+        <p><%= name %></p>
+        <p><%= age %> лет</p>
+        <p>Лайки: <%= likes %></p>
+        <% if (guest) { %>
+         <a href="/users/likes?useremail=<%= touser %>">Нравится</a>
+        <% } %>
+        <p>Посты:</p>
+        <% if(allPosts != null && allPosts.length >= 1) { %>
+            <% allPosts.forEach(function(post) { %>
+                <div class="card">
+                    <h5 class="card-header">
+                        <% if (auth){ %>
+                            <a href="/userprofile?sender=<%= post.sender + '@mail.ru' %>"><%= post.sender %></a>
+                        <% } else { %>
+                            <a href="#"><%= post.sender %></a>
+                        <% } %>
+                        
+                    </h5>
+                    <div class="card-body">
+                      <h5 class="card-title"><%= post.content %></h5>
+                      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    </div> 
+                  </div>
+            <% }); %>
+        <% } else {%>
+            <p>Постов нет</p>
+        <% } %>
+        <label for="inputSender" class="sr-only">Sender</label>
+        <input value="<%= sender %>" type="text" id="inputSender" disabled class="sender form-control" placeholder="Sender" required="" autofocus="">
+        <label for="inputContent" class="sr-only">Content</label>
+        <!-- <input type="text" id="inputContent" class="content form-control" placeholder="Content" required=""> -->
+        <textarea id="inputContent" class="content form-control" placeholder="Content" required=""></textarea>
+        
+        <!-- <a href="/postadd/?sender=<%= sender %>&content=hello">Добавить пост</a> -->
+        <button class="btn btn-lg btn-primary btn-block sendBtn">Отправить</button>
+
+
+        <p>Друзья:</p>
+        
+        <% if(allFriends.length){ %>
+            <% allFriends.forEach(function (friend, a){  %>
+                <div class="card">
+                    <a href="/?auth=true&sender=<%= new Map(friend).get('email').split('@')[0] %>"><h5 class="card-header"><%= new Map(friend).get("email")  %></h5></a>
+                    <div class="card-body">
+                        <h5 class="card-header"><%= new Map(friend).get("email")  %></h5>
+                        <h5 class="card-header"><%= new Map(friend).get("age")  %></h5>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else {%>
+            У вас нет ещё ни одного друга
+            <p>
+                <a href="/users/list?touser=<%= sender + '@mail.ru' %>">Найти себе друга</a>
+            </p>
+        <% }%>
+
+        <p>
+            <a href="/users/list?touser=<%= sender + '@mail.ru' %>">Пользователи:</a>
+        </p>
+        Группы:
+        <% if(groupswithdata != null && groupswithdata.length >= 1) { %>
+            <%  groupswithdata.forEach(function (group, a){  %>
+                <div class="card">
+                    <a href="/users/groups?touser=<%= sender + '@mail.ru' %>&groupname=<%= group.name %>&imageurl=<%= group.imageurl %>"><h5 class="card-header"><%= group.name  %></h5></a>
+                    <div class="card-body">
+                        <h5 class="card-header"><%= group.description  %></h5>
+                        <h5 class="card-header"><%= group.access  %></h5>
+                    </div>
+                </div>
+                <a href="/users/groups/list?touser=<%= sender + '@mail.ru' %>&groupname=<%= group.name %>">Перейти к списку групп</a>
+            <% }) %>
+        <% } else if(groupswithdata != null && groupswithdata.length <= 0) { %>
+            <p>Вы не создали ещё ни одну группу</p>
+        <% } %>     
+        <p>
+            <a href="/users/groups/register?touser=<%= sender + '@mail.ru' %>">Добавить новую группу</a>
+            <a href="/users/groups/list?touser=<%= sender + '@mail.ru' %>&groupname=">Перейти к списку групп</a>
+        </p>
+        <!-- footer -->
+        <p class="mt-5 mb-3 text-muted">© {{ new Date().toLocaleDateString() }}</p> 
+    </div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+
+<script>
+    document.querySelector('.sendBtn').addEventListener('click', async function(){
+        let sender = document.querySelector('.sender').value
+        let content = document.querySelector('.content').value
+    
+        localStorage.setItem("userlogin", "true")
+
+        location.href = `/postadd?sender=${sender}&content=${content}`
+        
+    })
+</script>
+</html>

@@ -1,0 +1,217 @@
+<template>
+    <div id="app">
+    <Header :auth="'true'" :sender="sender"/>
+    
+    <select v-model="groupfilter" class="form-select" aria-label="Default select example">
+      <option selected value="1">Группы</option>
+      <option value="2">Группы которые вы создали</option>
+      <option value="3">Группы которые вы не создали</option>
+      <option value="4">Группы в которые вы вступили</option>
+      <option value="5">Группы в которые вы не вступили</option>
+    </select>
+
+        <div v-if="allGroups != null && allGroups.length >= 1 && groupfilter === '1'">
+            <p>Группы: </p>
+            <div v-for="group in allGroups">
+                <div class="card">
+                    <h5 class="card-header">
+                        <div v-if="auth.includes('true')">
+                            <router-link :to="{ name: 'Group', query: { 'groupname': group.name, 'groupdescription': group.description, 'groupaccess': group.access, 'imageurl': group.imageurl, 'touser': $route.query.touser, 'guest': $route.query.guest  } }">{{ group.name }}</router-link>
+                        </div>
+                        <div v-else>
+
+                        </div>
+                    </h5>
+                  </div>
+            </div>
+        </div>
+        <!-- <div v-else>
+            <p>Групп нет</p>    
+        </div> -->
+        <br style="clear: both;"/>
+        <div v-if="hasGroups != null && hasGroups.length >= 1 && groupfilter === '2'">
+            <p>Группы которые вы создали</p>
+            <div v-for="group in hasGroups">
+            
+                <div class="card">
+                    <h5 class="card-header">
+                        <div v-if="auth.includes('true')">
+                            <a href="/users/groups?groupname=<%= group.name %>&groupdescription=<%= group.description %>&groupaccess=<%= group.access %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">{{ group.name }}</a>
+                        </div>
+                    </h5>
+                    <div class="card-body">
+                      <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&touser=<%= touser %>">Вступить в группу</a> -->
+                      <p>Вы уже в группе</p>
+                      <!-- <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&  touser=<%= touser %>">Выйти из группы</a> -->
+                    </div> 
+                  </div>
+            </div>
+        </div>
+        <!-- <div v-else>
+            <p>Групп нет</p>    
+        </div> -->
+ 
+        <!-- <br style="clear: both;"/> -->
+        
+        
+        <div v-if="notHasGroups != null && notHasGroups.length >= 1 && groupfilter === '3'">
+            <p>Группы которые вы не создали</p>  
+            <div v-for="group in notHasGroups">
+            
+                <div class="card">
+                    <h5 class="card-header">
+                        <div v-if="auth.includes('true')">
+                            <a href="/users/groups?groupname=<%= group.name %>&groupdescription=<%= group.description %>&groupaccess=<%= group.access %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">{{ group.name }}</a>
+                        </div>
+                        <div v-else>
+                          
+                        </div>
+                        
+                    </h5>
+                    <div class="card-body">
+                      <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">Вступить в группу</a> -->
+                      <p>Вы ещё не в группе</p>
+                      <!-- <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&  touser=<%= touser %>">Выйти из группы</a> -->
+                    </div> 
+                  </div>
+            </div>
+        </div>
+        <!-- <div v-else>
+            <p>Групп нет</p>    
+        </div> -->
+
+        <!-- <br style="clear: both;"/> -->
+
+        
+        <div v-if="allGroupsWithPartisipants != null && allGroupsWithPartisipants.length >= 1 && groupfilter === '4'">
+            <p>Группы в которые вы вступили</p> 
+            <div v-for="group in allGroupsWithPartisipants">
+                <div class="card">
+                    <h5 class="card-header">
+                        <div v-if="auth.includes('true')">
+                            <a href="/users/groups?groupname=<%= group %>&groupdescription=<%= 'group.description' %>&groupaccess=<%= 'group.access' %>&imageurl=<%= 'empty' %>&touser=<%= touser %>">{{ group.name }}</a>
+                        </div>
+                        <div v-else>
+                          
+                        </div>
+                        
+                    </h5>
+                    <div class="card-body">
+                      <p>Вы участник этой группы</p>
+                      <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">Вступить в группу</a> -->
+                      
+                      <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl%>&touser=<%= touser %>">Выйти из группы</a>
+                    </div> 
+                  </div>
+                </div>
+            </div>
+        <!-- <div v-else>
+            <p>Групп нет</p>    
+        </div> -->
+
+        <!-- <br style="clear: both;"/> -->
+
+        
+        <div v-if="allGroupsWithoutPartisipants != null && allGroupsWithoutPartisipants.length >= 1 && groupfilter === '5'">
+            <p>Группы в которые вы не вступили</p>  
+            <div v-for="group in allGroupsWithoutPartisipants">
+                <div class="card">
+                    <h5 class="card-header">
+                        <div v-if="auth.includes('true')">
+                            <a href="/users/groups?groupname=<%= group.name %>&groupdescription=<%= group.description %>&groupaccess=<%= group.access %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">{{ group.name }}</a>
+                        </div>
+                        <div v-else>
+                          
+                        </div>
+                        
+                    </h5>
+                    <div class="card-body">
+                      <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">Вступить в группу</a>
+                      <p>Вы ещё не участник этой группы</p>
+                      <!-- <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&  touser=<%= touser %>">Выйти из группы</a> -->
+                    </div> 
+                  </div>
+            </div>
+        </div>
+        <!-- <div v-else>
+            <p>Групп нет</p>    
+        </div> -->
+
+        <br style="clear: both;"/>
+        <Footer/>
+    </div>    
+</template>
+<script>
+
+import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
+
+export default {
+    data(){
+        return {
+            groupfilter: "1",
+            allGroupsWithPartisipants: [],
+            allGroupsWithoutPartisipants: [],
+            hasGroups: [],
+            notHasGroups: [],
+            allGroups: [],
+            auth:'true',
+            touser: '',
+            sender: ''
+        }
+    },
+    mounted(){
+    fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/list?sender=${this.$route.query.touser}&groupname=${this.$route.query.groupname}`, {
+      mode: 'cors',
+      method: 'GET'
+    }).then(response => response.body).then(rb  => {
+        const reader = rb.getReader()
+        return new ReadableStream({
+          start(controller) {
+            function push() {
+              reader.read().then( ({done, value}) => {
+                if (done) {
+                  console.log('done', done);
+                  controller.close();
+                  return;
+                }
+                controller.enqueue(value);
+                console.log(done, value);
+                push();
+              })
+            }
+            push();
+          }
+        });
+    }).then(stream => {
+        return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+      })
+      .then(result => {
+        console.log(JSON.parse(result))
+        this.allGroupsWithPartisipants = JSON.parse(result).allGroupsWithPartisipants
+        this.allGroupsWithoutPartisipants = JSON.parse(result).allGroupsWithoutPartisipants
+        this.hasGroups = JSON.parse(result).hasGroups
+        this.notHasGroups = JSON.parse(result).notHasGroups
+        this.allGroups = JSON.parse(result).allGroups
+        this.touser = JSON.parse(result).touser
+        this.sender = this.touser.split('@')[0]
+      });
+  },
+  components: {
+    Header,
+    Footer
+  }
+}
+</script>
+
+<style scoped>
+  .card {
+    color: black;
+  }
+  .card {
+    width: 250px;
+    display: block;
+    float: left;
+    margin: 10px 5px;
+  }
+</style>
