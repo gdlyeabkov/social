@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+﻿const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 const mongoose = require('mongoose')
@@ -195,7 +195,9 @@ app.get('/users/edit',(req, res)=>{
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
-    res.json({ 'auth':'true', 'touser': req.query.touser, 'imageurl': req.query.imageurl, 'name': req.query.name, 'age': req.query.age, 'email': req.query.email, 'password': req.query.password  })
+    // res.json({ 'auth':'true', 'touser': req.query.touser, 'imageurl': req.query.imageurl, 'name': req.query.name, 'age': req.query.age, 'email': req.query.email, 'password': req.query.password  })
+    res.json({ 'auth':'true', 'touser': req.query.touser, 'imageurl': req.query.imageurl, 'name': req.query.name, 'age': req.query.age, 'email': req.query.email  })
+
 })
 
 app.get('/users/editsuccess', async (req, res)=>{
@@ -204,16 +206,74 @@ app.get('/users/editsuccess', async (req, res)=>{
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
 
-    let encodedPassword = "#"
-    encodedPassword = bcrypt.hashSync(req.query.password, saltRounds)
+    // let encodedPassword = "#"
+    // encodedPassword = bcrypt.hashSync(req.query.password, saltRounds)
+
+    // await UsersModel.updateOne({ email: req.query.touser },
+    //     {
+    //         imageurl: req.query.imageurl,
+    //         name: req.query.name,
+    //         age: req.query.age,
+    //         email: req.query.email,
+    //         password: encodedPassword,
+    //     }, (err) => {
+    //         if(err){
+    //             return
+    //         } else {
+    //             let queryOfFriends =  UsersModel.findOne({'email': req.query.email}, function(err, user){
+    //                 if (err){
+    //                     return
+    //                 } else {
+    //                     const userGroupsArray = []
+    //                     user.groups.map((groupKey, groupValue) => {
+    //                         userGroupsArray.push(new Map(groupKey).get('name'))
+    //                     })
+    //                     console.log('userGroupsArray', userGroupsArray)
+    //                     const groupsWithData = []
+    //                     const queryOfGroupsWithData = GroupsModel.find({ name: { $in: userGroupsArray } }).select(['name', 'description', 'access', 'imageurl', 'partisipants' ])
+    //                     queryOfGroupsWithData.exec( async (error, groups) => {
+    //                         if(error){
+    //                             return
+    //                         }
+    //                         groups.forEach((g) => {
+    //                             groupsWithData.push(g)
+    //                         })
+    //                         nickOfUser = req.query.email.split('@')[0]
+    //                         const allPosts = []
+
+    //                         await PostModel.updateMany({ sender: req.query.touser.split('@')[0] },
+    //                             {
+    //                                 sender: nickOfUser
+    //                             }, (err) => {
+    //                                 if(err){
+    //                                     console.log("error PostModel")
+    //                                     return
+    //                                 } else {
+    //                                     console.log("success PostModel")
+    //                                 }
+    //                             }
+    //                         )
+
+    //                         let query = PostModel.find({ sender: { $eq: req.query.email.split('@')[0] } })
+    //                         query.exec((err, allPosts) => {
+    //                             console.log('req.query', req.query)
+    //                             console.log('обновил')
+    //                             res.json({ "allPosts": allPosts, "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "groupswithdata": groupsWithData })
+    //                         })
+    //                     })
+                
+    //                 }
+    //             }
+    //         )
+    //     }
+    // })
 
     await UsersModel.updateOne({ email: req.query.touser },
         {
             imageurl: req.query.imageurl,
             name: req.query.name,
             age: req.query.age,
-            email: req.query.email,
-            password: encodedPassword,
+            email: req.query.email
         }, (err) => {
             if(err){
                 return
@@ -265,6 +325,7 @@ app.get('/users/editsuccess', async (req, res)=>{
             )
         }
     })
+
 })
 
 app.get('/users/groups/edit',(req, res)=>{
@@ -607,7 +668,7 @@ app.get('/users/check', (req,res)=>{
         if (err){
             return
         } else {
-            const passwordCheck = bcrypt.compareSync(req.query.userpassword, user.password) && req.query.developerpassword !== ''
+            const passwordCheck = bcrypt.compareSync(req.query.userpassword, user.password) && req.query.userpassword !== ''
             if(user != null && user != undefined && passwordCheck){
                 auth = true
                 return res.json({ "auth": "true", "sender": user.email.split('@')[0] })

@@ -1,18 +1,22 @@
 <template>
     <div>
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">{{ post.sender }}</h5>
-                <p class="card-text">{{ post.content }}</p>
-                
+      <Header :auth="'true'" :sender="post.sender" />
+        <div class="card" style="color: black; margin: 25px auto; width: 18rem;">
+            <div class="card-header">
+              <h5 class="card-title">{{ post.sender }}</h5>
             </div>
-          </div>
-        <!-- footer -->
-        <p class="mt-5 mb-3 text-muted">© {{ new Date().toLocaleDateString() }}</p> 
+            <div class="card-body">
+                <p class="card-text">{{ post.content }}</p>
+            </div>
+        </div>
+      <Footer/>
     </div>
 </template>
 
 <script>
+import Footer from '@/components/Footer.vue'
+import Header from '@/components/Header.vue'
+
 export default {
     data(){
         return {
@@ -50,6 +54,10 @@ export default {
           console.log(JSON.parse(result))
           this.post = JSON.parse(result).post
       });
+    },
+    components: {
+      Header,
+      Footer
     }
 }
 </script>

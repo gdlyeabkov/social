@@ -199,7 +199,8 @@ export default {
         .then(result => {
           console.log(JSON.parse(result))
           // JSON.parse(result).message   
-          window.location.reload()
+          // window.location.reload()
+          this.$router.push({ name: 'Home', query: { auth: 'true', guest: 'false', sender: window.localStorage.getItem('useremail') } })
         });
       },
       leaveFromGroup(){
@@ -231,7 +232,8 @@ export default {
         .then(result => {
           console.log(JSON.parse(result))
           // JSON.parse(result).message
-          window.location.reload()
+          // window.location.reload()
+          this.$router.push({ name: 'Home', query: { auth: 'true', guest: 'false', sender: window.localStorage.getItem('useremail') } })
         });
       }
     },

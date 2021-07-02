@@ -8,9 +8,7 @@
           <Header :auth="'true'" :sender="loginedSender"/>
         </div>
         
-        
-
-        <p>Пользователи: </p>
+        <p style="text-align: center;">Пользователи: </p>
         
         <div v-if="allUsers != null && allUsers.length >= 1">
           <div v-for="user in allUsers">

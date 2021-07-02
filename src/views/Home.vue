@@ -5,7 +5,7 @@
         <Header :sender="sender" :auth="'true'" />
         <div class="customflex">
           <div class="customflexbar aside">
-            <p>Ваши друзья:</p>
+            <p style="text-align: center;">Ваши друзья:</p>
             <div v-if="allFriends.length">
               <div v-for="friend in allFriends">
                 <div class="card friendCard">
@@ -60,7 +60,9 @@
                   <div class="card postStyle">
                       <h5 class="card-header">
                         <div v-if="$route.query.auth.includes('true')">
-                          <router-link :to="{ name: 'Post', params: { 'postid': post._id }, }">{{ post.sender }}</router-link>
+                          <!-- <router-link :to="{ name: 'Post', params: { 'postid': post._id }, }">{{ post.sender }}</router-link> -->
+                          <router-link :to="{ name: 'Home', query: { 'auth': 'true', 'guest': isLogginedSender(post.sender) ? 'false' : 'true', 'sender': post.sender }, }">{{ post.sender }}</router-link>
+                          <!-- {{ post.sender }} -->
                         </div>
                       </h5>
                       <div class="card-body">
@@ -74,7 +76,7 @@
             </div>
           </div>
           <div class="customflexbar article">
-            Группы:
+          <p style="text-align: center;">Группы:</p>
         <div v-if="groupswithdata != null && groupswithdata.length >= 1">
           <div v-for="group in groupswithdata">
             <div class="card groupCard">
@@ -222,6 +224,9 @@ export default {
       }
   },
   methods: {
+    isLogginedSender(senderOfPost){
+      return senderOfPost.includes(window.localStorage.getItem('useremail'))
+    },
     receiveRequest(requestFriendName, requestFriendAge){
       this.deleteFromRequests(requestFriendName)
       

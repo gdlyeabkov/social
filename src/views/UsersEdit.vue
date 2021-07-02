@@ -17,8 +17,8 @@
         <input v-model="age" type="text" id="inputAge" class="userage form-control" placeholder="Age" required="" autofocus="">
         <label for="inputEmail" class="sr-only">Email</label>
         <input disabled v-model="email" type="email" id="inputEmail" class="useremail form-control" placeholder="Email" required="" autofocus="">
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input v-model="password" type="password" id="inputPassword" class="userpassword form-control" placeholder="Password" required="" autofocus="">
+        <!-- <label for="inputPassword" class="sr-only">Password</label>
+        <input disabled v-model="password" type="password" id="inputPassword" class="userpassword form-control" placeholder="Password" required="" autofocus=""> -->
         <button @click="save()" class="btn btn-lg btn-primary btn-block editBtn">Сохранить</button>
       </div>
         <!-- footer -->
@@ -38,7 +38,7 @@ export default {
             name: '',
             age: 0,
             imageurl: '',
-            password: '',
+            // password: '',
             touser: '',
             auth: 'true'
         }
@@ -47,14 +47,15 @@ export default {
       this.email = this.$route.query.email
       this.name = this.$route.query.name
       this.age = this.$route.query.age
-      this.password = this.$route.query.password
+      // this.password = this.$route.query.password
       this.imageurl = this.$route.query.imageurl
       this.touser = this.$route.query.touser
     },
     methods: {
         save(){
           localStorage.setItem("userlogin", "true")
-          fetch(`https://vuesocialnetwork.herokuapp.com/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}&password=${this.password}`, {
+          // fetch(`https://vuesocialnetwork.herokuapp.com/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}&password=${this.password}`, {
+          fetch(`https://vuesocialnetwork.herokuapp.com/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}`, {
         mode: 'cors',
         method: 'GET'
       }).then(response => response.body).then(rb  => {
