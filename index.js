@@ -910,44 +910,48 @@ app.get('/users/requests/delete', (req, res)=>{
     mongoose.connection.collection("myusersofposts").updateOne(
         { email: req.query.touser },
         { $pull: { 'requests': { name: req.query.sender } } }, (err, user) => {
-            UsersModel.updateOne({ email: req.query.touser },
-            { $push: 
-                { 
-                    friends: [
-                        {
-                            email: req.query.sender + '@mail.ru',
-                            age: Number(req.query.userage)
-                        }
-                    ]
-                    
-                }
-        }, (err, user) => {
-            if(err){
-                return res.json({ "message": "Error" })
-            }
-            
-        })
-
-        UsersModel.findOne({ email: req.query.touser }, (err, user) => {
-            UsersModel.updateOne({ email: emailOfOtherUser },
+            if(req.query.acceptrequest.includes("true")){
+                UsersModel.updateOne({ email: req.query.touser },
                 { $push: 
                     { 
                         friends: [
                             {
-                                email: req.query.touser,
-                                age: Number(user.age)
+                                email: req.query.sender + '@mail.ru',
+                                age: Number(req.query.userage)
                             }
                         ]
+                        
                     }
-                }, (err, user => {
-                    if(err){
-                        return res.json({ "message": "Error" })
-                    }
-                    return res.json({ "message": "Success" })
-                })
-            )
-        })
+            }, (err, user) => {
+                if(err){
+                    return res.json({ "message": "Error" })
+                }
+                
+            })
 
+            UsersModel.findOne({ email: req.query.touser }, (err, user) => {
+                UsersModel.updateOne({ email: emailOfOtherUser },
+                    { $push: 
+                        { 
+                            friends: [
+                                {
+                                    email: req.query.touser,
+                                    age: Number(user.age)
+                                }
+                            ]
+                        }
+                    }, (err, user => {
+                        if(err){
+                            return res.json({ "message": "Error" })
+                        }
+                        return res.json({ "message": "Success" })
+                    })
+                )
+            })
+        } else if(req.query.acceptrequest.includes("false")){
+            return res.json({ "message": "Success" })
+        }
+        
     })
 })
 

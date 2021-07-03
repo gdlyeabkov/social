@@ -42,7 +42,7 @@
               <router-link v-if="$route.query.guest.includes('false')" :to="{name:'UsersEdit', query:{ 'touser': sender + '@mail.ru', 'imageurl': imageurl, 'name': name, 'email': sender + '@mail.ru', 'age': age, 'password': password } }">
                 Редактировать профиль
               </router-link>
-              <p>{{ age }} лет</p>
+              <p>{{ age + ' ' + agePostfix }}</p>
               <p>Лайки: {{ likes }}</p>
               <div style="text-decoration: underline; color: blue; cursor: pointer;" v-if="$route.query.guest.includes('true')">
                 <a @click="addLike()">Нравится</a>
@@ -103,7 +103,7 @@
           </div>
         </div>
 
-        <div v-for="request in requests">
+        <div v-if="$route.query.guest.includes('false')" v-for="request in requests">
           <div style="box-sizing: border-box; padding: 10px; overflow:scroll-y; background-color: white; position: absolute; top: 0px; left: 0px; width: 175px; height: 175px;">
             <span @click="deleteFromRequests(request.name)" style="cursor: pointer; color: red;" class="material-icons">
               close
@@ -134,6 +134,7 @@ export default {
       imageurl: '',
       name: '',
       age: 0,
+      agePostfix: 'лет',
       likes: 0,
       guest: 'false',
       auth: 'false',
@@ -209,6 +210,7 @@ export default {
             this.name = JSON.parse(result).name
             this.sender = JSON.parse(result).sender
             this.age = JSON.parse(result).age
+            this.agePostfix = !this.age.toString()[this.age.toString().length - 1].includes('1') && !this.age.toString()[this.age.toString().length - 1].includes('2') && !this.age.toString()[this.age.toString().length - 1].includes('3') && !this.age.toString()[this.age.toString().length - 1].includes('4') ? 'лет' : !this.age.toString()[this.age.toString().length - 1].includes('1') && (this.age.toString()[this.age.toString().length - 1].includes('2') || this.age.toString()[this.age.toString().length - 1].includes('3') || this.age.toString()[this.age.toString().length - 1].includes('4')) ? 'года' : this.age.toString()[this.age.toString().length - 1].includes('1') && (!this.age.toString()[this.age.toString().length - 1].includes('2') && !this.age.toString()[this.age.toString().length - 1].includes('3') && !this.age.toString()[this.age.toString().length - 1].includes('4')) ? 'год' : '' 
             this.allFriends = JSON.parse(result).allFriends
             this.allGroups = JSON.parse(result).allGroups
             this.groupswithdata = JSON.parse(result).groupswithdata
@@ -228,9 +230,9 @@ export default {
       return senderOfPost.includes(window.localStorage.getItem('useremail'))
     },
     receiveRequest(requestFriendName, requestFriendAge){
-      this.deleteFromRequests(requestFriendName)
+      this.deleteFromRequests(requestFriendName, false)
       
-      fetch(`https://vuesocialnetwork.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}`, {
+      fetch(`https://vuesocialnetwork.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true`, {
       mode: 'cors',
       method: 'GET'
     }).then(response => response.body).then(rb  => {
@@ -257,46 +259,76 @@ export default {
       })
       .then(result => {
         console.log(JSON.parse(result))
-        fetch(`https://vuesocialnetwork.herokuapp.com/users/friends/add?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}`, {
-          mode: 'cors',
-          method: 'GET'
-        }).then(response => response.body).then(rb  => {
-            const reader = rb.getReader()
-            return new ReadableStream({
-              start(controller) {
-                function push() {
-                  reader.read().then( ({done, value}) => {
-                    if (done) {
-                      console.log('done', done);
-                      controller.close();
-                      return;
-                    }
-                    controller.enqueue(value);
-                    console.log(done, value);
-                    push();
-                  })
-                }
-                push();
-              }
-            });
-        }).then(stream => {
-            return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
-          })
-          .then(result => {
-            console.log(JSON.parse(result))
-            window.location.reload() 
-          });
+        // fetch(`https://vuesocialnetwork.herokuapp.com/users/friends/add?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}`, {
+        //   mode: 'cors',
+        //   method: 'GET'
+        // }).then(response => response.body).then(rb  => {
+        //     const reader = rb.getReader()
+        //     return new ReadableStream({
+        //       start(controller) {
+        //         function push() {
+        //           reader.read().then( ({done, value}) => {
+        //             if (done) {
+        //               console.log('done', done);
+        //               controller.close();
+        //               return;
+        //             }
+        //             controller.enqueue(value);
+        //             console.log(done, value);
+        //             push();
+        //           })
+        //         }
+        //         push();
+        //       }
+        //     });
+        // }).then(stream => {
+        //     return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+        //   })
+        //   .then(result => {
+        //     console.log(JSON.parse(result))
+        //     window.location.reload() 
+        //   });
         
       });
 
     },
-    deleteFromRequests(requestFriendName){
+    deleteFromRequests(requestFriendName, dorequest){
       this.requests = this.requests.filter((request) => {
         if(request.name.includes(requestFriendName)){
           return false
         }
         return true
       })
+      if(dorequest === true){
+        fetch(`https://vuesocialnetwork.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false`, {
+        mode: 'cors',
+        method: 'GET'
+      }).then(response => response.body).then(rb  => {
+          const reader = rb.getReader()
+          return new ReadableStream({
+            start(controller) {
+              function push() {
+                reader.read().then( ({done, value}) => {
+                  if (done) {
+                    console.log('done', done);
+                    controller.close();
+                    return;
+                  }
+                  controller.enqueue(value);
+                  console.log(done, value);
+                  push();
+                })
+              }
+              push();
+            }
+          });
+      }).then(stream => {
+          return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+        })
+        .then(result => {
+          console.log(JSON.parse(result))
+        })
+      }
     },
     checkGuest(){
       return window.localStorage.getItem('useremail').includes(this.sender) ? 'true' : 'false'

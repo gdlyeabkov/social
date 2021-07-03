@@ -18,7 +18,7 @@
                     </h5>
                     <div style="min-height: 110px;" class="card-body">
                       <p>Ещё не в друзьях</p>
-                      <a @click="addFriend(user)" class="btn btn-primary">Добавить в друзья</a>
+                      <a @click="addFriend(user)" v-if="!isLoginedSender(user.name)" class="btn btn-primary">Добавить в друзья</a>
                     </div> 
             </div>
           </div>
@@ -62,6 +62,7 @@ export default {
   name: 'UsersList',
   data(){
     return {
+      loginedSender: window.localStorage.getItem('useremail'),
       touser: '',
       allUsers: [],
       friendsOfUser: [],
@@ -201,6 +202,9 @@ export default {
         }
       });
       
+    },
+    isLoginedSender(userName){
+      return userName.includes(this.loginedSender)
     }
   },
   components: {
