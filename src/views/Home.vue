@@ -158,7 +158,13 @@ export default {
       if(this.$route.query.redirectroute.includes('users/login') || this.$route.query.redirectroute.includes('users/register')){
         this.$router.push({ path: this.$route.query.redirectroute })
       } else if(!this.$route.query.redirectroute.includes('users/login') && !this.$route.query.redirectroute.includes('users/register')){
-        this.$router.push({ name: "UsersLogin" })
+        jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+          if (err) {
+            this.$router.push({ name: "UsersLogin" })
+          } else {
+            this.$router.push({ name: "Home", query: { auth: 'true', sender: decoded.useremail.split('@')[0], guest: 'false' } })
+          }
+        })
       }
     } else {
         // стало так и работало

@@ -473,17 +473,17 @@ app.get('/userprofile', (req, res)=>{
 })
 
 
-app.get('/users/register',(req, res)=>{
+// app.get('/users/register',(req, res)=>{
 
 
 
-    console.log(Array(req.query.useremail)[0] === undefined)
-    if(Array(req.query.useremail)[0] === undefined){
-        res.render('usersregistry', { userlogin : false })
-    } else {
-        res.render('usersregistry', { userlogin : true })
-    }
-})
+//     console.log(Array(req.query.useremail)[0] === undefined)
+//     if(Array(req.query.useremail)[0] === undefined){
+//         res.render('usersregistry', { userlogin : false })
+//     } else {
+//         res.render('usersregistry', { userlogin : true })
+//     }
+// })
 
 app.get('/users/logout',(req, res)=>{
     auth = false
