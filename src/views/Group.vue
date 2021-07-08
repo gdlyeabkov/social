@@ -74,6 +74,8 @@
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 
+import * as jwt from 'jsonwebtoken'
+
 export default {
     data(){
         return {
@@ -86,155 +88,184 @@ export default {
             auth: 'true',
             isPartisipant: false,
             posts: [],
-            groupPostContent: ''
+            groupPostContent: '',
+            token: window.localStorage.getItem("vuesocialnetworktoken")
         }
     },
     mounted(){
-      fetch(`https://vuesocialnetwork.herokuapp.com/users/groups?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&imageurl=${this.$route.query.imageurl}&touser=${this.$route.query.touser}`, {
-      mode: 'cors',
-      method: 'GET'
-    }).then(response => response.body).then(rb  => {
-        const reader = rb.getReader()
-        return new ReadableStream({
-          start(controller) {
-            function push() {
-              reader.read().then( ({done, value}) => {
-                if (done) {
-                  console.log('done', done);
-                  controller.close();
-                  return;
+      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+      if (err) {
+        this.$router.push({ name: "UsersLogin" })
+      } else {
+          fetch(`https://vuesocialnetwork.herokuapp.com/users/groups?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&imageurl=${this.$route.query.imageurl}&touser=${this.$route.query.touser}`, {
+          mode: 'cors',
+          method: 'GET'
+        }).then(response => response.body).then(rb  => {
+            const reader = rb.getReader()
+            return new ReadableStream({
+              start(controller) {
+                function push() {
+                  reader.read().then( ({done, value}) => {
+                    if (done) {
+                      console.log('done', done);
+                      controller.close();
+                      return;
+                    }
+                    controller.enqueue(value);
+                    console.log(done, value);
+                    push();
+                  })
                 }
-                controller.enqueue(value);
-                console.log(done, value);
                 push();
-              })
-            }
-            push();
-          }
-        });
-    }).then(stream => {
-        return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+              }
+            });
+        }).then(stream => {
+            return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+          })
+          .then(result => {
+            console.log(JSON.parse(result))
+            this.name = JSON.parse(result).name
+            this.description = JSON.parse(result).description
+            this.access = JSON.parse(result).access
+            this.partisipants = JSON.parse(result).partisipants
+            this.touser = JSON.parse(result).touser
+            this.imageurl = JSON.parse(result).imageurl
+            this.posts = JSON.parse(result).posts
+            
+            console.log('Object.values(this.partisipants): ', Object.values(this.partisipants))
+            let possiblePartisipants = []
+            Object.values(this.partisipants).forEach((partisipant) => {
+              possiblePartisipants.push(partisipant.email)
+            })
+            this.isPartisipant = possiblePartisipants.includes(this.$route.query.touser)
+            console.log('this.isPartisipant: ', this.isPartisipant)
+
+            console.log('json: ', JSON.parse(result))
+
+          });
+        }
       })
-      .then(result => {
-        console.log(JSON.parse(result))
-        this.name = JSON.parse(result).name
-        this.description = JSON.parse(result).description
-        this.access = JSON.parse(result).access
-        this.partisipants = JSON.parse(result).partisipants
-        this.touser = JSON.parse(result).touser
-        this.imageurl = JSON.parse(result).imageurl
-        this.posts = JSON.parse(result).posts
-         
-        console.log('Object.values(this.partisipants): ', Object.values(this.partisipants))
-        let possiblePartisipants = []
-        Object.values(this.partisipants).forEach((partisipant) => {
-          possiblePartisipants.push(partisipant.email)
-        })
-        this.isPartisipant = possiblePartisipants.includes(this.$route.query.touser)
-        console.log('this.isPartisipant: ', this.isPartisipant)
-
-        console.log('json: ', JSON.parse(result))
-
-      });
     },
     methods: {
       submitPost(){
-        console.log("отпраляю пост")
-        fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/posts/add?groupname=${this.name}&name=${this.$route.query.touser.split('@')[0]}&content=${this.groupPostContent}`, {
-        mode: 'cors',
-        method: 'GET'
-      }).then(response => response.body).then(rb  => {
-          const reader = rb.getReader()
-          return new ReadableStream({
-            start(controller) {
-              function push() {
-                reader.read().then( ({done, value}) => {
-                  if (done) {
-                    console.log('done', done);
-                    controller.close();
-                    return;
+        jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+          if (err) {
+            this.$router.push({ name: "UsersLogin" })
+          } else {
+            console.log("отпраляю пост")
+            fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/posts/add?groupname=${this.name}&name=${this.$route.query.touser.split('@')[0]}&content=${this.groupPostContent}`, {
+            mode: 'cors',
+            method: 'GET'
+          }).then(response => response.body).then(rb  => {
+              const reader = rb.getReader()
+              return new ReadableStream({
+                start(controller) {
+                  function push() {
+                    reader.read().then( ({done, value}) => {
+                      if (done) {
+                        console.log('done', done);
+                        controller.close();
+                        return;
+                      }
+                      controller.enqueue(value);
+                      console.log(done, value);
+                      push();
+                    })
                   }
-                  controller.enqueue(value);
-                  console.log(done, value);
                   push();
-                })
-              }
-              push();
-            }
-          });
-      }).then(stream => {
-          return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+                }
+              });
+          }).then(stream => {
+              return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+            })
+            .then(result => {
+              console.log(JSON.parse(result))
+              // window.location.reload()
+              this.$router.push({ name: "Home", query: { auth: 'true', guest: 'false', sender: this.$route.query.touser.split('@')[0] } })
+            });
+          }
         })
-        .then(result => {
-          console.log(JSON.parse(result))
-          window.location.reload()
-        });
       },
       enterToGroup(){
-        fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/partisipants/add?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&touser=${this.$route.query.touser}`, {
-        mode: 'cors',
-        method: 'GET'
-      }).then(response => response.body).then(rb  => {
-          const reader = rb.getReader()
-          return new ReadableStream({
-            start(controller) {
-              function push() {
-                reader.read().then( ({done, value}) => {
-                  if (done) {
-                    console.log('done', done);
-                    controller.close();
-                    return;
+        jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+          if (err) {
+            this.$router.push({ name: "UsersLogin" })
+          } else {
+            fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/partisipants/add?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&touser=${this.$route.query.touser}`, {
+            mode: 'cors',
+            method: 'GET'
+          }).then(response => response.body).then(rb  => {
+              const reader = rb.getReader()
+              return new ReadableStream({
+                start(controller) {
+                  function push() {
+                    reader.read().then( ({done, value}) => {
+                      if (done) {
+                        console.log('done', done);
+                        controller.close();
+                        return;
+                      }
+                      controller.enqueue(value);
+                      console.log(done, value);
+                      push();
+                    })
                   }
-                  controller.enqueue(value);
-                  console.log(done, value);
                   push();
-                })
-              }
-              push();
-            }
-          });
-      }).then(stream => {
-          return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+                }
+              });
+          }).then(stream => {
+              return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+            })
+            .then(result => {
+              console.log(JSON.parse(result))
+              // JSON.parse(result).message   
+              // window.location.reload()
+              // this.$router.push({ name: 'Home', query: { auth: 'true', guest: 'false', sender: window.localStorage.getItem('useremail') } })
+              this.$router.push({ name: 'Home', query: { auth: 'true', guest: 'false', sender: decoded.useremail.split('@')[0] } })
+
+            });
+          }
         })
-        .then(result => {
-          console.log(JSON.parse(result))
-          // JSON.parse(result).message   
-          // window.location.reload()
-          this.$router.push({ name: 'Home', query: { auth: 'true', guest: 'false', sender: window.localStorage.getItem('useremail') } })
-        });
       },
       leaveFromGroup(){
-        fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/partisipants/delete?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&touser=${this.$route.query.touser}`, {
-        mode: 'cors',
-        method: 'GET'
-      }).then(response => response.body).then(rb  => {
-          const reader = rb.getReader()
-          return new ReadableStream({
-            start(controller) {
-              function push() {
-                reader.read().then( ({done, value}) => {
-                  if (done) {
-                    console.log('done', done);
-                    controller.close();
-                    return;
+        jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+          if (err) {
+            this.$router.push({ name: "UsersLogin" })
+          } else {
+            fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/partisipants/delete?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&touser=${this.$route.query.touser}`, {
+            mode: 'cors',
+            method: 'GET'
+          }).then(response => response.body).then(rb  => {
+              const reader = rb.getReader()
+              return new ReadableStream({
+                start(controller) {
+                  function push() {
+                    reader.read().then( ({done, value}) => {
+                      if (done) {
+                        console.log('done', done);
+                        controller.close();
+                        return;
+                      }
+                      controller.enqueue(value);
+                      console.log(done, value);
+                      push();
+                    })
                   }
-                  controller.enqueue(value);
-                  console.log(done, value);
                   push();
-                })
-              }
-              push();
-            }
-          });
-      }).then(stream => {
-          return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+                }
+              });
+          }).then(stream => {
+              return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+            })
+            .then(result => {
+              console.log(JSON.parse(result))
+              // JSON.parse(result).message
+              // window.location.reload()
+              // this.$router.push({ name: 'Home', query: { auth: 'true', guest: 'false', sender: window.localStorage.getItem('useremail') } })
+              this.$router.push({ name: 'Home', query: { auth: 'true', guest: 'false', sender: decoded.useremail.split('@')[0] } })
+            });
+          }
         })
-        .then(result => {
-          console.log(JSON.parse(result))
-          // JSON.parse(result).message
-          // window.location.reload()
-          this.$router.push({ name: 'Home', query: { auth: 'true', guest: 'false', sender: window.localStorage.getItem('useremail') } })
-        });
       }
     },
     components: {

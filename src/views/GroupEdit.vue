@@ -39,6 +39,9 @@
 
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+
+import * as jwt from 'jsonwebtoken'
+
 export default {
     data(){
         return {
@@ -47,7 +50,8 @@ export default {
           groupname: '',
           groupdescription: '',
           groupaccess: '',
-          previousgroupname: ''
+          previousgroupname: '',
+          token: window.localStorage.getItem("vuesocialnetworktoken"),
         }
     },
     mounted(){
@@ -61,35 +65,41 @@ export default {
     },
     methods: {
       save(){
-        fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/editsuccess?previousgroupname=${this.previousgroupname}&groupname=${this.groupname}&groupdescription=${this.groupdescription}&groupaccess=${this.groupaccess}&imageurl=${this.imageurl}&touser=${this.touser}`, {
-      mode: 'cors',
-      method: 'GET'
-    }).then(response => response.body).then(rb  => {
-        const reader = rb.getReader()
-        return new ReadableStream({
-          start(controller) {
-            function push() {
-              reader.read().then( ({done, value}) => {
-                if (done) {
-                  console.log('done', done);
-                  controller.close();
-                  return;
+        jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+          if (err) {
+            this.$router.push({ name: "UsersLogin" })
+          } else {
+            fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/editsuccess?previousgroupname=${this.previousgroupname}&groupname=${this.groupname}&groupdescription=${this.groupdescription}&groupaccess=${this.groupaccess}&imageurl=${this.imageurl}&touser=${this.touser}`, {
+              mode: 'cors',
+              method: 'GET'
+            }).then(response => response.body).then(rb  => {
+            const reader = rb.getReader()
+            return new ReadableStream({
+              start(controller) {
+                function push() {
+                  reader.read().then( ({done, value}) => {
+                    if (done) {
+                      console.log('done', done);
+                      controller.close();
+                      return;
+                    }
+                    controller.enqueue(value);
+                    console.log(done, value);
+                    push();
+                  })
                 }
-                controller.enqueue(value);
-                console.log(done, value);
                 push();
-              })
-            }
-            push();
+              }
+            });
+        }).then(stream => {
+            return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+          })
+          .then(result => {
+            console.log()
+            this.$router.push({ name: 'Group', query: { 'imageurl': this.imageurl, 'groupname': this.groupname, 'groupdescription': this.groupdescription, 'groupaccess': this.groupaccess, 'touser': this.touser, 'guest': 'false' } } )
+            });
           }
-        });
-    }).then(stream => {
-        return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
-      })
-      .then(result => {
-        console.log()
-        this.$router.push({ name: 'Group', query: { 'imageurl': this.imageurl, 'groupname': this.groupname, 'groupdescription': this.groupdescription, 'groupaccess': this.groupaccess, 'touser': this.touser, 'guest': 'false' } } )
-        });
+        })
       }
     },
     components: {

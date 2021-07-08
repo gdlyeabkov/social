@@ -24,13 +24,17 @@
 <script>
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+
+import * as jwt from 'jsonwebtoken'
+
 export default {
     data(){
         return {
             useremail: '',
             userpassword: '',
             errors: '',
-            auth: 'false'
+            auth: 'false',
+            token: ''
         }
     },
     methods: {
@@ -66,6 +70,12 @@ export default {
             const isAuth = JSON.parse(result).auth.includes('true')
             console.log(!isAuth)
             if(isAuth){
+                
+                this.token = jwt.sign({
+                    useremail: this.useremail
+                    }, 'vuesocialnetworksecret', { expiresIn: '5m' })
+                localStorage.setItem('vuesocialnetworktoken', this.token)
+
                 localStorage.setItem('useremail', this.useremail.split('@')[0])
                 this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).sender, "guest": 'false'  } })
             } else if(!isAuth){

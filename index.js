@@ -92,9 +92,7 @@ app.get('/home', async (req, res)=>{
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
-    console.log('req.query: ', req.query)
-    console.log('req.query.auth === true: ', req.query.auth === "true")
-    if(req.query.auth === "true"){
+    // if(req.query.auth === "true"){
         let queryOfFriendsBefore =  UsersModel.findOne({'email': req.query.sender + "@mail.ru"}, function(err, beforeUser){
             if(err){
                 console.log('ошибка получение всех записей текущего пользователя и его друзей')
@@ -103,10 +101,6 @@ app.get('/home', async (req, res)=>{
                 console.log('получение всех записей текущего пользователя и его друзей')
                 const friendsPosts = []
                 beforeUser.friends.map((friendKey, friendValue) => {
-                    console.log("friendKey", friendKey)
-                    console.log("friendValue", friendValue)
-                    console.log(new Map(friendKey).get('email'))
-                    
                     friendsPosts.push(new Map(friendKey).get('email').split('@')[0])
                 })
                 console.log(new Array(beforeUser.friends))
@@ -119,9 +113,7 @@ app.get('/home', async (req, res)=>{
                         return
                     }
 
-                    
                     if(Array(req.query.auth)[0] === undefined){
-                        // return res.render('index', { allPosts: null, guest: 'false', auth: 'false', allFriends: null})
                         return res.json({ "status": 'error'})
                     }
 
@@ -131,20 +123,23 @@ app.get('/home', async (req, res)=>{
                             return res.json({ "status": 'error'})
                         } else {
                             
-                            console.log('friends', user.friends)
-                            console.log('likes', user.likes)
-                            console.log('groups', user.groups)
-                            
-                            const userGroupsArray = []
+                            let userGroupsArray = []
                             user.groups.map((groupKey, groupValue) => {
-                                userGroupsArray.push(new Map(groupKey).get('name'))
+                                //было раньше так и работало
+                                // userGroupsArray.push(new Map(groupKey).get('name'))
+                                // а стало так и работало
+                                userGroupsArray.push(new Map(groupKey).get('id'))
                             })
                             console.log('userGroupsArray', userGroupsArray)
-                            const groupsWithData = []
-                            const queryOfGroupsWithData = GroupsModel.find({ name: { $in: userGroupsArray } }).select(['name', 'description', 'access', 'imageurl', 'partisipants' ])
+                            let groupsWithData = []
+                            
+                            //было раньше так и работало
+                            // const queryOfGroupsWithData = GroupsModel.find({ name: { $in: userGroupsArray } }).select(['name', 'description', 'access', 'imageurl', 'partisipants' ])
+                            // а стало так и работало
+                            let queryOfGroupsWithData = GroupsModel.find({ _id: { $in: userGroupsArray } }).select(['name', 'description', 'access', 'imageurl', 'partisipants' ])
+                            
                             queryOfGroupsWithData.exec((error, groups) => {
                                 if(error){
-                                    // console.log('error Group')
                                     return res.json({ "status": 'error'})
                                 }
                                 console.log('group success')
@@ -154,10 +149,8 @@ app.get('/home', async (req, res)=>{
                                 console.log('groups', groups)
                                 console.log('groupsWithData', groupsWithData)
                                 if(req.query.guest.includes('true')){
-                                    // res.render('index', { allPosts: allPosts, auth:true, guest: true, touser:req.query.touser, sender: nickOfUser, allFriends: user.friends, likes: user.likes, allGroups: user.groups, imageurl: user.imageurl, name: user.name, age: user.age, password: user.password, groupswithdata: groupsWithData })
                                     return res.json({ "allPosts": allPosts, "auth": 'true', "guest": 'true', "touser":req.query.touser, "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "imageurl": user.imageurl, "name": user.name, "age": user.age, "password": user.password, "groupswithdata": groupsWithData })
                                 } else if(req.query.guest.includes('false')){
-                                    //res.render('index', { allPosts: allPosts, auth:true, guest: false, sender: nickOfUser, allFriends: user.friends, likes: user.likes, allGroups: user.groups, imageurl: user.imageurl, name: user.name, age: user.age, password: user.password, groupswithdata: groupsWithData })
                                     return res.json({ "allPosts": allPosts, "auth": 'true', "guest": 'false', "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "imageurl": user.imageurl, "name": user.name, "age": user.age, "password": user.password, "groupswithdata": groupsWithData, "requests": user.requests })
                                 }  
                                 console.log("пользовтель",user)
@@ -167,10 +160,9 @@ app.get('/home', async (req, res)=>{
                 })
             }
         })
-    } else if (req.query.auth === 'false'){
-        return res.json({ "auth": "false" })
-        // return res.json({ "status": 'error'})
-    }
+    // } else if (req.query.auth === 'false'){
+    //     return res.json({ "auth": "false" })
+    // }
 })
 
 app.get('/post/:postID',(req, res)=>{
@@ -421,7 +413,7 @@ app.get('/users/groups/groupcreatesuccess', (req, res) => {
             console.log('создание', req.query.groupname in allGroups)
             auth = true
             const group = new GroupsModel({ name: req.query.groupname, description:req.query.groupdescription, access: req.query.groupaccess, imageurl: req.query.imageurl });
-            group.save(function (err) {
+            group.save(function (err, group) {
                 if(err){
                     console.log('создание ошибка')
                     console.log(err)
@@ -432,12 +424,13 @@ app.get('/users/groups/groupcreatesuccess', (req, res) => {
                             {
                                 groups: [
                                     {
+                                        id: group._id.toString(),
                                         name: req.query.groupname
                                     }
                                 ]
                                 
                             }
-                    }, (err) => {
+                    }, (err, user) => {
                         if(err){
                             return res.json({ "message": "error" })
                         } else {
@@ -446,13 +439,18 @@ app.get('/users/groups/groupcreatesuccess', (req, res) => {
                                     { 
                                         partisipants: [
                                             {
+                                                id: user._id,
                                                 email: req.query.touser
                                             }
                                         ]
                                         
                                     }
+                            }, (err, group) => {
+                                if(err) {
+                                    return res.json({ "message": "error" })
+                                }
+                                return res.json({ "message": "success" })
                             })
-                            return res.json({ "message": "success" })
                         } 
                     })
                 }
@@ -955,6 +953,11 @@ app.get('/users/requests/delete', (req, res)=>{
     })
 })
 
+app.get('**', (req, res) => {
+    console.log('redirect')
+    // return res.json({ "redirectroute": req.path })
+    return res.redirect(`/?redirectroute=${req.path}`)
+})
 
 const port = process.env.PORT || 8080
 // const port = 4000

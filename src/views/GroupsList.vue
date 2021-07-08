@@ -11,7 +11,7 @@
     </select>
 
         <div v-if="allGroups != null && allGroups.length >= 1 && groupfilter === '1'">
-            <p>Группы: </p>
+            <p style="text-align: center;">Все группы: </p>
             <div v-for="group in allGroups">
                 <div class="card">
                     <h5 class="card-header">
@@ -25,12 +25,12 @@
                   </div>
             </div>
         </div>
-        <!-- <div v-else>
-            <p>Групп нет</p>    
-        </div> -->
+        <div v-else-if="allGroups != null && allGroups.length <= 0 && groupfilter === '1'" style="text-align: center;">
+          <p style="text-align: center;">Таких групп нет</p>    
+        </div>
         <br style="clear: both;"/>
         <div v-if="hasGroups != null && hasGroups.length >= 1 && groupfilter === '2'">
-            <p>Группы которые вы создали</p>
+            <p style="text-align: center;">Группы которые вы создали</p>
             <div v-for="group in hasGroups">
             
                 <div class="card">
@@ -47,15 +47,15 @@
                   </div>
             </div>
         </div>
-        <!-- <div v-else>
-            <p>Групп нет</p>    
-        </div> -->
+        <div v-else-if="hasGroups != null && hasGroups.length <= 0 && groupfilter === '2'" style="text-align: center;">
+          <p style="text-align: center;">Таких групп нет</p>    
+        </div>
  
         <!-- <br style="clear: both;"/> -->
         
         
         <div v-if="notHasGroups != null && notHasGroups.length >= 1 && groupfilter === '3'">
-            <p>Группы которые вы не создали</p>  
+            <p style="text-align: center;">Группы которые вы не создали</p>  
             <div v-for="group in notHasGroups">
             
                 <div class="card">
@@ -76,44 +76,44 @@
                   </div>
             </div>
         </div>
-        <!-- <div v-else>
-            <p>Групп нет</p>    
-        </div> -->
+        <div v-else-if="notHasGroups != null && notHasGroups.length <= 0 && groupfilter === '3'" style="text-align: center;">
+          <p  style="text-align: center;">Таких групп нет</p>    
+        </div>
 
         <!-- <br style="clear: both;"/> -->
 
         
         <div v-if="allGroupsWithPartisipants != null && allGroupsWithPartisipants.length >= 1 && groupfilter === '4'">
-            <p>Группы в которые вы вступили</p> 
-            <div v-for="group in allGroupsWithPartisipants">
-                <div class="card">
-                    <h5 class="card-header">
-                        <div v-if="auth.includes('true')">
-                            <a href="/users/groups?groupname=<%= group %>&groupdescription=<%= 'group.description' %>&groupaccess=<%= 'group.access' %>&imageurl=<%= 'empty' %>&touser=<%= touser %>">{{ group.name }}</a>
-                        </div>
-                        <div v-else>
-                          
-                        </div>
+          <p style="text-align: center;">Группы в которые вы вступили</p> 
+          <div v-for="group in allGroupsWithPartisipants">
+              <div class="card">
+                  <h5 class="card-header">
+                      <div v-if="auth.includes('true')">
+                          <a href="/users/groups?groupname=<%= group %>&groupdescription=<%= 'group.description' %>&groupaccess=<%= 'group.access' %>&imageurl=<%= 'empty' %>&touser=<%= touser %>">{{ group.name }}</a>
+                      </div>
+                      <div v-else>
                         
-                    </h5>
-                    <div class="card-body">
-                      <p>Вы участник этой группы</p>
-                      <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">Вступить в группу</a> -->
+                      </div>
                       
-                      <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl%>&touser=<%= touser %>">Выйти из группы</a>
-                    </div> 
-                  </div>
+                  </h5>
+                  <div class="card-body">
+                    <p>Вы участник этой группы</p>
+                    <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">Вступить в группу</a> -->
+                    
+                    <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl%>&touser=<%= touser %>">Выйти из группы</a>
+                  </div> 
                 </div>
+              </div>
             </div>
-        <!-- <div v-else>
-            <p>Групп нет</p>    
-        </div> -->
+            <div v-else-if="allGroupsWithPartisipants != null && allGroupsWithPartisipants.length <= 0 && groupfilter === '4'" style="text-align: center;">
+              <p  style="text-align: center;">Таких групп нет</p>    
+            </div>
 
         <!-- <br style="clear: both;"/> -->
 
         
         <div v-if="allGroupsWithoutPartisipants != null && allGroupsWithoutPartisipants.length >= 1 && groupfilter === '5'">
-            <p>Группы в которые вы не вступили</p>  
+            <p style="text-align: center;">Группы в которые вы не вступили</p>  
             <div v-for="group in allGroupsWithoutPartisipants">
                 <div class="card">
                     <h5 class="card-header">
@@ -133,9 +133,9 @@
                   </div>
             </div>
         </div>
-        <!-- <div v-else>
-            <p>Групп нет</p>    
-        </div> -->
+        <div v-else-if="allGroupsWithoutPartisipants != null && allGroupsWithoutPartisipants.length <= 0 && groupfilter === '5'" style="text-align: center;">
+          <p style="text-align: center;">Таких групп нет</p>    
+        </div>
 
         <br style="clear: both;"/>
         <Footer/>
@@ -145,6 +145,8 @@
 
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+
+import * as jwt from 'jsonwebtoken'
 
 export default {
     data(){
@@ -157,45 +159,52 @@ export default {
             allGroups: [],
             auth:'true',
             touser: '',
-            sender: ''
+            sender: '',
+            token: window.localStorage.getItem("vuesocialnetworktoken"),
         }
     },
     mounted(){
-    fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/list?sender=${this.$route.query.touser}&groupname=${this.$route.query.groupname}`, {
-      mode: 'cors',
-      method: 'GET'
-    }).then(response => response.body).then(rb  => {
-        const reader = rb.getReader()
-        return new ReadableStream({
-          start(controller) {
-            function push() {
-              reader.read().then( ({done, value}) => {
-                if (done) {
-                  console.log('done', done);
-                  controller.close();
-                  return;
+      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+        if (err) {
+          this.$router.push({ name: "UsersLogin" })
+        } else {
+          fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/list?sender=${this.$route.query.touser}&groupname=${this.$route.query.groupname}`, {
+            mode: 'cors',
+            method: 'GET'
+          }).then(response => response.body).then(rb  => {
+            const reader = rb.getReader()
+            return new ReadableStream({
+              start(controller) {
+                function push() {
+                  reader.read().then( ({done, value}) => {
+                    if (done) {
+                      console.log('done', done);
+                      controller.close();
+                      return;
+                    }
+                    controller.enqueue(value);
+                    console.log(done, value);
+                    push();
+                  })
                 }
-                controller.enqueue(value);
-                console.log(done, value);
                 push();
-              })
-            }
-            push();
-          }
-        });
-    }).then(stream => {
-        return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
-      })
-      .then(result => {
-        console.log(JSON.parse(result))
-        this.allGroupsWithPartisipants = JSON.parse(result).allGroupsWithPartisipants
-        this.allGroupsWithoutPartisipants = JSON.parse(result).allGroupsWithoutPartisipants
-        this.hasGroups = JSON.parse(result).hasGroups
-        this.notHasGroups = JSON.parse(result).notHasGroups
-        this.allGroups = JSON.parse(result).allGroups
-        this.touser = JSON.parse(result).touser
-        this.sender = this.touser.split('@')[0]
-      });
+              }
+            });
+        }).then(stream => {
+            return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+          })
+          .then(result => {
+            console.log(JSON.parse(result))
+            this.allGroupsWithPartisipants = JSON.parse(result).allGroupsWithPartisipants
+            this.allGroupsWithoutPartisipants = JSON.parse(result).allGroupsWithoutPartisipants
+            this.hasGroups = JSON.parse(result).hasGroups
+            this.notHasGroups = JSON.parse(result).notHasGroups
+            this.allGroups = JSON.parse(result).allGroups
+            this.touser = JSON.parse(result).touser
+            this.sender = this.touser.split('@')[0]
+          });
+      }
+    })
   },
   components: {
     Header,

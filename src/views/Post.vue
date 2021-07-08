@@ -17,43 +17,52 @@
 import Footer from '@/components/Footer.vue'
 import Header from '@/components/Header.vue'
 
+import * as jwt from 'jsonwebtoken'
+
 export default {
     data(){
         return {
-            post: {}
+          post: {},
+          token: window.localStorage.getItem("vuesocialnetworktoken"),
         }
     },
     mounted(){
-    console.log(this.$route.params.postid)
-    fetch(`https://vuesocialnetwork.herokuapp.com/post/${this.$route.params.postid}`, {
-      mode: 'cors',
-      method: 'GET'
-    }).then(response => response.body).then(rb  => {
-        const reader = rb.getReader()
-        return new ReadableStream({
-          start(controller) {
-            function push() {
-              reader.read().then( ({done, value}) => {
-                if (done) {
-                  console.log('done', done);
-                  controller.close();
-                  return;
+      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+      if (err) {
+        this.$router.push({ name: "UsersLogin" })
+      } else {
+        console.log(this.$route.params.postid)
+        fetch(`https://vuesocialnetwork.herokuapp.com/post/${this.$route.params.postid}`, {
+          mode: 'cors',
+          method: 'GET'
+        }).then(response => response.body).then(rb  => {
+            const reader = rb.getReader()
+            return new ReadableStream({
+              start(controller) {
+                function push() {
+                  reader.read().then( ({done, value}) => {
+                    if (done) {
+                      console.log('done', done);
+                      controller.close();
+                      return;
+                    }
+                    controller.enqueue(value);
+                    console.log(done, value);
+                    push();
+                  })
                 }
-                controller.enqueue(value);
-                console.log(done, value);
                 push();
-              })
-            }
-            push();
-          }
-        });
-    }).then(stream => {
-        return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+              }
+            });
+        }).then(stream => {
+            return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+          })
+          .then(result => {
+              console.log(JSON.parse(result))
+              this.post = JSON.parse(result).post
+          });
+        }
       })
-      .then(result => {
-          console.log(JSON.parse(result))
-          this.post = JSON.parse(result).post
-      });
     },
     components: {
       Header,

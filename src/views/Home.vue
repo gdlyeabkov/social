@@ -105,7 +105,7 @@
 
         <div v-if="$route.query.guest.includes('false')" v-for="request in requests">
           <div style="box-sizing: border-box; padding: 10px; overflow:scroll-y; background-color: white; position: absolute; top: 0px; left: 0px; width: 175px; height: 175px;">
-            <span @click="deleteFromRequests(request.name)" style="cursor: pointer; color: red;" class="material-icons">
+            <span @click="deleteFromRequests(request.name)" style="float: right; cursor: pointer; color: red;" class="material-icons">
               close
             </span>
             <img width="45%" height="45%" :src="request.image" alt="">
@@ -126,6 +126,7 @@ import UsersList from '@/views/UsersList.vue'
 import Footer from '@/components/Footer.vue'
 import Header from '@/components/Header.vue'
 
+import * as jwt from 'jsonwebtoken'
 
 export default {
   name: 'Home',
@@ -146,161 +147,145 @@ export default {
       groupswithdata: [],
       requests: [],
       touser: '',
-      content: ''
+      content: '',
+      token: localStorage.getItem('vuesocialnetworktoken')
     }
   },
   mounted(){
-    // if(this.$route.query.auth === 'true'){
-    //   this.auth = 'true'
-    //   this.sender = this.$route.query.sender
-    //   console.log("делаю auth в true")
-    //   if(this.$route.query.guest === 'true'){
-    //     this.guest = 'true'
-    //   } else if(this.$route.query.guest === 'false'){
-    //     this.guest = 'false'
-    //   }
-    // } else if(this.$route.query.auth === 'false'){
-    //   this.auth = 'false'
-    //   console.log("делаю auth в false")
-    // }
-    // fetch(`http://localhost:4000/home?auth=${this.auth}&guest=false&sender=${this.sender}`, {
     
-    // console.log('this.$route.query.auth: ', this.$route.query.auth)
-    if(this.$route.query.auth === undefined || this.$route.query.auth.includes('false')){
-      this.$router.push({ name: 'UsersLogin' })
-    } else if(this.$route.query.auth !== undefined && this.$route.query.auth.includes('true')){
-      this.sender = this.$route.query.sender
-      fetch(`https://vuesocialnetwork.herokuapp.com/home?auth=true&guest=false&sender=${this.sender}`, {
-        mode: 'cors',
-        method: 'GET'
-      }).then(response => response.body).then(rb  => {
-          const reader = rb.getReader()
-          return new ReadableStream({
-            start(controller) {
-              function push() {
-                reader.read().then( ({done, value}) => {
-                  if (done) {
-                    console.log('done', done);
-                    controller.close();
-                    return;
-                  }
-                  controller.enqueue(value);
-                  console.log(done, value);
-                  push();
-                })
-              }
-              push();
-            }
-          });
-      }).then(stream => {
-          return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
-        })
-        .then(result => {
-          console.log('isAuthJson', JSON.parse(result))
-          const isAuth = JSON.parse(result).auth === 'true'
-          console.log('!isAuth', !isAuth)
-          if(!isAuth || this.$route.query.auth === 'false'){
-            console.log("!isAuth: ", !isAuth)
-            console.log("this.$route.query.auth: ", this.$route.query.auth)
-            this.$router.push({ name: 'UsersLogin' })
-            // window.location = '/users/login'
-            // window.location.reload()
-          } else if(isAuth && this.$route.query.auth === 'true'){
-            console.log(JSON.parse(result))
-            this.name = JSON.parse(result).name
-            this.sender = JSON.parse(result).sender
-            this.age = JSON.parse(result).age
-            this.agePostfix = !this.age.toString()[this.age.toString().length - 1].includes('1') && !this.age.toString()[this.age.toString().length - 1].includes('2') && !this.age.toString()[this.age.toString().length - 1].includes('3') && !this.age.toString()[this.age.toString().length - 1].includes('4') ? 'лет' : !this.age.toString()[this.age.toString().length - 1].includes('1') && (this.age.toString()[this.age.toString().length - 1].includes('2') || this.age.toString()[this.age.toString().length - 1].includes('3') || this.age.toString()[this.age.toString().length - 1].includes('4')) ? 'года' : this.age.toString()[this.age.toString().length - 1].includes('1') && (!this.age.toString()[this.age.toString().length - 1].includes('2') && !this.age.toString()[this.age.toString().length - 1].includes('3') && !this.age.toString()[this.age.toString().length - 1].includes('4')) ? 'год' : '' 
-            this.allFriends = JSON.parse(result).allFriends
-            this.allGroups = JSON.parse(result).allGroups
-            this.groupswithdata = JSON.parse(result).groupswithdata
-            this.likes = JSON.parse(result).likes
-            this.password = JSON.parse(result).password
-            this.imageurl = JSON.parse(result).imageurl
-            this.allPosts = JSON.parse(result).allPosts
-            this.requests = JSON.parse(result).requests
-            console.log(JSON.parse(result).allPosts)
-            console.log('this', this)
-          }
-        });
+    if(this.$route.query.redirectroute !== null && this.$route.query.redirectroute !== undefined){
+      // логика перенаправления
+      if(this.$route.query.redirectroute.includes('users/login') || this.$route.query.redirectroute.includes('users/register')){
+        this.$router.push({ path: this.$route.query.redirectroute })
+      } else if(!this.$route.query.redirectroute.includes('users/login') && !this.$route.query.redirectroute.includes('users/register')){
+        this.$router.push({ name: "UsersLogin" })
       }
+    } else {
+        // стало так и работало
+        jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+          if (err) {
+            this.$router.push({ name: "UsersLogin" })
+          } else {
+            fetch(`https://vuesocialnetwork.herokuapp.com/home?auth=true&guest=false&sender=${this.$route.query.sender}`, {
+            mode: 'cors',
+            method: 'GET'
+          }).then(response => response.body).then(rb  => {
+              const reader = rb.getReader()
+              return new ReadableStream({
+                start(controller) {
+                  function push() {
+                    reader.read().then( ({done, value}) => {
+                      if (done) {
+                        console.log('done', done);
+                        controller.close();
+                        return;
+                      }
+                      controller.enqueue(value);
+                      console.log(done, value);
+                      push();
+                    })
+                  }
+                  push();
+                }
+              });
+          }).then(stream => {
+              return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+            })
+            .then(result => {
+              console.log(JSON.parse(result))
+              this.name = JSON.parse(result).name
+              this.sender = JSON.parse(result).sender
+              this.age = JSON.parse(result).age
+              this.agePostfix = !this.age.toString()[this.age.toString().length - 1].includes('1') && !this.age.toString()[this.age.toString().length - 1].includes('2') && !this.age.toString()[this.age.toString().length - 1].includes('3') && !this.age.toString()[this.age.toString().length - 1].includes('4') ? 'лет' : !this.age.toString()[this.age.toString().length - 1].includes('1') && (this.age.toString()[this.age.toString().length - 1].includes('2') || this.age.toString()[this.age.toString().length - 1].includes('3') || this.age.toString()[this.age.toString().length - 1].includes('4')) ? 'года' : this.age.toString()[this.age.toString().length - 1].includes('1') && (!this.age.toString()[this.age.toString().length - 1].includes('2') && !this.age.toString()[this.age.toString().length - 1].includes('3') && !this.age.toString()[this.age.toString().length - 1].includes('4')) ? 'год' : '' 
+              this.allFriends = JSON.parse(result).allFriends
+              this.allGroups = JSON.parse(result).allGroups
+              this.groupswithdata = JSON.parse(result).groupswithdata
+              this.likes = JSON.parse(result).likes
+              this.password = JSON.parse(result).password
+              this.imageurl = JSON.parse(result).imageurl
+              this.allPosts = JSON.parse(result).allPosts
+              this.requests = JSON.parse(result).requests
+              this.touser = decoded.useremail.split('@')[0]
+            });
+          }
+        })
+
+        //раньше было так и работало
+        // if(this.$route.query.auth === undefined || this.$route.query.auth.includes('false')){
+        //   this.$router.push({ name: 'UsersLogin' })
+        // } else if(this.$route.query.auth !== undefined && this.$route.query.auth.includes('true')){
+        //   this.sender = this.$route.query.sender
+          // fetch(`http://localhost:4000/home?auth=true&guest=false&sender=${this.sender}`, {
+          //   mode: 'cors',
+          //   method: 'GET'
+          // }).then(response => response.body).then(rb  => {
+          //     const reader = rb.getReader()
+          //     return new ReadableStream({
+          //       start(controller) {
+          //         function push() {
+          //           reader.read().then( ({done, value}) => {
+          //             if (done) {
+          //               console.log('done', done);
+          //               controller.close();
+          //               return;
+          //             }
+          //             controller.enqueue(value);
+          //             console.log(done, value);
+          //             push();
+          //           })
+          //         }
+          //         push();
+          //       }
+          //     });
+          // }).then(stream => {
+          //     return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+          //   })
+          //   .then(result => {
+          //     console.log('isAuthJson', JSON.parse(result))
+          //     const isAuth = JSON.parse(result).auth === 'true'
+          //     console.log('!isAuth', !isAuth)
+          //     if(!isAuth || this.$route.query.auth === 'false'){
+          //       console.log("!isAuth: ", !isAuth)
+          //       console.log("this.$route.query.auth: ", this.$route.query.auth)
+          //       this.$router.push({ name: 'UsersLogin' })
+          //       // window.location = '/users/login'
+          //       // window.location.reload()
+          //     } else if(isAuth && this.$route.query.auth === 'true'){
+          //       console.log(JSON.parse(result))
+          //       this.name = JSON.parse(result).name
+          //       this.sender = JSON.parse(result).sender
+          //       this.age = JSON.parse(result).age
+          //       this.agePostfix = !this.age.toString()[this.age.toString().length - 1].includes('1') && !this.age.toString()[this.age.toString().length - 1].includes('2') && !this.age.toString()[this.age.toString().length - 1].includes('3') && !this.age.toString()[this.age.toString().length - 1].includes('4') ? 'лет' : !this.age.toString()[this.age.toString().length - 1].includes('1') && (this.age.toString()[this.age.toString().length - 1].includes('2') || this.age.toString()[this.age.toString().length - 1].includes('3') || this.age.toString()[this.age.toString().length - 1].includes('4')) ? 'года' : this.age.toString()[this.age.toString().length - 1].includes('1') && (!this.age.toString()[this.age.toString().length - 1].includes('2') && !this.age.toString()[this.age.toString().length - 1].includes('3') && !this.age.toString()[this.age.toString().length - 1].includes('4')) ? 'год' : '' 
+          //       this.allFriends = JSON.parse(result).allFriends
+          //       this.allGroups = JSON.parse(result).allGroups
+          //       this.groupswithdata = JSON.parse(result).groupswithdata
+          //       this.likes = JSON.parse(result).likes
+          //       this.password = JSON.parse(result).password
+          //       this.imageurl = JSON.parse(result).imageurl
+          //       this.allPosts = JSON.parse(result).allPosts
+          //       this.requests = JSON.parse(result).requests
+          //       console.log(JSON.parse(result).allPosts)
+          //       console.log('this', this)
+          //     }
+          //   });
+          // }
+    }
   },
   methods: {
     isLogginedSender(senderOfPost){
-      return senderOfPost.includes(window.localStorage.getItem('useremail'))
+      // return senderOfPost.includes(window.localStorage.getItem('useremail'))
+      return senderOfPost.includes(this.touser)
     },
     receiveRequest(requestFriendName, requestFriendAge){
-      this.deleteFromRequests(requestFriendName, false)
       
-      fetch(`https://vuesocialnetwork.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true`, {
-      mode: 'cors',
-      method: 'GET'
-    }).then(response => response.body).then(rb  => {
-        const reader = rb.getReader()
-        return new ReadableStream({
-          start(controller) {
-            function push() {
-              reader.read().then( ({done, value}) => {
-                if (done) {
-                  console.log('done', done);
-                  controller.close();
-                  return;
-                }
-                controller.enqueue(value);
-                console.log(done, value);
-                push();
-              })
-            }
-            push();
-          }
-        });
-    }).then(stream => {
-        return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
-      })
-      .then(result => {
-        console.log(JSON.parse(result))
-        // fetch(`https://vuesocialnetwork.herokuapp.com/users/friends/add?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}`, {
-        //   mode: 'cors',
-        //   method: 'GET'
-        // }).then(response => response.body).then(rb  => {
-        //     const reader = rb.getReader()
-        //     return new ReadableStream({
-        //       start(controller) {
-        //         function push() {
-        //           reader.read().then( ({done, value}) => {
-        //             if (done) {
-        //               console.log('done', done);
-        //               controller.close();
-        //               return;
-        //             }
-        //             controller.enqueue(value);
-        //             console.log(done, value);
-        //             push();
-        //           })
-        //         }
-        //         push();
-        //       }
-        //     });
-        // }).then(stream => {
-        //     return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
-        //   })
-        //   .then(result => {
-        //     console.log(JSON.parse(result))
-        //     window.location.reload() 
-        //   });
+      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+      if (err) {
+        this.$router.push({ name: "UsersLogin" })
+      } else {
         
-      });
-
-    },
-    deleteFromRequests(requestFriendName, dorequest){
-      this.requests = this.requests.filter((request) => {
-        if(request.name.includes(requestFriendName)){
-          return false
-        }
-        return true
-      })
-      if(dorequest === true){
-        fetch(`https://vuesocialnetwork.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false`, {
+        this.deleteFromRequests(requestFriendName, false)
+        
+        fetch(`https://vuesocialnetwork.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true`, {
         mode: 'cors',
         method: 'GET'
       }).then(response => response.body).then(rb  => {
@@ -327,11 +312,89 @@ export default {
         })
         .then(result => {
           console.log(JSON.parse(result))
-        })
-      }
+          // fetch(`https://vuesocialnetwork.herokuapp.com/users/friends/add?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}`, {
+          //   mode: 'cors',
+          //   method: 'GET'
+          // }).then(response => response.body).then(rb  => {
+          //     const reader = rb.getReader()
+          //     return new ReadableStream({
+          //       start(controller) {
+          //         function push() {
+          //           reader.read().then( ({done, value}) => {
+          //             if (done) {
+          //               console.log('done', done);
+          //               controller.close();
+          //               return;
+          //             }
+          //             controller.enqueue(value);
+          //             console.log(done, value);
+          //             push();
+          //           })
+          //         }
+          //         push();
+          //       }
+          //     });
+          // }).then(stream => {
+          //     return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+          //   })
+          //   .then(result => {
+          //     console.log(JSON.parse(result))
+          //     window.location.reload() 
+          //   });
+          
+        });
+        }
+      })
+
+    },
+    deleteFromRequests(requestFriendName, dorequest){
+      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+        if (err) {
+          this.$router.push({ name: "UsersLogin" })
+        } else {
+          this.requests = this.requests.filter((request) => {
+            if(request.name.includes(requestFriendName)){
+              return false
+            }
+            return true
+          })
+          if(dorequest === true){
+            fetch(`https://vuesocialnetwork.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false`, {
+            mode: 'cors',
+            method: 'GET'
+          }).then(response => response.body).then(rb  => {
+              const reader = rb.getReader()
+              return new ReadableStream({
+                start(controller) {
+                  function push() {
+                    reader.read().then( ({done, value}) => {
+                      if (done) {
+                        console.log('done', done);
+                        controller.close();
+                        return;
+                      }
+                      controller.enqueue(value);
+                      console.log(done, value);
+                      push();
+                    })
+                  }
+                  push();
+                }
+              });
+          }).then(stream => {
+              return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+            })
+            .then(result => {
+              console.log(JSON.parse(result))
+            })
+          }
+        }
+      })
     },
     checkGuest(){
-      return window.localStorage.getItem('useremail').includes(this.sender) ? 'true' : 'false'
+      // return window.localStorage.getItem('useremail').includes(this.sender) ? 'true' : 'false'
+      return this.touser.includes(this.sender) ? 'true' : 'false'
+
     },
     visitFriend(friendname, isGuest){
       
@@ -402,70 +465,82 @@ export default {
       window.location.reload()
     },
     addPost(){
-      fetch(`https://vuesocialnetwork.herokuapp.com/postadd?sender=${this.sender}&content=${this.content}`, {
-      mode: 'cors',
-      method: 'GET'
-    }).then(response => response.body).then(rb  => {
-        const reader = rb.getReader()
-        return new ReadableStream({
-          start(controller) {
-            function push() {
-              reader.read().then( ({done, value}) => {
-                if (done) {
-                  console.log('done', done);
-                  controller.close();
-                  return;
-                }
-                controller.enqueue(value);
-                console.log(done, value);
-                push();
-              })
+      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+      if (err) {
+        this.$router.push({ name: "UsersLogin" })
+      } else {
+        fetch(`https://vuesocialnetwork.herokuapp.com/postadd?sender=${this.sender}&content=${this.content}`, {
+        mode: 'cors',
+        method: 'GET'
+      }).then(response => response.body).then(rb  => {
+          const reader = rb.getReader()
+          return new ReadableStream({
+            start(controller) {
+              function push() {
+                reader.read().then( ({done, value}) => {
+                  if (done) {
+                    console.log('done', done);
+                    controller.close();
+                    return;
+                  }
+                  controller.enqueue(value);
+                  console.log(done, value);
+                  push();
+                })
+              }
+              push();
             }
-            push();
-          }
+          });
+      }).then(stream => {
+          return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+        })
+        .then(result => {
+          console.log(JSON.parse(result))
+          // this.$router.go(this.$router.currentRoute)
+          // this.$router.replace({ 'name': 'Home', 'query': { 'auth': 'true', 'sender': this.sender, 'guest': 'false' } })
+          window.location.reload()
         });
-    }).then(stream => {
-        return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+        }
       })
-      .then(result => {
-        console.log(JSON.parse(result))
-        // this.$router.go(this.$router.currentRoute)
-        // this.$router.replace({ 'name': 'Home', 'query': { 'auth': 'true', 'sender': this.sender, 'guest': 'false' } })
-        window.location.reload()
-      });
     },
     addLike(){
-      fetch(`https://vuesocialnetwork.herokuapp.com/users/likes?useremail=${this.sender + '@mail.ru'}`, {
-      mode: 'cors',
-      method: 'GET'
-    }).then(response => response.body).then(rb  => {
-        const reader = rb.getReader()
-        return new ReadableStream({
-          start(controller) {
-            function push() {
-              reader.read().then( ({done, value}) => {
-                if (done) {
-                  console.log('done', done);
-                  controller.close();
-                  return;
-                }
-                controller.enqueue(value);
-                console.log(done, value);
-                push();
-              })
+      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+      if (err) {
+        this.$router.push({ name: "UsersLogin" })
+      } else {
+        fetch(`https://vuesocialnetwork.herokuapp.com/users/likes?useremail=${this.sender + '@mail.ru'}`, {
+        mode: 'cors',
+        method: 'GET'
+      }).then(response => response.body).then(rb  => {
+          const reader = rb.getReader()
+          return new ReadableStream({
+            start(controller) {
+              function push() {
+                reader.read().then( ({done, value}) => {
+                  if (done) {
+                    console.log('done', done);
+                    controller.close();
+                    return;
+                  }
+                  controller.enqueue(value);
+                  console.log(done, value);
+                  push();
+                })
+              }
+              push();
             }
-            push();
+          });
+      }).then(stream => {
+          return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+        })
+        .then(result => {
+          console.log(JSON.parse(result))
+          if(JSON.parse(result).status.includes("OK")){
+            window.location.reload()
           }
         });
-    }).then(stream => {
-        return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
-      })
-      .then(result => {
-        console.log(JSON.parse(result))
-        if(JSON.parse(result).status.includes("OK")){
-          window.location.reload()
         }
-      });
+      })
     },
   },
   components: {

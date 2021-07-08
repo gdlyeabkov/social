@@ -31,16 +31,19 @@
 import Footer from '@/components/Footer.vue'
 import Header from '@/components/Header.vue'
 
+import * as jwt from 'jsonwebtoken'
+
 export default {
     data(){
         return {
-            email: '',
-            name: '',
-            age: 0,
-            imageurl: '',
-            // password: '',
-            touser: '',
-            auth: 'true'
+          email: '',
+          name: '',
+          age: 0,
+          imageurl: '',
+          // password: '',
+          touser: '',
+          auth: 'true',
+          token: window.localStorage.getItem("vuesocialnetworktoken"),
         }
     },
     mounted(){
@@ -53,37 +56,43 @@ export default {
     },
     methods: {
         save(){
-          localStorage.setItem("userlogin", "true")
-          // fetch(`https://vuesocialnetwork.herokuapp.com/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}&password=${this.password}`, {
-          fetch(`https://vuesocialnetwork.herokuapp.com/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}`, {
-        mode: 'cors',
-        method: 'GET'
-      }).then(response => response.body).then(rb  => {
-          const reader = rb.getReader()
-          return new ReadableStream({
-            start(controller) {
-              function push() {
-                reader.read().then( ({done, value}) => {
-                  if (done) {
-                    console.log('done', done);
-                    controller.close();
-                    return;
+          jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+            if (err) {
+              this.$router.push({ name: "UsersLogin" })
+            } else {
+              localStorage.setItem("userlogin", "true")
+              // fetch(`https://vuesocialnetwork.herokuapp.com/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}&password=${this.password}`, {
+              fetch(`https://vuesocialnetwork.herokuapp.com/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}`, {
+              mode: 'cors',
+              method: 'GET'
+            }).then(response => response.body).then(rb  => {
+                const reader = rb.getReader()
+                return new ReadableStream({
+                  start(controller) {
+                    function push() {
+                      reader.read().then( ({done, value}) => {
+                        if (done) {
+                          console.log('done', done);
+                          controller.close();
+                          return;
+                        }
+                        controller.enqueue(value);
+                        console.log(done, value);
+                        push();
+                      })
+                    }
+                    push();
                   }
-                  controller.enqueue(value);
-                  console.log(done, value);
-                  push();
-                })
-              }
-              push();
-            }
-          });
-      }).then(stream => {
-          return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+                });
+            }).then(stream => {
+                return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+              })
+              .then(result => {
+                console.log(JSON.parse(result))
+                this.$router.push({name: 'Home', query: { 'auth': 'true', 'guest': 'false', 'groupswithdata': JSON.parse(result).groupswithdata, 'sender': JSON.parse(result).sender, 'allPosts': JSON.parse(result).allPosts, 'allFriends': JSON.parse(result).allFriends, 'likes': JSON.parse(result).likes, 'allGroups': JSON.parse(result).allGroups }})
+            });
+          }
         })
-        .then(result => {
-          console.log(JSON.parse(result))
-          this.$router.push({name: 'Home', query: { 'auth': 'true', 'guest': 'false', 'groupswithdata': JSON.parse(result).groupswithdata, 'sender': JSON.parse(result).sender, 'allPosts': JSON.parse(result).allPosts, 'allFriends': JSON.parse(result).allFriends, 'likes': JSON.parse(result).likes, 'allGroups': JSON.parse(result).allGroups }})
-      });
       }
     },
     components: {
