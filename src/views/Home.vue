@@ -63,6 +63,7 @@
                           <!-- <router-link :to="{ name: 'Post', params: { 'postid': post._id }, }">{{ post.sender }}</router-link> -->
                           <router-link :to="{ name: 'Home', query: { 'auth': 'true', 'guest': isLogginedSender(post.sender) ? 'false' : 'true', 'sender': post.sender }, }">{{ post.sender }}</router-link>
                           <!-- {{ post.sender }} -->
+                          <p style="font-size: 14px; float: right;">Опубликовано: {{ new Date(post.created).getDay() + "." + new Date(post.created).getMonth() + "." + new Date(post.created).getFullYear() + " в " + new Date(post.created).getHours() + ":" + new Date(post.created).getMinutes() }}</p>
                         </div>
                       </h5>
                       <div class="card-body">
@@ -172,7 +173,7 @@ export default {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
-            fetch(`https://vuesocialnetwork.herokuapp.com/home?auth=true&guest=false&sender=${this.$route.query.sender}`, {
+            fetch(`http://localhost:4000/home?auth=true&guest=false&sender=${this.$route.query.sender}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {

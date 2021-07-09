@@ -19,7 +19,7 @@
         <input disabled v-model="email" type="email" id="inputEmail" class="useremail form-control" placeholder="Email" required="" autofocus="">
         <!-- <label for="inputPassword" class="sr-only">Password</label>
         <input disabled v-model="password" type="password" id="inputPassword" class="userpassword form-control" placeholder="Password" required="" autofocus=""> -->
-        <button @click="save()" class="btn btn-lg btn-primary btn-block editBtn">Сохранить</button>
+        <button style="min-width: 125px;" @click="save()" class="btn btn-lg btn-primary btn-block editBtn">Сохранить</button>
       </div>
         <!-- footer -->
         <Footer/>

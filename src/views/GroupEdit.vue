@@ -26,7 +26,7 @@
         
         <br/>
         
-        <button @click="save()" class="btn btn-lg btn-primary btn-block editBtn">Сохранить</button>
+        <button style="min-width: 125px;" @click="save()" class="btn btn-lg btn-primary btn-block editBtn">Сохранить</button>
        
         <input type="hidden" class="sender form-control" disabled required="" autofocus="" v-model="touser">
         

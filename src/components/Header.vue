@@ -38,7 +38,9 @@
                             <!-- <router-link :to="{name: 'UsersLogin'}">
                                 Выйти
                             </router-link> -->
-                            <button class="primary" @click="logout()">Выйти</button>
+                            <!-- <button class="primary" @click="logout()">Выйти</button> -->
+                            <!-- <button @click="logout()" type="button" class="btn btn-primary">Выйти</button> -->
+                            <span class="badge bg-primary" style="cursor: pointer;" @click="logout()">Выйти</span>
                         </li>
                         <li>
                             <!-- <router-link :to="{name: 'UsersLogin'}">

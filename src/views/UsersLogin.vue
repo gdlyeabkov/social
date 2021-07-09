@@ -11,7 +11,7 @@
             <input type="password" id="inputPassword" v-model="userpassword" class="userpassword form-control" placeholder="Password" required="">
             <div class="checkbox mb-3">
             </div>
-            <button class="btn btn-lg btn-primary btn-block loginBtn" @click="login()">Войти</button>
+            <button style="min-width: 85px;" class="btn btn-lg btn-primary btn-block loginBtn" @click="login()">Войти</button>
             <p class="customErros">
                 {{ errors }}
             </p>

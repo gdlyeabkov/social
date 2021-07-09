@@ -51,7 +51,8 @@
             <div v-for="post in posts">
               <div class="card postStyle">
                 <h5 class="card-header">
-                  <p style="color: black;">{{ post.name }}</p>
+                  <span style="color: black;">{{ post.name }}</span>
+                  <span style="font-size: 14px; color:black; float: right;">Опубликовано: {{ new Date(post.created).getDay() + "." + new Date(post.created).getMonth() + "." + new Date(post.created).getFullYear() + " в " + new Date(post.created).getHours() + ":" + new Date(post.created).getMinutes() }}</span>
                 </h5>
                 <div class="card-body">
                   <h5 style="color: black;" class="card-title">{{ post.content }}</h5>
@@ -97,7 +98,7 @@ export default {
       if (err) {
         this.$router.push({ name: "UsersLogin" })
       } else {
-          fetch(`https://vuesocialnetwork.herokuapp.com/users/groups?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&imageurl=${this.$route.query.imageurl}&touser=${this.$route.query.touser}`, {
+          fetch(`http://localhost:4000/users/groups?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&imageurl=${this.$route.query.imageurl}&touser=${this.$route.query.touser}`, {
           mode: 'cors',
           method: 'GET'
         }).then(response => response.body).then(rb  => {
@@ -153,7 +154,7 @@ export default {
             this.$router.push({ name: "UsersLogin" })
           } else {
             console.log("отпраляю пост")
-            fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/posts/add?groupname=${this.name}&name=${this.$route.query.touser.split('@')[0]}&content=${this.groupPostContent}`, {
+            fetch(`http://localhost:4000/users/groups/posts/add?groupname=${this.name}&name=${this.$route.query.touser.split('@')[0]}&content=${this.groupPostContent}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
