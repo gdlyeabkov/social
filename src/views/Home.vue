@@ -221,7 +221,7 @@ export default {
               this.liked = JSON.parse(result).liked
 
               // this.likedYet = JSON.parse(result).liked.includes(decoded.useremail.split('@')[0])
-              this.likedYet = this.liked.findIndex((like) => like.name === decoded.useremail)
+              this.likedYet = this.liked.findIndex((like) => like.name === decoded.useremail) >= 0
 
             });
           }
