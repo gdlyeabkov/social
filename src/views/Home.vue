@@ -44,8 +44,11 @@
               </router-link>
               <p>{{ age + ' ' + agePostfix }}</p>
               <p>Лайки: {{ likes }}</p>
-              <div style="text-decoration: underline; color: blue; cursor: pointer;" v-if="$route.query.guest.includes('true')">
+              <div style="text-decoration: underline; color: blue; cursor: pointer;" v-if="$route.query.guest.includes('true') && !likedYet">
                 <a @click="addLike()">Нравится</a>
+              </div>
+              <div style="text-decoration: underline; color: blue; cursor: pointer;" v-else-if="$route.query.guest.includes('true') && likedYet">
+                <a>Вы уже оценили</a>
               </div>
             </div>
             <br style="clear: both;"/>
@@ -149,7 +152,9 @@ export default {
       requests: [],
       touser: '',
       content: '',
-      token: localStorage.getItem('vuesocialnetworktoken')
+      token: localStorage.getItem('vuesocialnetworktoken'),
+      likedYet: false,
+      liked: []
     }
   },
   mounted(){
@@ -173,7 +178,7 @@ export default {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
-            fetch(`http://localhost:4000/home?auth=true&guest=false&sender=${this.$route.query.sender}`, {
+            fetch(`https://vuesocialnetwork.herokuapp.com/home?auth=true&guest=false&sender=${this.$route.query.sender}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
@@ -213,6 +218,11 @@ export default {
               this.allPosts = JSON.parse(result).allPosts
               this.requests = JSON.parse(result).requests
               this.touser = decoded.useremail.split('@')[0]
+              this.liked = JSON.parse(result).liked
+
+              // this.likedYet = JSON.parse(result).liked.includes(decoded.useremail.split('@')[0])
+              this.likedYet = this.liked.findIndex((like) => like.name === decoded.useremail)
+
             });
           }
         })

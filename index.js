@@ -76,6 +76,7 @@ const UsersSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    liked: [mongoose.Schema.Types.Map],
     friends: [mongoose.Schema.Types.Map],
     requests: [mongoose.Schema.Types.Map],
     groups: [mongoose.Schema.Types.Map]
@@ -130,9 +131,9 @@ app.get('/home', async (req, res)=>{
                                 groupsWithData.push(g)
                             })
                             if(req.query.guest.includes('true')){
-                                return res.json({ "allPosts": allPosts, "auth": 'true', "guest": 'true', "touser":req.query.touser, "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "imageurl": user.imageurl, "name": user.name, "age": user.age, "password": user.password, "groupswithdata": groupsWithData })
+                                return res.json({ "allPosts": allPosts, "auth": 'true', "guest": 'true', "touser":req.query.touser, "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "imageurl": user.imageurl, "name": user.name, "age": user.age, "password": user.password, "groupswithdata": groupsWithData, liked: user.liked  })
                             } else if(req.query.guest.includes('false')){
-                                return res.json({ "allPosts": allPosts, "auth": 'true', "guest": 'false', "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "imageurl": user.imageurl, "name": user.name, "age": user.age, "password": user.password, "groupswithdata": groupsWithData, "requests": user.requests })
+                                return res.json({ "allPosts": allPosts, "auth": 'true', "guest": 'false', "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "imageurl": user.imageurl, "name": user.name, "age": user.age, "password": user.password, "groupswithdata": groupsWithData, "requests": user.requests, liked: user.liked })
                             }  
                         })                            
                     }
@@ -387,7 +388,18 @@ app.get('/users/likes', (req, res) => {
             if(user != null && user != undefined){
                 UsersModel.updateOne({ email: req.query.useremail }, 
                 { 
-                    "$inc": { "likes": 1 }
+                    {
+                        "$inc": { "likes": 1 },
+                        "$push": { 
+                            liked: [
+                                {
+                                    name: req.query.useremail.split('@')[0],
+                                }
+                            ]
+                                
+                        }
+                    }
+
                 }, (err, user) => {
                     if(err){
                         return res.json({ "status": "Error" })        
@@ -774,6 +786,6 @@ app.get('**', (req, res) => {
     return res.redirect(`/?redirectroute=${req.path}`)
 })
 
-// const port = process.env.PORT || 8080
-const port = 4000
+const port = process.env.PORT || 8080
+// const port = 4000
 app.listen(port)

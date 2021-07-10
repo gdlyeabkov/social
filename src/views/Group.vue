@@ -98,7 +98,7 @@ export default {
       if (err) {
         this.$router.push({ name: "UsersLogin" })
       } else {
-          fetch(`http://localhost:4000/users/groups?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&imageurl=${this.$route.query.imageurl}&touser=${this.$route.query.touser}`, {
+          fetch(`https://vuesocialnetwork.herokuapp.com/users/groups?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&imageurl=${this.$route.query.imageurl}&touser=${this.$route.query.touser}`, {
           mode: 'cors',
           method: 'GET'
         }).then(response => response.body).then(rb  => {
@@ -154,7 +154,7 @@ export default {
             this.$router.push({ name: "UsersLogin" })
           } else {
             console.log("отпраляю пост")
-            fetch(`http://localhost:4000/users/groups/posts/add?groupname=${this.name}&name=${this.$route.query.touser.split('@')[0]}&content=${this.groupPostContent}`, {
+            fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/posts/add?groupname=${this.name}&name=${this.$route.query.touser.split('@')[0]}&content=${this.groupPostContent}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
