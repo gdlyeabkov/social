@@ -221,7 +221,7 @@ export default {
               this.liked = JSON.parse(result).liked
 
               // this.likedYet = JSON.parse(result).liked.includes(decoded.useremail.split('@')[0])
-              this.likedYet = this.liked.findIndex((like) => like.name === decoded.useremail) >= 0
+              this.likedYet = this.liked.findIndex((like) => decoded.useremail.includes(like.name)) >= 0
 
             });
           }
@@ -525,7 +525,7 @@ export default {
       if (err) {
         this.$router.push({ name: "UsersLogin" })
       } else {
-        fetch(`https://vuesocialnetwork.herokuapp.com/users/likes?useremail=${this.sender + '@mail.ru'}`, {
+        fetch(`https://vuesocialnetwork.herokuapp.com/users/likes?useremail=${this.sender + '@mail.ru'}&touser=${decoded.useremail}`, {
         mode: 'cors',
         method: 'GET'
       }).then(response => response.body).then(rb  => {

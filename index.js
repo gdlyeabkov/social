@@ -393,7 +393,7 @@ app.get('/users/likes', (req, res) => {
                     "$push": { 
                         liked: [
                             {
-                                name: req.query.useremail.split('@')[0],
+                                name: req.query.touser.split('@')[0],
                             }
                         ]
                             
