@@ -19,6 +19,7 @@
         
         <!-- <input v-model="access" type="text" id="inputAccess" class="groupaccess form-control" placeholder="Access" required=""> -->
         
+        <!-- сделать загрузку файлом -->
         <label for="input" class="sr-only">Image Url</label>
         <input v-model="imageurl" type="text" id="inputImageUrl" class="groupimageurl form-control" placeholder="imageurl" required="">
         <div class="checkbox mb-3">
