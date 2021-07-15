@@ -90,15 +90,15 @@ export default {
             isPartisipant: false,
             posts: [],
             groupPostContent: '',
-            token: window.localStorage.getItem("vuesocialnetworktoken")
+            token: window.localStorage.getItem("showbellowtoken")
         }
     },
     mounted(){
-      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+      jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
       if (err) {
         this.$router.push({ name: "UsersLogin" })
       } else {
-          fetch(`https://vuesocialnetwork.herokuapp.com/users/groups?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&imageurl=${this.$route.query.imageurl}&touser=${this.$route.query.touser}`, {
+          fetch(`https://showbellow.herokuapp.com/users/groups?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&imageurl=${this.$route.query.imageurl}&touser=${this.$route.query.touser}`, {
           mode: 'cors',
           method: 'GET'
         }).then(response => response.body).then(rb  => {
@@ -149,12 +149,12 @@ export default {
     },
     methods: {
       submitPost(){
-        jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+        jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
             console.log("отпраляю пост")
-            fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/posts/add?groupname=${this.name}&name=${this.$route.query.touser.split('@')[0]}&content=${this.groupPostContent}`, {
+            fetch(`https://showbellow.herokuapp.com/users/groups/posts/add?groupname=${this.name}&name=${this.$route.query.touser.split('@')[0]}&content=${this.groupPostContent}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
@@ -188,11 +188,11 @@ export default {
         })
       },
       enterToGroup(){
-        jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+        jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
-            fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/partisipants/add?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&touser=${this.$route.query.touser}`, {
+            fetch(`https://showbellow.herokuapp.com/users/groups/partisipants/add?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&touser=${this.$route.query.touser}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
@@ -229,11 +229,11 @@ export default {
         })
       },
       leaveFromGroup(){
-        jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+        jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
-            fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/partisipants/delete?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&touser=${this.$route.query.touser}`, {
+            fetch(`https://showbellow.herokuapp.com/users/groups/partisipants/delete?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&touser=${this.$route.query.touser}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {

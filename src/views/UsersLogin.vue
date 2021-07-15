@@ -40,7 +40,7 @@ export default {
     methods: {
         login(){
             // this.$router.push({ name: '/users/check?useremail=${useremail}&userpassword=${userpassword}' })
-            fetch(`https://vuesocialnetwork.herokuapp.com/users/check?useremail=${this.useremail}&userpassword=${this.userpassword}`, {
+            fetch(`https://showbellow.herokuapp.com/users/check?useremail=${this.useremail}&userpassword=${this.userpassword}`, {
         mode: 'cors',
         method: 'GET'
         }).then(response => response.body).then(rb  => {
@@ -73,8 +73,8 @@ export default {
                 
                 this.token = jwt.sign({
                     useremail: this.useremail
-                    }, 'vuesocialnetworksecret', { expiresIn: '5m' })
-                localStorage.setItem('vuesocialnetworktoken', this.token)
+                    }, 'showbellowsecret', { expiresIn: '5m' })
+                localStorage.setItem('showbellowtoken', this.token)
 
                 localStorage.setItem('useremail', this.useremail.split('@')[0])
                 this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).sender, "guest": 'false'  } })

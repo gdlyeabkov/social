@@ -71,18 +71,18 @@ export default {
       friendsOfUser: [],
       auth: 'true',
       guest: 'false',
-      token: window.localStorage.getItem("vuesocialnetworktoken")
+      token: window.localStorage.getItem("showbellowtoken")
     }
   },
   mounted(){
-    jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+    jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
       if (err) {
         this.$router.push({ name: "UsersLogin" })
       } else {
       this.loginedSender = decoded.useremail.split('@')[0]
       this.touser = this.$route.query.touser
       this.guest = this.$route.query.guest
-      fetch(`https://vuesocialnetwork.herokuapp.com/users/list?touser=${this.touser}`, {
+      fetch(`https://showbellow.herokuapp.com/users/list?touser=${this.touser}`, {
         mode: 'cors',
         method: 'GET'
       }).then(response => response.body).then(rb  => {
@@ -116,12 +116,12 @@ export default {
   },
   methods: {
     removeFriend(oldFriend){
-      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+      jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
         if (err) {
           this.$router.push({ name: "UsersLogin" })
         } else {
           // href="/users/friends/delete?touser=<%= touser %>&useremail=<%= friend  %>"
-          fetch(`https://vuesocialnetwork.herokuapp.com/users/friends/delete?touser=${this.touser}&useremail=${oldFriend}`, {
+          fetch(`https://showbellow.herokuapp.com/users/friends/delete?touser=${this.touser}&useremail=${oldFriend}`, {
           mode: 'cors',
           method: 'GET'
         }).then(response => response.body).then(rb  => {
@@ -155,7 +155,7 @@ export default {
       })
     },
     addFriend(newFriend){
-      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+      jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
       if (err) {
         this.$router.push({ name: "UsersLogin" })
       } else {
@@ -194,7 +194,7 @@ export default {
         
         // fetch(`http://localhost:4000/users/requests/add?touser=${newFriend.email}&name=${localStorage.getItem('useremail').split('@')[0]}&image=${newFriend.imageurl}&age=${newFriend.age}`, {
 
-        fetch(`https://vuesocialnetwork.herokuapp.com/users/requests/add?touser=${newFriend.email}&name=${this.loginedSender.split('@')[0]}&image=${newFriend.imageurl}&age=${newFriend.age}`, {
+        fetch(`https://showbellow.herokuapp.com/users/requests/add?touser=${newFriend.email}&name=${this.loginedSender.split('@')[0]}&image=${newFriend.imageurl}&age=${newFriend.age}`, {
 
           mode: 'cors',
           method: 'GET'

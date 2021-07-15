@@ -47,18 +47,18 @@ export default {
             access: 'public',
             imageurl: '',
             errors: '',
-            token: window.localStorage.getItem("vuesocialnetworktoken"),
+            token: window.localStorage.getItem("showbellowtoken"),
         }
     },
     methods: {
         createGroup(){
-          jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+          jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
             if (err) {
               this.$router.push({ name: "UsersLogin" })
             } else {
               localStorage.setItem("userlogin", "true")
               // location.href = `/users/groups/groupcreatesuccess?touser=${touser}&groupaccess=${groupaccess}&groupdescription=${groupdescription}&groupname=${groupname}&imageurl=${groupimageurl}`
-              fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/groupcreatesuccess?touser=${this.$route.query.touser}&groupaccess=${this.access}&groupdescription=${this.description}&groupname=${this.name}&imageurl=${this.imageurl}`, {
+              fetch(`https://showbellow.herokuapp.com/users/groups/groupcreatesuccess?touser=${this.$route.query.touser}&groupaccess=${this.access}&groupdescription=${this.description}&groupname=${this.name}&imageurl=${this.imageurl}`, {
                 mode: 'cors',
                 method: 'GET'
               }).then(response => response.body).then(rb  => {

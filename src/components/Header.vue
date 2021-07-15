@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">VueSocialNetwork</a>
+            <a class="navbar-brand" href="#">Show Bellow</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -72,8 +72,8 @@ export default {
             
             this.token = jwt.sign({
               useremail: 'admin'
-            }, 'vuesocialnetworksecret', { expiresIn: 1 })
-            window.localStorage.setItem("vuesocialnetworktoken", this.token)
+            }, 'showbellowsecret', { expiresIn: 1 })
+            window.localStorage.setItem("showbellowtoken", this.token)
 
             this.$router.push({ name: "UsersLogin" })
         }

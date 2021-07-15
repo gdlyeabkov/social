@@ -160,15 +160,15 @@ export default {
             auth:'true',
             touser: '',
             sender: '',
-            token: window.localStorage.getItem("vuesocialnetworktoken"),
+            token: window.localStorage.getItem("showbellowtoken"),
         }
     },
     mounted(){
-      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+      jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
         if (err) {
           this.$router.push({ name: "UsersLogin" })
         } else {
-          fetch(`https://vuesocialnetwork.herokuapp.com/users/groups/list?sender=${this.$route.query.touser}&groupname=${this.$route.query.groupname}`, {
+          fetch(`https://showbellow.herokuapp.com/users/groups/list?sender=${this.$route.query.touser}&groupname=${this.$route.query.groupname}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {

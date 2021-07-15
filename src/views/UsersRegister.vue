@@ -38,7 +38,7 @@ export default {
     methods: {
         registerNewUser(){
             // this.$router.push({ name: '/users/check?useremail=${useremail}&userpassword=${userpassword}' })
-            fetch(`https://vuesocialnetwork.herokuapp.com/users/usercreatesuccess?useremail=${this.useremail}&userpassword=${this.userpassword}&userage=${this.userage}&username=${this.username}`, {
+            fetch(`https://showbellow.herokuapp.com/users/usercreatesuccess?useremail=${this.useremail}&userpassword=${this.userpassword}&userage=${this.userage}&username=${this.username}`, {
         mode: 'cors',
         method: 'GET'
         }).then(response => response.body).then(rb  => {

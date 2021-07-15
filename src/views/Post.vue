@@ -23,16 +23,16 @@ export default {
     data(){
         return {
           post: {},
-          token: window.localStorage.getItem("vuesocialnetworktoken"),
+          token: window.localStorage.getItem("showbellowtoken"),
         }
     },
     mounted(){
-      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+      jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
       if (err) {
         this.$router.push({ name: "UsersLogin" })
       } else {
         console.log(this.$route.params.postid)
-        fetch(`https://vuesocialnetwork.herokuapp.com/post/${this.$route.params.postid}`, {
+        fetch(`https://showbellow.herokuapp.com/post/${this.$route.params.postid}`, {
           mode: 'cors',
           method: 'GET'
         }).then(response => response.body).then(rb  => {

@@ -152,7 +152,7 @@ export default {
       requests: [],
       touser: '',
       content: '',
-      token: localStorage.getItem('vuesocialnetworktoken'),
+      token: localStorage.getItem('showbellowtoken'),
       likedYet: false,
       liked: []
     }
@@ -164,7 +164,7 @@ export default {
       if(this.$route.query.redirectroute.includes('users/login') || this.$route.query.redirectroute.includes('users/register')){
         this.$router.push({ path: this.$route.query.redirectroute })
       } else if(!this.$route.query.redirectroute.includes('users/login') && !this.$route.query.redirectroute.includes('users/register')){
-        jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+        jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
@@ -174,11 +174,11 @@ export default {
       }
     } else {
         // стало так и работало
-        jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+        jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
-            fetch(`https://vuesocialnetwork.herokuapp.com/home?auth=true&guest=false&sender=${this.$route.query.sender}`, {
+            fetch(`https://showbellow.herokuapp.com/home?auth=true&guest=false&sender=${this.$route.query.sender}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
@@ -295,14 +295,14 @@ export default {
     },
     receiveRequest(requestFriendName, requestFriendAge){
       
-      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+      jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
       if (err) {
         this.$router.push({ name: "UsersLogin" })
       } else {
         
         this.deleteFromRequests(requestFriendName, false)
         
-        fetch(`https://vuesocialnetwork.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true`, {
+        fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true`, {
         mode: 'cors',
         method: 'GET'
       }).then(response => response.body).then(rb  => {
@@ -365,7 +365,7 @@ export default {
 
     },
     deleteFromRequests(requestFriendName, dorequest){
-      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+      jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
         if (err) {
           this.$router.push({ name: "UsersLogin" })
         } else {
@@ -376,7 +376,7 @@ export default {
             return true
           })
           if(dorequest === true){
-            fetch(`https://vuesocialnetwork.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false`, {
+            fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
@@ -482,11 +482,11 @@ export default {
       window.location.reload()
     },
     addPost(){
-      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+      jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
       if (err) {
         this.$router.push({ name: "UsersLogin" })
       } else {
-        fetch(`https://vuesocialnetwork.herokuapp.com/postadd?sender=${this.sender}&content=${this.content}`, {
+        fetch(`https://showbellow.herokuapp.com/postadd?sender=${this.sender}&content=${this.content}`, {
         mode: 'cors',
         method: 'GET'
       }).then(response => response.body).then(rb  => {
@@ -521,11 +521,11 @@ export default {
       })
     },
     addLike(){
-      jwt.verify(this.token, 'vuesocialnetworksecret', (err, decoded) => {
+      jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
       if (err) {
         this.$router.push({ name: "UsersLogin" })
       } else {
-        fetch(`https://vuesocialnetwork.herokuapp.com/users/likes?useremail=${this.sender + '@mail.ru'}&touser=${decoded.useremail}`, {
+        fetch(`https://showbellow.herokuapp.com/users/likes?useremail=${this.sender + '@mail.ru'}&touser=${decoded.useremail}`, {
         mode: 'cors',
         method: 'GET'
       }).then(response => response.body).then(rb  => {
