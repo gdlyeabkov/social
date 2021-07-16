@@ -685,9 +685,9 @@ app.get('/users/groups/posts/add', (req, res)=>{
                     content: req.query.content,
                     created: Date.now
                     // created: new Date().toLocaleString(),
-                },
-                $sort: { created: -1 }
-            }
+                }
+            },
+            $sort: { created: -1 }
         }, (err, group) => {
             if(err){
                 return res.json({ "status": "error" })
