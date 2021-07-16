@@ -683,8 +683,8 @@ app.get('/users/groups/posts/add', (req, res)=>{
                 posts: {
                     name: req.query.name,
                     content: req.query.content,
-                    created: Date.now
-                    // created: new Date().toLocaleString(),
+                    // created: Date.now
+                    created: new Date().toLocaleString(),
                 }
             }
         }, (err, group) => {
