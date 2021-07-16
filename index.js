@@ -678,19 +678,19 @@ app.get('/users/groups/posts/add', (req, res)=>{
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
     GroupsModel.updateOne({ name: req.query.groupname },
-        { $push: 
+        { $push:
             {
                 posts: [
                     {
                         name: req.query.name,
                         content: req.query.content,
-                        created: Date.now,
-                        $sort: { created: -1 }
+                        created: Date.now
                         // created: new Date().toLocaleString(),
                     }
                 ]
                 
-            }
+            },
+        $sort: { created: -1 }
         }, (err, group) => {
             if(err){
                 return res.json({ "status": "error" })
