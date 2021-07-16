@@ -52,7 +52,7 @@
               <div class="card postStyle">
                 <h5 class="card-header">
                   <span style="color: black;">{{ post.name }}</span>
-                  <span style="font-size: 14px; color:black; float: right;">Опубликовано: {{ post.created.split(", ")[0].split("/")[0] + "." + post.created.split(", ")[0].split("/")[1] + "." + post.created.split(", ")[0].split("/")[2] + " в " + post.created.split(", ")[1].split(":")[0] + ":" + post.created.split(", ")[1].split(":")[1] }}</span>
+                  <span style="font-size: 14px; color:black; float: right;">Опубликовано: {{ post.created.split(", ")[0].split("/")[1] + "." + post.created.split(", ")[0].split("/")[0] + "." + post.created.split(", ")[0].split("/")[2] + " в " + post.created.split(", ")[1].split(":")[0] + ":" + post.created.split(", ")[1].split(":")[1] }}</span>
                 </h5>
                 <div class="card-body">
                   <h5 style="color: black;" class="card-title">{{ post.content }}</h5>
@@ -132,6 +132,7 @@ export default {
             this.touser = JSON.parse(result).touser
             this.imageurl = JSON.parse(result).imageurl
             this.posts = JSON.parse(result).posts
+            this.posts = this.posts.reverse()
             
             console.log('Object.values(this.partisipants): ', Object.values(this.partisipants))
             let possiblePartisipants = []
