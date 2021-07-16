@@ -41,48 +41,48 @@ export default {
         login(){
             // this.$router.push({ name: '/users/check?useremail=${useremail}&userpassword=${userpassword}' })
             fetch(`https://showbellow.herokuapp.com/users/check?useremail=${this.useremail}&userpassword=${this.userpassword}`, {
-        mode: 'cors',
-        method: 'GET'
-        }).then(response => response.body).then(rb  => {
-            const reader = rb.getReader()
-            return new ReadableStream({
-            start(controller) {
-                function push() {
-                reader.read().then( ({done, value}) => {
-                    if (done) {
-                    console.log('done', done);
-                    controller.close();
-                    return;
+            mode: 'cors',
+            method: 'GET'
+            }).then(response => response.body).then(rb  => {
+                const reader = rb.getReader()
+                return new ReadableStream({
+                start(controller) {
+                    function push() {
+                    reader.read().then( ({done, value}) => {
+                        if (done) {
+                        console.log('done', done);
+                        controller.close();
+                        return;
+                        }
+                        controller.enqueue(value);
+                        console.log(done, value);
+                        push();
+                    })
                     }
-                    controller.enqueue(value);
-                    console.log(done, value);
                     push();
-                })
                 }
-                push();
-            }
-            });
-        }).then(stream => {
-            return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
-        })
-        .then(result => {
-            console.log(JSON.parse(result))
-            const isAuth = JSON.parse(result).auth.includes('true')
-            console.log(!isAuth)
-            if(isAuth){
-                
-                this.token = jwt.sign({
-                    useremail: this.useremail
-                    }, 'showbellowsecret', { expiresIn: '5m' })
-                localStorage.setItem('showbellowtoken', this.token)
+                });
+            }).then(stream => {
+                return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+            })
+            .then(result => {
+                console.log(JSON.parse(result))
+                const isAuth = JSON.parse(result).auth.includes('true')
+                console.log(!isAuth)
+                if(isAuth){
+                    
+                    this.token = jwt.sign({
+                        useremail: this.useremail
+                        }, 'showbellowsecret', { expiresIn: '5m' })
+                    localStorage.setItem('showbellowtoken', this.token)
 
-                localStorage.setItem('useremail', this.useremail.split('@')[0])
-                this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).sender, "guest": 'false'  } })
-            } else if(!isAuth){
-                //window.location.reload()
-                this.errors = "Неверный логин или пароль"
-            }
-        });
+                    localStorage.setItem('useremail', this.useremail.split('@')[0])
+                    this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).sender, "guest": 'false'  } })
+                } else if(!isAuth){
+                    //window.location.reload()
+                    this.errors = "Неверный логин или пароль"
+                }
+            });
         }
     },
     components: {

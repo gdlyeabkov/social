@@ -66,7 +66,7 @@
                           <!-- <router-link :to="{ name: 'Post', params: { 'postid': post._id }, }">{{ post.sender }}</router-link> -->
                           <router-link :to="{ name: 'Home', query: { 'auth': 'true', 'guest': isLogginedSender(post.sender) ? 'false' : 'true', 'sender': post.sender }, }">{{ post.sender }}</router-link>
                           <!-- {{ post.sender }} -->
-                          <p style="font-size: 14px; float: right;">Опубликовано: {{ new Date(post.created).getDay() + "." + new Date(post.created).getMonth() + "." + new Date(post.created).getFullYear() + " в " + new Date(post.created).getHours() + ":" + new Date(post.created).getMinutes() }}</p>
+                          <p style="font-size: 14px; float: right;">Опубликовано: {{ post.created.split("T")[0].split("-")[2] + "." + post.created.split("T")[0].split("-")[1] + "." + post.created.split("T")[0].split("-")[0] + " в " + new Date(post.created).getHours() + ":" + new Date(post.created).getMinutes() }}</p>
                         </div>
                       </h5>
                       <div class="card-body">
@@ -222,6 +222,8 @@ export default {
 
               // this.likedYet = JSON.parse(result).liked.includes(decoded.useremail.split('@')[0])
               this.likedYet = this.liked.findIndex((like) => decoded.useremail.includes(like.name)) >= 0
+
+              console.log("posts: ", this.allPosts)
 
             });
           }

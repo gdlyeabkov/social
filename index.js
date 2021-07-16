@@ -42,8 +42,10 @@ const PostSchema = new mongoose.Schema({
     content: String,
     sender: String,
     created: {
-        default: new Date().toLocaleString(),
-        type: String
+        type: Date,
+        default: Date.now
+    //     default: new Date().toLocaleString(),
+    //     type: String
     },
 }, { collection : 'myposts' });
 
@@ -101,7 +103,8 @@ app.get('/home', async (req, res)=>{
                 friendsPosts.push(new Map(friendKey).get('email').split('@')[0])
             })
             
-            let query = PostModel.find({ $or:[ {  sender: { $eq: req.query.sender } }, { sender: { $in: friendsPosts }  } ] }, null, { sort: { created: -1 } }).select(['content', 'sender', 'created']);
+            // let query = PostModel.find({ $or:[ {  sender: { $eq: req.query.sender } }, { sender: { $in: friendsPosts }  } ] }, null, { sort: { created: -1 } }).select(['content', 'sender', 'created']);
+            let query = PostModel.find({ $or:[ {  sender: { $eq: req.query.sender } }, { sender: { $in: friendsPosts }  } ] }, ['content', 'sender', 'created'], { sort: { created: -1 } });
             query.exec((err, allPosts) => {
                 if (err){
                     return res.json({ "status": 'error'})
@@ -681,7 +684,9 @@ app.get('/users/groups/posts/add', (req, res)=>{
                     {
                         name: req.query.name,
                         content: req.query.content,
-                        created: new Date().toLocaleString(),
+                        created: Date.now,
+                        $sort: { created: -1 }
+                        // created: new Date().toLocaleString(),
                     }
                 ]
                 
