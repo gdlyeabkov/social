@@ -3,12 +3,15 @@
       <Header :auth="'true'" :sender="touser.split('@')[0]" />
       <div class="customCardGroup">
         <input type="hidden" class="previousgroupname form-control" disabled required="" autofocus="" :value="groupname">
-        <div v-if="imageurl && imageurl.includes('empty')">
+        
+        <!-- <div v-if="imageurl && imageurl.includes('empty')">
           <img width="85px" height="85px" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" />  
         </div>  
         <div v-else-if="imageurl && !imageurl.includes('empty')">
           <img width="85px" height="85px" :src="imageurl" />
-        </div>  
+        </div>   -->
+        <img width="85px" height="85px" :src="`https://dog-sparkly-chipmunk.glitch.me/pictures/getpicture?picturename=${groupname}`" />
+
         <label for="inputPhoto" class="sr-only">Photo</label>
         <input v-model="imageurl" type="text" id="inputPhoto" class="imageurl form-control" placeholder="Photo" required="" autofocus="">
         <label for="inputName" class="sr-only">Name</label>
