@@ -11,7 +11,7 @@
           <div v-else-if="imageurl && !imageurl.includes('empty')">
             <img width="85px" height="85px" :src="imageurl" />
           </div>   -->
-          <img width="85px" height="85px" :src="`https://opalescent-soapy-baseball.glitch.me/pictures/getpicture?picturename=${groupname}`" />
+          <img width="85px" height="85px" :src="`https://catkin-teal-hat.glitch.me/pictures/getpicture?picturename=${groupname}`" />
 
           <label for="inputPhoto" class="sr-only">Photo</label>
           <input v-model="imageurl" type="text" id="inputPhoto" class="imageurl form-control" placeholder="Photo" required="" autofocus="">
