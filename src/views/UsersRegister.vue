@@ -5,7 +5,7 @@
         <div class="customCardGroup">
             <img class="mb-4" src="https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/vue-dot-js-256.png" alt="" width="72" height="72">
             <h1 class="h3 mb-3 font-weight-normal headerform">Зарегестрируйтесь</h1>
-            <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://thin-well-poinsettia.glitch.me/users/usercreatesuccess?useremail=${useremail}&userpassword=${userpassword}&userage=${userage}&username=${username}`">
+            <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://soapy-speckle-galaxy.glitch.me/users/usercreatesuccess?useremail=${useremail}&userpassword=${userpassword}&userage=${userage}&username=${username}`">
                 <label class="sr-only">Email</label>
                 <input name="useremail" v-model="useremail" type="email" id="" class="useremail form-control" placeholder="Email address" required="" autofocus="">
                 <label class="sr-only">Password</label>
