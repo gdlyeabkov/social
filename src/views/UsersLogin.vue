@@ -50,7 +50,7 @@ export default {
         login(){
             if(!this.useremail.includes("@")){
                 // this.$router.push({ name: '/users/check?useremail=${useremail}&userpassword=${userpassword}' })
-                fetch(`http://localhost:4000/users/check?useremail=${this.useremail + this.custommail}&userpassword=${this.userpassword}`, {
+                fetch(`https://showbellow.herokuapp.com/users/check?useremail=${this.useremail + this.custommail}&userpassword=${this.userpassword}`, {
                     mode: 'cors',
                     method: 'GET'
                 }).then(response => response.body).then(rb  => {

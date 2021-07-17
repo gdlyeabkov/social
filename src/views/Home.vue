@@ -199,7 +199,7 @@ export default {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
-            fetch(`http://localhost:4000/home?auth=true&guest=false&sender=${this.$route.query.sender}`, {
+            fetch(`https://showbellow.herokuapp.com/home?auth=true&guest=false&sender=${this.$route.query.sender}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
