@@ -6,8 +6,16 @@
             <img class="mb-4" src="https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/vue-dot-js-256.png" alt="" width="72" height="72">
             <h1 class="h3 mb-3 font-weight-normal headerform">Зарегестрируйтесь</h1>
             <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://catkin-teal-hat.glitch.me/users/usercreatesuccess?useremail=${useremail}&userpassword=${userpassword}&userage=${userage}&username=${username}`">
+                
                 <label class="sr-only">Email</label>
-                <input name="useremail" v-model="useremail" type="email" id="" class="useremail form-control" placeholder="Email address" required="" autofocus="">
+                <div class="input-group mb-3" style="width: 405px; margin: auto;">
+                    <input name="useremail" v-model="useremail" type="email" id="" class="useremail form-control" placeholder="Email address" required="" autofocus="">    
+                    <select style="max-width: 115px;" class="useremail form-control" v-model="custommail">
+                        <option value="@gmail.com" selected>@gmail.com</option>
+                        <option value="@mail.ru">@mail.ru</option>
+                    </select>
+                </div>
+                
                 <label class="sr-only">Password</label>
                 <input name="userpassword" v-model="userpassword" type="password" id="" class="userpassword form-control" placeholder="Password" required="">
                 <label class="sr-only">Age</label>
@@ -36,13 +44,14 @@ export default {
             userpassword: '',
             username: '',
             userage: 0,
-            errors: ''
+            errors: '',
+            custommail: "@gmail.com"
         }
     },
     methods: {
         registerNewUser(){
             // this.$router.push({ name: '/users/check?useremail=${useremail}&userpassword=${userpassword}' })
-            fetch(`https://showbellow.herokuapp.com/users/usercreatesuccess?useremail=${this.useremail}&userpassword=${this.userpassword}&userage=${this.userage}&username=${this.username}`, {
+            fetch(`https://showbellow.herokuapp.com/users/usercreatesuccess?useremail=${this.useremail + this.custommail}&userpassword=${this.userpassword}&userage=${this.userage}&username=${this.username}`, {
         mode: 'cors',
         method: 'GET'
         }).then(response => response.body).then(rb  => {

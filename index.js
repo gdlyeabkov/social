@@ -203,7 +203,7 @@ app.post('/users/editsuccess', upload.single('myFile'), async (req, res)=>{
         console.log("Error to upload file ")
         return res.json({ "message": "error" })
     }
-    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.email.split('@')[0], function (err) {
+    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.email.split('@')[0] + ".png", function (err) {
         if (err) {
             return res.json({ "message": "Error" })
         }
@@ -342,7 +342,7 @@ app.post('/users/groups/groupcreatesuccess', upload.single('myFile'), (req, res)
         console.log("Error to upload file ")
         return res.json({ "message": "error" })
     }
-    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.touser.split('@')[0], function (err) {
+    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.touser.split('@')[0] + ".png", function (err) {
         if (err) {
             return res.json({ "message": "error" })
         }
@@ -606,7 +606,7 @@ app.post('/users/usercreatesuccess', upload.single('myFile'), async (req, res)=>
         console.log("Error to upload file ")
         return res.json({ "message": "error" })
     }
-    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.useremail.split('@')[0], function (err) {
+    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.useremail.split('@')[0] + ".png", function (err) {
         if (err) {
             return res.json({ "status": "Error" })
         }
