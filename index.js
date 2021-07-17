@@ -108,7 +108,8 @@ app.get('/home', async (req, res)=>{
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
     
-    let queryOfFriendsBefore =  UsersModel.findOne({'email': req.query.sender + "@mail.ru"}, function(err, beforeUser){
+    // let queryOfFriendsBefore =  UsersModel.findOne({'email': req.query.sender + "@mail.ru"}, function(err, beforeUser){
+    let queryOfFriendsBefore =  UsersModel.findOne({'email': req.query.sender + req.query.mailclient }, function(err, beforeUser){
     // let queryOfFriendsBefore =  UsersModel.findOne({ 'email': req.query.decodedcustomtokenvalue }, function(err, beforeUser){
 
         if(err){
@@ -131,7 +132,8 @@ app.get('/home', async (req, res)=>{
                 let nickOfUser = req.query.sender
                 
                 // let queryOfFriends =  UsersModel.findOne({ 'email': req.query.decodedcustomtokenvalue }, function(err, user){
-                let queryOfFriends =  UsersModel.findOne({'email': req.query.sender + "@mail.ru"}, function(err, user){
+                // let queryOfFriends =  UsersModel.findOne({'email': req.query.sender + "@mail.ru"}, function(err, user){
+                let queryOfFriends =  UsersModel.findOne({'email': req.query.sender + req.query.mailclient}, function(err, user){
                     
                     if (err){
                         return res.json({ "status": 'error'})
@@ -783,7 +785,10 @@ app.get('/users/requests/add', (req, res)=>{
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
-    UsersModel.findOne({ email: req.query.name + '@mail.ru' }, (err, user) => {
+
+    // UsersModel.findOne({ email: req.query.name + '@mail.ru' }, (err, user) => {
+    UsersModel.findOne({ email: req.query.name + req.query.mailclient }, (err, user) => {
+
     
         UsersModel.updateOne({ email: req.query.touser },
             { $push: 
@@ -814,7 +819,7 @@ app.get('/users/requests/delete', (req, res)=>{
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
-    let emailOfOtherUser = req.query.sender.concat('@mail.ru')
+    let emailOfOtherUser = req.query.sender.concat(req.query.mailclient)
     mongoose.connection.collection("myusersofposts").updateOne(
         { email: req.query.touser },
         { $pull: { 'requests': { name: req.query.sender } } }, (err, user) => {
@@ -824,7 +829,8 @@ app.get('/users/requests/delete', (req, res)=>{
                     { 
                         friends: [
                             {
-                                email: req.query.sender + '@mail.ru',
+                                // email: req.query.sender + '@mail.ru',
+                                email: req.query.sender + req.query.mailclient,
                                 age: Number(req.query.userage)
                             }
                         ]

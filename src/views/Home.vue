@@ -199,7 +199,7 @@ export default {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
-            fetch(`https://showbellow.herokuapp.com/home?auth=true&guest=false&sender=${this.$route.query.sender}`, {
+            fetch(`https://showbellow.herokuapp.com/home?auth=true&guest=false&sender=${this.$route.query.sender}&mailclient=${decoded.useremail.split('@')[1]}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
@@ -330,10 +330,10 @@ export default {
         
         this.deleteFromRequests(requestFriendName, false)
         
-        fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true`, {
-        mode: 'cors',
-        method: 'GET'
-      }).then(response => response.body).then(rb  => {
+        fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true&mailclient=${decoded.useremail.split('@')[1]}`, {
+          mode: 'cors',
+          method: 'GET'
+        }).then(response => response.body).then(rb  => {
           const reader = rb.getReader()
           return new ReadableStream({
             start(controller) {
@@ -404,7 +404,7 @@ export default {
             return true
           })
           if(dorequest === true){
-            fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false`, {
+            fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false&mailclient=${decoded.useremail.split('@')[1]}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {

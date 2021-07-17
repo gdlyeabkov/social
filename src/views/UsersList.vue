@@ -194,7 +194,7 @@ export default {
         
         // fetch(`http://localhost:4000/users/requests/add?touser=${newFriend.email}&name=${localStorage.getItem('useremail').split('@')[0]}&image=${newFriend.imageurl}&age=${newFriend.age}`, {
 
-        fetch(`https://showbellow.herokuapp.com/users/requests/add?touser=${newFriend.email}&name=${this.loginedSender.split('@')[0]}&image=${newFriend.imageurl}&age=${newFriend.age}`, {
+        fetch(`https://showbellow.herokuapp.com/users/requests/add?touser=${newFriend.email}&name=${this.loginedSender.split('@')[0]}&image=${newFriend.imageurl}&age=${newFriend.age}&mailclient=${this.touser.split('@')[1]}`, {
 
           mode: 'cors',
           method: 'GET'
