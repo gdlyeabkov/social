@@ -6,7 +6,7 @@
       <div class="customCardGroup">
         <img class="mb-4" src="https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/vue-dot-js-256.png" alt="" width="72" height="72">
         <h1 class="h3 mb-3 font-weight-normal">Создание новой группы</h1>
-        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://changeme.glitch.me/users/groups/groupcreatesuccess`">
+        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://https://thin-well-poinsettia.glitch.me/users/groups/groupcreatesuccess`">
           <label for="inputName" class="sr-only">Name</label>
           <input name="groupname" v-model="name" type="text" id="inputDescription" class="groupname form-control" placeholder="Name" required="" autofocus="">
           <label for="inputDescription" class="sr-only">Description</label>
