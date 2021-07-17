@@ -1,4 +1,5 @@
-﻿const multer  = require('multer')
+﻿const fs = require('fs')
+const multer  = require('multer')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'uploads')
@@ -189,11 +190,25 @@ app.get('/users/edit',(req, res)=>{
 
 })
 
-app.get('/users/editsuccess', async (req, res)=>{
+app.post('/users/editsuccess', upload.single('myFile'), async (req, res)=>{
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+
+    console.log("req.body: ", req.body)
+    let file = req.file
+
+    if(!file){
+        console.log("Error to upload file ")
+        return res.json({ "message": "error" })
+    }
+    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.email.split('@')[0], function (err) {
+        if (err) {
+            return res.json({ "message": "Error" })
+        }
+    })
+
 
     await UsersModel.updateOne({ email: req.query.touser },
         {
@@ -203,11 +218,11 @@ app.get('/users/editsuccess', async (req, res)=>{
             email: req.query.email
         }, (err) => {
             if(err){
-                return
+                return res.json({ "message": "Error" })
             } else {
                 let queryOfFriends =  UsersModel.findOne({'email': req.query.email}, function(err, user){
                     if (err){
-                        return
+                        return res.json({ "message": "Error" })
                     } else {
                         const userGroupsArray = []
                         user.groups.map((groupKey, groupValue) => {
@@ -217,7 +232,7 @@ app.get('/users/editsuccess', async (req, res)=>{
                         const queryOfGroupsWithData = GroupsModel.find({ name: { $in: userGroupsArray } }).select(['name', 'description', 'access', 'imageurl', 'partisipants' ])
                         queryOfGroupsWithData.exec( async (error, groups) => {
                             if(error){
-                                return
+                                return res.json({ "message": "Error" })
                             }
                             groups.forEach((g) => {
                                 groupsWithData.push(g)
@@ -230,7 +245,7 @@ app.get('/users/editsuccess', async (req, res)=>{
                                     sender: nickOfUser
                                 }, (err) => {
                                     if(err){
-                                        return
+                                        return res.json({ "message": "Error" })
                                      }
                                 }
                             )
@@ -249,7 +264,7 @@ app.get('/users/editsuccess', async (req, res)=>{
 
 })
 
-app.get('/users/groups/editsuccess', async (req, res)=>{
+app.post('/users/groups/editsuccess', async (req, res)=>{
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
@@ -325,6 +340,11 @@ app.post('/users/groups/groupcreatesuccess', upload.single('myFile'), (req, res)
         console.log("Error to upload file ")
         return res.json({ "message": "error" })
     }
+    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.touser.split('@')[0], function (err) {
+        if (err) {
+            return res.json({ "message": "error" })
+        }
+    })
 
     let query = GroupsModel.find({}).select(['name', 'partisipants']);
     query.exec((err, allGroups) => {
@@ -584,6 +604,11 @@ app.post('/users/usercreatesuccess', upload.single('myFile'), async (req, res)=>
         console.log("Error to upload file ")
         return res.json({ "message": "error" })
     }
+    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.useremail.split('@')[0], function (err) {
+        if (err) {
+            return res.json({ "status": "Error" })
+        }
+    })
 
 
     let query = UsersModel.find({}).select(['email']);

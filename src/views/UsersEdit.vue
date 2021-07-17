@@ -2,27 +2,33 @@
     <div>
       <Header :auth="'true'" :sender="touser.split('@')[0]" />
       <div class="customCardGroup">
-        <input type="hidden" class="touser form-control" disabled required="" autofocus="" v-model="touser">
-        
-        <!-- <div v-if="imageurl && imageurl.includes('empty')">
-            <img width="85px" height="85px" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" />
-        </div>
-        <div v-else-if="imageurl && !imageurl.includes('empty')">
-            <img width="85px" height="85px" :src="imageurl" />
-        </div> -->
-        <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://opalescent-soapy-baseball.glitch.me/pictures/getpicture?picturename=${name}`" />
+        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://showbellow.herokuapp.com/users/editsuccess?touser=${$route.query.touser}&imageurl=a&name=${this.name}&age=${this.age}&email=${$route.query.email}`">
+          <input type="hidden" class="touser form-control" disabled required="" autofocus="" v-model="touser">
+          
+          <!-- <div v-if="imageurl && imageurl.includes('empty')">
+              <img width="85px" height="85px" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" />
+          </div>
+          <div v-else-if="imageurl && !imageurl.includes('empty')">
+              <img width="85px" height="85px" :src="imageurl" />
+          </div> -->
+          <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://opalescent-soapy-baseball.glitch.me/pictures/getpicture?picturename=${name}`" />
 
-        <label for="inputPhoto" class="sr-only">Photo</label>
-        <input v-model="imageurl" type="text" id="inputPhoto" class="userphoto form-control" placeholder="Photo" required="" autofocus="">
-        <label for="inputName" class="sr-only">Name</label>
-        <input v-model="name" type="text" id="inputName" class="username form-control" placeholder="Name" required="" autofocus="">
-        <label for="inputAge" class="sr-only">Age</label>
-        <input v-model="age" type="text" id="inputAge" class="userage form-control" placeholder="Age" required="" autofocus="">
-        <label for="inputEmail" class="sr-only">Email</label>
-        <input disabled v-model="email" type="email" id="inputEmail" class="useremail form-control" placeholder="Email" required="" autofocus="">
-        <!-- <label for="inputPassword" class="sr-only">Password</label>
-        <input disabled v-model="password" type="password" id="inputPassword" class="userpassword form-control" placeholder="Password" required="" autofocus=""> -->
-        <button style="min-width: 125px;" @click="save()" class="btn btn-lg btn-primary btn-block editBtn">Сохранить</button>
+          <label for="inputPhoto" class="sr-only">Photo</label>
+          <input name="myFile" type="file" class="userimage form-control" required="" autofocus="">
+          <!-- <input v-model="imageurl" type="text" id="inputPhoto" class="userphoto form-control" placeholder="Photo" required="" autofocus=""> -->
+          <label for="inputName" class="sr-only">Name</label>
+          <input v-model="name" type="text" id="inputName" class="username form-control" placeholder="Name" required="" autofocus="">
+          <label for="inputAge" class="sr-only">Age</label>
+          <input v-model="age" type="text" id="inputAge" class="userage form-control" placeholder="Age" required="" autofocus="">
+          <label for="inputEmail" class="sr-only">Email</label>
+          <input disabled v-model="email" type="email" id="inputEmail" class="useremail form-control" placeholder="Email" required="" autofocus="">
+          <!-- <label for="inputPassword" class="sr-only">Password</label>
+          <input disabled v-model="password" type="password" id="inputPassword" class="userpassword form-control" placeholder="Password" required="" autofocus=""> -->
+          
+          <!-- <button style="min-width: 125px;" @click="save()" class="btn btn-lg btn-primary btn-block editBtn">Сохранить</button> -->
+          <input type="submit" style="min-width: 125px;" class="btn btn-lg btn-primary btn-block editBtn" value="Сохранить">
+
+        </form>
       </div>
         <!-- footer -->
         <Footer/>
