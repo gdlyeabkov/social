@@ -13,7 +13,7 @@
               <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="imageurl" />
             </div> -->
             
-            <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://dog-sparkly-chipmunk.glitch.me/pictures/getpicture?picturename=${username}`" />
+            <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://maze-living-swim.glitch.me/pictures/getpicture?picturename=${username}`" />
             
 
 
