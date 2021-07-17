@@ -6,7 +6,15 @@
             <img class="mb-4" src="https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/vue-dot-js-256.png" alt="" width="72" height="72">
             <h1 class="h3 mb-3 font-weight-normal">Войдите</h1>
             <label for="inputEmail" class="sr-only">Email</label>
-            <input type="email" id="inputEmail" v-model="useremail" class="useremail form-control" placeholder="Email address" required="" autofocus="">
+            
+            <div class="input-group mb-3" style="width: 405px; margin: auto;">
+                <input style="" type="email" id="inputEmail" v-model="useremail" class="useremail form-control" placeholder="Email address" required="" autofocus="">
+                <select style="max-width: 115px;" class="useremail form-control" v-model="custommail">
+                    <option value="@gmail.com" selected>@gmail.com</option>
+                    <option value="@mail.ru">@mail.ru</option>
+                </select>
+            </div>
+            
             <label for="inputPassword" class="sr-only">Password</label>
             <input type="password" id="inputPassword" v-model="userpassword" class="userpassword form-control" placeholder="Password" required="">
             <div class="checkbox mb-3">
@@ -34,55 +42,60 @@ export default {
             userpassword: '',
             errors: '',
             auth: 'false',
-            token: ''
+            token: '',
+            custommail: "@gmail.com"
         }
     },
     methods: {
         login(){
-            // this.$router.push({ name: '/users/check?useremail=${useremail}&userpassword=${userpassword}' })
-            fetch(`https://showbellow.herokuapp.com/users/check?useremail=${this.useremail}&userpassword=${this.userpassword}`, {
-            mode: 'cors',
-            method: 'GET'
-            }).then(response => response.body).then(rb  => {
-                const reader = rb.getReader()
-                return new ReadableStream({
-                start(controller) {
-                    function push() {
-                    reader.read().then( ({done, value}) => {
-                        if (done) {
-                        console.log('done', done);
-                        controller.close();
-                        return;
+            if(!this.useremail.includes("@")){
+                // this.$router.push({ name: '/users/check?useremail=${useremail}&userpassword=${userpassword}' })
+                fetch(`http://localhost:4000/users/check?useremail=${this.useremail + this.custommail}&userpassword=${this.userpassword}`, {
+                    mode: 'cors',
+                    method: 'GET'
+                }).then(response => response.body).then(rb  => {
+                    const reader = rb.getReader()
+                    return new ReadableStream({
+                    start(controller) {
+                        function push() {
+                        reader.read().then( ({done, value}) => {
+                            if (done) {
+                            console.log('done', done);
+                            controller.close();
+                            return;
+                            }
+                            controller.enqueue(value);
+                            console.log(done, value);
+                            push();
+                        })
                         }
-                        controller.enqueue(value);
-                        console.log(done, value);
                         push();
-                    })
                     }
-                    push();
-                }
-                });
-            }).then(stream => {
-                return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
-            })
-            .then(result => {
-                console.log(JSON.parse(result))
-                const isAuth = JSON.parse(result).auth.includes('true')
-                console.log(!isAuth)
-                if(isAuth){
-                    
-                    this.token = jwt.sign({
-                        useremail: this.useremail
-                        }, 'showbellowsecret', { expiresIn: '5m' })
-                    localStorage.setItem('showbellowtoken', this.token)
+                    });
+                }).then(stream => {
+                    return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+                })
+                .then(result => {
+                    console.log(JSON.parse(result))
+                    const isAuth = JSON.parse(result).auth.includes('true')
+                    console.log(!isAuth)
+                    if(isAuth){
+                        
+                        this.token = jwt.sign({
+                            useremail: this.useremail
+                            }, 'showbellowsecret', { expiresIn: '5m' })
+                        localStorage.setItem('showbellowtoken', this.token)
 
-                    localStorage.setItem('useremail', this.useremail.split('@')[0])
-                    this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).sender, "guest": 'false'  } })
-                } else if(!isAuth){
-                    //window.location.reload()
-                    this.errors = "Неверный логин или пароль"
-                }
-            });
+                        localStorage.setItem('useremail', this.useremail.split('@')[0])
+                        this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).sender, "guest": 'false'  } })
+                    } else if(!isAuth){
+                        //window.location.reload()
+                        this.errors = "Неверный логин или пароль"
+                    }
+                });
+            } else if(this.useremail.includes("@")){
+                this.errors = "Неверный логин или пароль"
+            }
         }
     },
     components: {

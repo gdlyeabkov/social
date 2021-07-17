@@ -5,24 +5,18 @@
           <div class="aside">
           </div>
           <div class="main">
-            <div v-if="imageurl.includes('empty')">
+            
+            <!-- <div v-if="imageurl.includes('empty')">
               <img style="border-radius: 25%; float: left;" width="200px" height="200px" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" />
             </div>
-              <!-- <div style="float: left;">
-                <router-link v-if="isPartisipant" style="display: block;" :to="{ name:'GroupEdit', query: {'groupname': name, 'groupdescription': description, 'groupaccess': access, 'imageurl': imageurl, 'touser': touser } }">Редактировать группу</router-link>
-                <div v-if="access.includes('public')">
-                  <a v-if="!isPartisipant" style="color: blue; cursor: pointer; text-decoration: underline;;" @click="enterToGroup()">Вступить в группу</a>
-                </div>
-                <div v-else-if="access.includes('private')">
-                  <p>Эта группа приватная</p>
-                </div>
-                <a v-if="isPartisipant" style="color: blue; cursor: pointer; text-decoration: underline;" @click="leaveFromGroup()">Выйти из группы</a>
-              </div>
-              <br style="clear: both;"/> -->
-            
             <div if="!imageurl.includes('empty')">
               <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="imageurl" />
-            </div>
+            </div> -->
+            
+            <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://showbellow.herokuapp.com/pictures/getpicture?picturename=${username}`" />
+            
+
+
               <div style="float: left; width: calc(100% - 200px); text-align: center;">
                 <router-link v-if="isPartisipant" style="display: block;" :to="{ name:'GroupEdit', query: {'groupname': name, 'groupdescription': description, 'groupaccess': access, 'imageurl': imageurl, 'touser': touser } }">Редактировать группу</router-link>
                 <div v-if="access.includes('public')">
@@ -38,11 +32,6 @@
               </div>
               <br style="clear: both;"/>
 
-            <!-- <div v-if="isPartisipant">
-              <textarea style="height: 155px; margin-bottom: 5px;" v-model="groupPostContent" id="inputContent" class="content form-control" placeholder="Введите текст сообщения..." required=""></textarea>
-              <button @click="submitPost()" class="btn btn-lg btn-primary btn-block sendBtn">Отправить</button>
-            </div> -->
-            
             <textarea :disabled="!isPartisipant" style="height: 155px; margin-bottom: 5px;" v-model="groupPostContent" id="inputContent" class="content form-control" placeholder="Введите текст сообщения..." required=""></textarea>
             <button :disabled="!isPartisipant" @click="submitPost()" class="btn btn-lg btn-primary btn-block sendBtn">Отправить</button>
           
@@ -52,7 +41,7 @@
               <div class="card postStyle">
                 <h5 class="card-header">
                   <span style="color: black;">{{ post.name }}</span>
-                  <span style="font-size: 14px; color:black; float: right;">Опубликовано: {{ post.created.split(", ")[0].split("/")[1] + "." + post.created.split(", ")[0].split("/")[0] + "." + post.created.split(", ")[0].split("/")[2] + " в " + post.created.split(", ")[1].split(":")[0] + ":" + post.created.split(", ")[1].split(":")[1] }}</span>
+                  <span style="font-size: 14px; color:black; float: right;">Опубликовано в {{ post.created.split(", ")[1].split(":")[0] + ":" + post.created.split(", ")[1].split(":")[1] }}<br/>{{ post.created.split(", ")[0].split("/")[1] + " " + months[post.created.split(", ")[0].split("/")[0]] + " " + post.created.split(", ")[0].split("/")[2] }}</span>
                 </h5>
                 <div class="card-body">
                   <h5 style="color: black;" class="card-title">{{ post.content }}</h5>
@@ -80,17 +69,32 @@ import * as jwt from 'jsonwebtoken'
 export default {
     data(){
         return {
-            partisipants: [],
-            imageurl: '',
-            name: '',
-            description: '',
-            access: '',
-            touser: '',
-            auth: 'true',
-            isPartisipant: false,
-            posts: [],
-            groupPostContent: '',
-            token: window.localStorage.getItem("showbellowtoken")
+          partisipants: [],
+          imageurl: '',
+          name: '',
+          description: '',
+          access: '',
+          touser: '',
+          username: '',
+          auth: 'true',
+          isPartisipant: false,
+          posts: [],
+          groupPostContent: '',
+          token: window.localStorage.getItem("showbellowtoken"),
+          months: {
+            "1": "января",
+            "2": "февраля",
+            "3": "марта",
+            "4": "апреля",
+            "5": "мая",
+            "6": "июня",
+            "7": "июля",
+            "8": "августа",
+            "9": "сентября",
+            "10": "октября",
+            "11": "ноября",
+            "12": "декабря"
+          }
         }
     },
     mounted(){
@@ -133,7 +137,8 @@ export default {
             this.imageurl = JSON.parse(result).imageurl
             this.posts = JSON.parse(result).posts
             this.posts = this.posts.reverse()
-            
+            this.username = decoded.useremail.split('@')[0]
+
             console.log('Object.values(this.partisipants): ', Object.values(this.partisipants))
             let possiblePartisipants = []
             Object.values(this.partisipants).forEach((partisipant) => {

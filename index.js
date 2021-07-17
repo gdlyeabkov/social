@@ -1,4 +1,17 @@
-﻿const bcrypt = require('bcrypt');
+﻿const multer  = require('multer')
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads')
+    },
+    filename: function (req, file, cb) {
+    //   cb(null, file.originalname)
+        cb(null, req.body.picturename)
+    }
+})
+const upload = multer({ storage: storage })
+
+
+const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 const mongoose = require('mongoose')
@@ -95,6 +108,8 @@ app.get('/home', async (req, res)=>{
     
     
     let queryOfFriendsBefore =  UsersModel.findOne({'email': req.query.sender + "@mail.ru"}, function(err, beforeUser){
+    // let queryOfFriendsBefore =  UsersModel.findOne({ 'email': req.query.decodedcustomtokenvalue }, function(err, beforeUser){
+
         if(err){
             return res.json({ "status": 'error'})
         } else {
@@ -113,7 +128,10 @@ app.get('/home', async (req, res)=>{
                     return res.json({ "status": 'error'})
                 }
                 let nickOfUser = req.query.sender
+                
+                // let queryOfFriends =  UsersModel.findOne({ 'email': req.query.decodedcustomtokenvalue }, function(err, user){
                 let queryOfFriends =  UsersModel.findOne({'email': req.query.sender + "@mail.ru"}, function(err, user){
+                    
                     if (err){
                         return res.json({ "status": 'error'})
                     } else {
@@ -134,7 +152,7 @@ app.get('/home', async (req, res)=>{
                                 groupsWithData.push(g)
                             })
                             if(req.query.guest.includes('true')){
-                                return res.json({ "allPosts": allPosts, "auth": 'true', "guest": 'true', "touser":req.query.touser, "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "imageurl": user.imageurl, "name": user.name, "age": user.age, "password": user.password, "groupswithdata": groupsWithData, "liked": user.liked  })
+                                return res.json({ "allPosts": allPosts, "auth": 'true', "guest": 'true', "touser":req.query.touser, "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "imageurl": user.imageurl, "name": user.name, "age": user.age, "password": user.password, "groupswithdata": groupsWithData, "liked": user.liked})
                             } else if(req.query.guest.includes('false')){
                                 return res.json({ "allPosts": allPosts, "auth": 'true', "guest": 'false', "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "imageurl": user.imageurl, "name": user.name, "age": user.age, "password": user.password, "groupswithdata": groupsWithData, "requests": user.requests, "liked": user.liked })
                             }  
@@ -293,13 +311,21 @@ app.get('/users/groups/register',(req, res)=>{
 
 })
 
-app.get('/users/groups/groupcreatesuccess', (req, res) => {
+app.post('/users/groups/groupcreatesuccess', upload.single('myFile'), (req, res) => {
     
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
    
+    console.log("req.body: ", req.body)
+    let file = req.file
+
+    if(!file){
+        console.log("Error to upload file ")
+        return res.json({ "message": "error" })
+    }
+
     let query = GroupsModel.find({}).select(['name', 'partisipants']);
     query.exec((err, allGroups) => {
         if (err){
@@ -309,7 +335,9 @@ app.get('/users/groups/groupcreatesuccess', (req, res) => {
         if(groupExists){
             return res.json({ "message": "error" })
         } else {
-            const group = new GroupsModel({ name: req.query.groupname, description:req.query.groupdescription, access: req.query.groupaccess, imageurl: req.query.imageurl });
+            // const group = new GroupsModel({ name: req.query.groupname, description:req.query.groupdescription, access: req.query.groupaccess, imageurl: req.query.imageurl });
+            const group = new GroupsModel({ name: req.body.groupname, description: req.body.groupdescription, access: req.body.groupaccess });
+
             group.save(function (err, group) {
                 if(err){
                     return res.json({ "message": "error" })
@@ -344,7 +372,8 @@ app.get('/users/groups/groupcreatesuccess', (req, res) => {
                                 if(err) {
                                     return res.json({ "message": "error" })
                                 }
-                                return res.json({ "message": "success" })
+                                // return res.json({ "message": "success" })
+                                return res.redirect("https://showbellow.herokuapp.com/")
                             })
                         } 
                     })
@@ -517,28 +546,46 @@ app.get('/users/check', (req,res)=>{
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
-    let query =  UsersModel.findOne({'email': req.query.useremail}, function(err, user){
-        if (err){
-            return
-        } else {
-            const passwordCheck = bcrypt.compareSync(req.query.userpassword, user.password) && req.query.userpassword !== ''
-            if(user != null && user != undefined && passwordCheck){
-                auth = true
-                return res.json({ "auth": "true", "sender": user.email.split('@')[0] })
-            } else {
-                return res.json({ "auth": "false" })
-            }
+    let queryBefore = UsersModel.find({ email: { $in: req.query.useremail }  })
+    queryBefore.exec((err, allUsers) => {
+        if(err){
+            return res.json({ "auth": "false" })
+        }
+        if(allUsers.length >= 1){
+            let query =  UsersModel.findOne({'email': req.query.useremail}, function(err, user){
+                if (err){
+                    return res.json({ "auth": "false" })
+                } else {
+                    const passwordCheck = bcrypt.compareSync(req.query.userpassword, user.password) && req.query.userpassword !== ''
+                    if(user != null && user != undefined && passwordCheck){
+                        return res.json({ "auth": "true", "sender": user.email.split('@')[0] })
+                    } else {
+                        return res.json({ "auth": "false" })
+                    }
+                }
+            })    
+        } else if(allUsers.length <= 0){
+            return res.json({ "auth": "false" })
         }
     })
 })
 
-app.get('/users/usercreatesuccess',async (req, res)=>{
+app.post('/users/usercreatesuccess', upload.single('myFile'), async (req, res)=>{
     
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
+    console.log("req.body: ", req.body)
+    let file = req.file
+
+    if(!file){
+        console.log("Error to upload file ")
+        return res.json({ "message": "error" })
+    }
+
+
     let query = UsersModel.find({}).select(['email']);
     query.exec((err, allUsers) => {
         if (err){
@@ -548,7 +595,8 @@ app.get('/users/usercreatesuccess',async (req, res)=>{
         var userExists = false;
 
         allUsers.forEach(user => {
-            if(user.email.includes(req.query.useremail)){
+            // if(user.email.includes(req.query.useremail)){
+            if(user.email.includes(req.body.useremail)){
                 userExists = true
             }
         });
@@ -557,14 +605,18 @@ app.get('/users/usercreatesuccess',async (req, res)=>{
         } else {
             let encodedPassword = "#"
             const salt = bcrypt.genSalt(saltRounds)
-            encodedPassword = bcrypt.hashSync(req.query.userpassword, saltRounds)
+            // encodedPassword = bcrypt.hashSync(req.query.userpassword, saltRounds)
+            encodedPassword = bcrypt.hashSync(req.body.userpassword, saltRounds)
 
-            const user = new UsersModel({ email: req.query.useremail, password: encodedPassword, name: req.query.username, age: Number(req.query.userage) });
+            // const user = new UsersModel({ email: req.query.useremail, password: encodedPassword, name: req.query.username, age: Number(req.query.userage) });
+            const user = new UsersModel({ email: req.body.useremail, password: encodedPassword, name: req.body.username, age: Number(req.body.userage) });
+
             user.save(function (err) {
                 if(err){
                     return res.json({ "status": "Error" })
                 } else {
-                    res.json({ "status": "OK", "username": user.email.split('@')[0] })
+                    return res.redirect("https://showbellow.herokuapp.com/")
+                    // res.json({ "status": "OK", "username": user.email.split('@')[0] })
                 }
             })
         }
@@ -782,10 +834,22 @@ app.get('/users/requests/delete', (req, res)=>{
     })
 })
 
+app.get('/pictures/getpicture', (req, res)=>{
+        
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+    
+    res.sendFile(__dirname + `/uploads/${req.query.picturename}.png`)
+
+})
+
+
 app.get('**', (req, res) => {
     return res.redirect(`/?redirectroute=${req.path}`)
 })
 
-const port = process.env.PORT || 8080
-// const port = 4000
+// const port = process.env.PORT || 8080
+const port = 4000
 app.listen(port)

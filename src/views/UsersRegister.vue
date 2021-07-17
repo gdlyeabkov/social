@@ -5,18 +5,22 @@
         <div class="customCardGroup">
             <img class="mb-4" src="https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/vue-dot-js-256.png" alt="" width="72" height="72">
             <h1 class="h3 mb-3 font-weight-normal headerform">Зарегестрируйтесь</h1>
-            
-            <label class="sr-only">Email</label>
-            <input v-model="useremail" type="email" id="" class="useremail form-control" placeholder="Email address" required="" autofocus="">
-            <label class="sr-only">Password</label>
-            <input v-model="userpassword" type="password" id="" class="userpassword form-control" placeholder="Password" required="">
-            <label class="sr-only">Age</label>
-            <input v-model="userage" type="number" id="" class="userage  form-control" placeholder="Age" required="" autofocus="">
-            <label class="sr-only">Name</label>
-            <input v-model="username" type="text" id="" class="username form-control" placeholder="Name" required="" autofocus="">
-            <div class="checkbox mb-3">
-            </div>
-            <button style="min-width: 215px;" @click="registerNewUser" class="btn btn-lg btn-primary btn-block registerBtn">Зарегестрироваться</button>
+            <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://changeme.glitch.me/users/usercreatesuccess`">
+                <label class="sr-only">Email</label>
+                <input name="useremail" v-model="useremail" type="email" id="" class="useremail form-control" placeholder="Email address" required="" autofocus="">
+                <label class="sr-only">Password</label>
+                <input name="userpassword" v-model="userpassword" type="password" id="" class="userpassword form-control" placeholder="Password" required="">
+                <label class="sr-only">Age</label>
+                <input name="userage" v-model="userage" type="number" id="" class="userage  form-control" placeholder="Age" required="" autofocus="">
+                <label class="sr-only">Name</label>
+                <input name="username" v-model="username" type="text" id="" class="username form-control" placeholder="Name" required="" autofocus="">
+                <label class="sr-only">Image</label>
+                <input name="myFile" type="file" class="userimage form-control" required="" autofocus="">
+                <div class="checkbox mb-3">
+                </div>
+                <input type="submit" style="min-width: 215px;" class="btn btn-lg btn-primary btn-block registerBtn" value="Зарегестрироваться">
+                <!-- <button style="min-width: 215px;" @click="registerNewUser" class="btn btn-lg btn-primary btn-block registerBtn">Зарегестрироваться</button> -->
+            </form>
             <div class="customErros">{{ errors }}</div>
         </div>
         <Footer/>

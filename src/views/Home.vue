@@ -30,12 +30,15 @@
           </div>
           <div class="customflexbar main">
             <div style="float: left;">
-              <div v-if="imageurl.includes('empty')">  
+              
+              <!-- <div v-if="imageurl.includes('empty')">  
                   <img width="200px" height="200px" style="border-radius: 25%;" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" />
               </div>
               <div v-else-if="!imageurl.includes('empty')">
                   <img width="200px" height="200px" :src="imageurl" style="border-radius: 25%;" />
-              </div>
+              </div> -->
+              <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://showbellow.herokuapp.com/pictures/getpicture?picturename=${touser}`" />
+
             </div>
             <div style="width: calc(100% - 200px); float: left; text-align: center;">
               <h1>{{ name }}</h1>
@@ -63,10 +66,10 @@
                   <div class="card postStyle">
                       <h5 class="card-header">
                         <div v-if="$route.query.auth.includes('true')">
-                          <!-- <router-link :to="{ name: 'Post', params: { 'postid': post._id }, }">{{ post.sender }}</router-link> -->
-                          <router-link :to="{ name: 'Home', query: { 'auth': 'true', 'guest': isLogginedSender(post.sender) ? 'false' : 'true', 'sender': post.sender }, }">{{ post.sender }}</router-link>
-                          <!-- {{ post.sender }} -->
-                          <p style="font-size: 14px; float: right;">Опубликовано: {{ post.created.split("T")[0].split("-")[2] + "." + post.created.split("T")[0].split("-")[1] + "." + post.created.split("T")[0].split("-")[0] + " в " + new Date(post.created).getHours() + ":" + new Date(post.created).getMinutes() }}</p>
+                          <!-- <router-link :to="{ name: 'Home', query: { 'auth': 'true', 'guest': isLogginedSender(post.sender) ? 'false' : 'true', 'sender': post.sender } }" @click="refresh()">{{ post.sender }}</router-link> -->
+                          <a style="cursor: pointer;" @click="refresh(post.sender)">{{ post.sender }}</a>
+                          <p style="font-size: 14px; float: right;">Опубликовано в {{ new Date(post.created).getHours() + ":" + new Date(post.created).getMinutes() }}<br/>{{ post.created.split("T")[0].split("-")[2] + " " + months[post.created.split("T")[0].split("-")[1]] + " " + post.created.split("T")[0].split("-")[0] }}</p>
+                          
                         </div>
                       </h5>
                       <div class="card-body">
@@ -112,7 +115,10 @@
             <span @click="deleteFromRequests(request.name)" style="float: right; cursor: pointer; color: red;" class="material-icons">
               close
             </span>
-            <img width="45%" height="45%" :src="request.image" alt="">
+
+            <!-- <img width="45%" height="45%" :src="request.image" alt=""> -->
+            <img width="45%" height="45%" :src="`https://showbellow.herokuapp.com/pictures/getpicture?picturename=${request.name}`" alt="">
+
             <p style="font-size: 14px; color: black;">
               {{ request.name }} хочет с вами подружиться
             </p>
@@ -154,7 +160,22 @@ export default {
       content: '',
       token: localStorage.getItem('showbellowtoken'),
       likedYet: false,
-      liked: []
+      liked: [],
+      months: {
+        "01": "января",
+        "02": "февраля",
+        "03": "марта",
+        "04": "апреля",
+        "05": "мая",
+        "06": "июня",
+        "07": "июля",
+        "08": "августа",
+        "09": "сентября",
+        "10": "октября",
+        "11": "ноября",
+        "12": "декабря"
+      },
+      postfixmail: "@mail.ru"
     }
   },
   mounted(){
@@ -178,7 +199,7 @@ export default {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
-            fetch(`https://showbellow.herokuapp.com/home?auth=true&guest=false&sender=${this.$route.query.sender}`, {
+            fetch(`http://localhost:4000/home?auth=true&guest=false&sender=${this.$route.query.sender}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
@@ -222,8 +243,9 @@ export default {
 
               // this.likedYet = JSON.parse(result).liked.includes(decoded.useremail.split('@')[0])
               this.likedYet = this.liked.findIndex((like) => decoded.useremail.includes(like.name)) >= 0
-
-              console.log("posts: ", this.allPosts)
+              
+              this.postfixmail = JSON.parse(result).postfixmail
+              console.log("json: ", JSON.parse(result))
 
             });
           }
@@ -291,6 +313,10 @@ export default {
     }
   },
   methods: {
+    refresh(postSender){
+      this.$router.push({ name: 'Home', query: { 'auth': 'true', 'guest': this.isLogginedSender(postSender) ? 'false' : 'true', 'sender': postSender } })
+      window.location.reload()
+    },
     isLogginedSender(senderOfPost){
       // return senderOfPost.includes(window.localStorage.getItem('useremail'))
       return senderOfPost.includes(this.touser)

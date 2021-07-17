@@ -3,12 +3,15 @@
       <Header :auth="'true'" :sender="touser.split('@')[0]" />
       <div class="customCardGroup">
         <input type="hidden" class="touser form-control" disabled required="" autofocus="" v-model="touser">
-        <div v-if="imageurl && imageurl.includes('empty')">
+        
+        <!-- <div v-if="imageurl && imageurl.includes('empty')">
             <img width="85px" height="85px" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" />
         </div>
         <div v-else-if="imageurl && !imageurl.includes('empty')">
             <img width="85px" height="85px" :src="imageurl" />
-        </div>
+        </div> -->
+        <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://showbellow.herokuapp.com/pictures/getpicture?picturename=${name}`" />
+
         <label for="inputPhoto" class="sr-only">Photo</label>
         <input v-model="imageurl" type="text" id="inputPhoto" class="userphoto form-control" placeholder="Photo" required="" autofocus="">
         <label for="inputName" class="sr-only">Name</label>
