@@ -13,14 +13,14 @@
           </div>   -->
           <img width="85px" height="85px" :src="`https://opalescent-nostalgic-feet.glitch.me/pictures/getpicture?picturename=${groupname}`" />
 
-          <label for="inputPhoto" class="sr-only">Photo</label>
+          <label for="inputPhoto" class="sr-only">Фото</label>
           <input v-model="imageurl" type="text" id="inputPhoto" class="imageurl form-control" placeholder="Photo" required="" autofocus="">
-          <label for="inputName" class="sr-only">Name</label>
+          <label for="inputName" class="sr-only">Имя</label>
           <input v-model="groupname" type="text" id="inputName" class="groupname form-control" placeholder="Name" required="" autofocus="">
-          <label for="inputDescription" class="sr-only">Description</label>
+          <label for="inputDescription" class="sr-only">Описание</label>
           <input v-model="groupdescription" type="text" id="inputDescription" class="groupdescription form-control" placeholder="Description" required="" autofocus="">
           
-          <label for="inputAccess" class="sr-only">Access</label>
+          <label for="inputAccess" class="sr-only">Доступ</label>
           <select style="max-width: 400px; margin: auto;" v-model="groupaccess" class="form-select" aria-label="Default select example">
             <option selected value="public">public</option>
             <option value="private">private</option>

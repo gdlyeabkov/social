@@ -7,12 +7,12 @@
         <img class="mb-4" src="https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/vue-dot-js-256.png" alt="" width="72" height="72">
         <h1 class="h3 mb-3 font-weight-normal">Создание новой группы</h1>
         <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://opalescent-nostalgic-feet.glitch.me/users/groups/groupcreatesuccess`">
-          <label for="inputName" class="sr-only">Name</label>
+          <label for="inputName" class="sr-only">Имя</label>
           <input name="groupname" v-model="name" type="text" id="inputDescription" class="groupname form-control" placeholder="Name" required="" autofocus="">
-          <label for="inputDescription" class="sr-only">Description</label>
+          <label for="inputDescription" class="sr-only">Описание</label>
           <input name="groupdescription" v-model="description" type="text" id="inputDescription" class="groupdescription form-control" placeholder="Description" required="">
           
-          <label for="inputAccess" class="sr-only">Access</label>
+          <label for="inputAccess" class="sr-only">Доступ</label>
           <select name="groupaccess" style="max-width: 400px; margin: auto;"  v-model="access" class="form-select" aria-label="Default select example">
             <option selected value="public">public</option>
             <option value="private">private</option>
@@ -23,7 +23,7 @@
           <!-- сделать загрузку файлом -->
           <!-- <label for="input" class="sr-only">Image Url</label>
           <input v-model="imageurl" type="text" id="inputImageUrl" class="groupimageurl form-control" placeholder="imageurl" required=""> -->
-          <label class="sr-only">Image</label>
+          <label class="sr-only">Фото</label>
           <input name="myFile" type="file" class="userimage form-control" required="" autofocus="">
           
           <div class="checkbox mb-3">

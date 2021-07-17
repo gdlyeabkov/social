@@ -16,13 +16,13 @@
                     </select>
                 </div>
                 
-                <label class="sr-only">Password</label>
+                <label class="sr-only">Пароль</label>
                 <input name="userpassword" v-model="userpassword" type="password" id="" class="userpassword form-control" placeholder="Password" required="">
-                <label class="sr-only">Age</label>
+                <label class="sr-only">Возраст</label>
                 <input name="userage" v-model="userage" type="number" id="" class="userage  form-control" placeholder="Age" required="" autofocus="">
-                <label class="sr-only">Name</label>
+                <label class="sr-only">Имя</label>
                 <input name="username" v-model="username" type="text" id="" class="username form-control" placeholder="Name" required="" autofocus="">
-                <label class="sr-only">Image</label>
+                <label class="sr-only">Фото</label>
                 <input name="myFile" type="file" class="userimage form-control" required="" autofocus="">
                 <div class="checkbox mb-3">
                 </div>

@@ -13,12 +13,12 @@
           </div> -->
           <img width="85px" height="85px" :src="`https://opalescent-nostalgic-feet.glitch.me/pictures/getpicture?picturename=${touser.split('@')[0]}`" />
 
-          <label for="inputPhoto" class="sr-only">Photo</label>
+          <label for="inputPhoto" class="sr-only">Фото</label>
           <input name="myFile" type="file" class="userimage form-control" required="" autofocus="">
           <!-- <input v-model="imageurl" type="text" id="inputPhoto" class="userphoto form-control" placeholder="Photo" required="" autofocus=""> -->
-          <label for="inputName" class="sr-only">Name</label>
+          <label for="inputName" class="sr-only">Имя</label>
           <input v-model="name" type="text" id="inputName" class="username form-control" placeholder="Name" required="" autofocus="">
-          <label for="inputAge" class="sr-only">Age</label>
+          <label for="inputAge" class="sr-only">Возраст</label>
           <input v-model="age" type="text" id="inputAge" class="userage form-control" placeholder="Age" required="" autofocus="">
           <label for="inputEmail" class="sr-only">Email</label>
           <input disabled v-model="email" type="email" id="inputEmail" class="useremail form-control" placeholder="Email" required="" autofocus="">

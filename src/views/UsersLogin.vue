@@ -15,7 +15,7 @@
                 </select>
             </div>
             
-            <label for="inputPassword" class="sr-only">Password</label>
+            <label for="inputPassword" class="sr-only">Пароль</label>
             <input type="password" id="inputPassword" v-model="userpassword" class="userpassword form-control" placeholder="Password" required="">
             <div class="checkbox mb-3">
             </div>
