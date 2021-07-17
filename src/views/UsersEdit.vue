@@ -2,7 +2,7 @@
     <div>
       <Header :auth="'true'" :sender="touser.split('@')[0]" />
       <div class="customCardGroup">
-        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://confirmed-giant-utahraptor.glitch.me/users/editsuccess?touser=${$route.query.touser}&imageurl=a&name=${this.name}&age=${this.age}&email=${$route.query.email}`">
+        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://opalescent-nostalgic-feet.glitch.me/users/editsuccess?touser=${$route.query.touser}&imageurl=a&name=${this.name}&age=${this.age}&email=${$route.query.email}`">
           <input type="hidden" class="touser form-control" disabled required="" autofocus="" v-model="touser">
           
           <!-- <div v-if="imageurl && imageurl.includes('empty')">
@@ -11,7 +11,7 @@
           <div v-else-if="imageurl && !imageurl.includes('empty')">
               <img width="85px" height="85px" :src="imageurl" />
           </div> -->
-          <img width="85px" height="85px" :src="`https://confirmed-giant-utahraptor.glitch.me/pictures/getpicture?picturename=${touser.split('@')[0]}`" />
+          <img width="85px" height="85px" :src="`https://opalescent-nostalgic-feet.glitch.me/pictures/getpicture?picturename=${touser.split('@')[0]}`" />
 
           <label for="inputPhoto" class="sr-only">Photo</label>
           <input name="myFile" type="file" class="userimage form-control" required="" autofocus="">
