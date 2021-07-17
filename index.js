@@ -600,6 +600,8 @@ app.post('/users/usercreatesuccess', upload.single('myFile'), async (req, res)=>
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
     console.log("req.body: ", req.body)
+    console.log("req.body: ", req.body)
+    
     let file = req.file
 
     if(!file){

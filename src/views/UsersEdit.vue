@@ -11,7 +11,7 @@
           <div v-else-if="imageurl && !imageurl.includes('empty')">
               <img width="85px" height="85px" :src="imageurl" />
           </div> -->
-          <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://catkin-teal-hat.glitch.me/pictures/getpicture?picturename=${name}`" />
+          <img width="85px" height="85px" :src="`https://confirmed-giant-utahraptor.glitch.me/pictures/getpicture?picturename=${touser.split('@')[0]}`" />
 
           <label for="inputPhoto" class="sr-only">Photo</label>
           <input name="myFile" type="file" class="userimage form-control" required="" autofocus="">
@@ -26,7 +26,7 @@
           <input disabled v-model="password" type="password" id="inputPassword" class="userpassword form-control" placeholder="Password" required="" autofocus=""> -->
           
           <!-- <button style="min-width: 125px;" @click="save()" class="btn btn-lg btn-primary btn-block editBtn">Сохранить</button> -->
-          <input type="submit" style="min-width: 125px;" class="btn btn-lg btn-primary btn-block editBtn" value="Сохранить">
+          <input type="submit" style="min-width: 125px; margin-top: 15px;" class="btn btn-lg btn-primary btn-block editBtn" value="Сохранить">
 
         </form>
       </div>

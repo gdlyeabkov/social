@@ -37,7 +37,7 @@
               <div v-else-if="!imageurl.includes('empty')">
                   <img width="200px" height="200px" :src="imageurl" style="border-radius: 25%;" />
               </div> -->
-              <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://confirmed-giant-utahraptor.glitch.me/pictures/getpicture?picturename=${touser}`" />
+              <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://confirmed-giant-utahraptor.glitch.me/pictures/getpicture?picturename=${sender}`" />
 
             </div>
             <div style="width: calc(100% - 200px); float: left; text-align: center;">
