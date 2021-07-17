@@ -13,7 +13,7 @@
               <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="imageurl" />
             </div> -->
             
-            <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://opalescent-nostalgic-feet.glitch.me/pictures/getpicture?picturename=${name}`" />
+            <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${name}`" />
             
 
 

@@ -2,7 +2,7 @@
     <div>
       <Header :auth="'true'" :sender="touser.split('@')[0]" />
       <div class="customCardGroup">
-        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://opalescent-nostalgic-feet.glitch.me/users/groups/editsuccess?previousgroupname=${previousgroupname}&groupname=${groupname}&groupdescription=${groupdescription}&groupaccess=${groupaccess}&imageurl=${imageurl}&touser=${touser}`">
+        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://mercurial-diagnostic-glazer.glitch.me/users/groups/editsuccess?previousgroupname=${previousgroupname}&groupname=${groupname}&groupdescription=${groupdescription}&groupaccess=${groupaccess}&imageurl=${imageurl}&touser=${touser}`">
           <input type="hidden" class="previousgroupname form-control" disabled required="" autofocus="" :value="groupname">
           
           <!-- <div v-if="imageurl && imageurl.includes('empty')">
@@ -11,7 +11,7 @@
           <div v-else-if="imageurl && !imageurl.includes('empty')">
             <img width="85px" height="85px" :src="imageurl" />
           </div>   -->
-          <img width="85px" height="85px" :src="`https://opalescent-nostalgic-feet.glitch.me/pictures/getpicture?picturename=${groupname}`" />
+          <img width="85px" height="85px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${groupname}`" />
 
           <label for="inputPhoto" class="sr-only">Фото</label>
           <input v-model="imageurl" type="text" id="inputPhoto" class="imageurl form-control" placeholder="Photo" required="" autofocus="">
