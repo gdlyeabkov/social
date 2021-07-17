@@ -37,7 +37,7 @@
               <div v-else-if="!imageurl.includes('empty')">
                   <img width="200px" height="200px" :src="imageurl" style="border-radius: 25%;" />
               </div> -->
-              <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://soapy-speckle-galaxy.glitch.me/pictures/getpicture?picturename=${touser}`" />
+              <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://opalescent-soapy-baseball.glitch.me/pictures/getpicture?picturename=${touser}`" />
 
             </div>
             <div style="width: calc(100% - 200px); float: left; text-align: center;">
@@ -117,7 +117,7 @@
             </span>
 
             <!-- <img width="45%" height="45%" :src="request.image" alt=""> -->
-            <img width="45%" height="45%" :src="`https://soapy-speckle-galaxy.glitch.me/pictures/getpicture?picturename=${request.name}`" alt="">
+            <img width="45%" height="45%" :src="`https://opalescent-soapy-baseball.glitch.me/pictures/getpicture?picturename=${request.name}`" alt="">
 
             <p style="font-size: 14px; color: black;">
               {{ request.name }} хочет с вами подружиться
