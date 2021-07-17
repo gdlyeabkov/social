@@ -595,8 +595,8 @@ app.post('/users/usercreatesuccess', upload.single('myFile'), async (req, res)=>
         var userExists = false;
 
         allUsers.forEach(user => {
-            // if(user.email.includes(req.query.useremail)){
-            if(user.email.includes(req.body.useremail)){
+            if(user.email.includes(req.query.useremail)){
+            // if(user.email.includes(req.body.useremail)){
                 userExists = true
             }
         });
@@ -605,11 +605,11 @@ app.post('/users/usercreatesuccess', upload.single('myFile'), async (req, res)=>
         } else {
             let encodedPassword = "#"
             const salt = bcrypt.genSalt(saltRounds)
-            // encodedPassword = bcrypt.hashSync(req.query.userpassword, saltRounds)
-            encodedPassword = bcrypt.hashSync(req.body.userpassword, saltRounds)
+            encodedPassword = bcrypt.hashSync(req.query.userpassword, saltRounds)
+            // encodedPassword = bcrypt.hashSync(req.body.userpassword, saltRounds)
 
-            // const user = new UsersModel({ email: req.query.useremail, password: encodedPassword, name: req.query.username, age: Number(req.query.userage) });
-            const user = new UsersModel({ email: req.body.useremail, password: encodedPassword, name: req.body.username, age: Number(req.body.userage) });
+            const user = new UsersModel({ email: req.query.useremail, password: encodedPassword, name: req.query.username, age: Number(req.query.userage) });
+            // const user = new UsersModel({ email: req.body.useremail, password: encodedPassword, name: req.body.username, age: Number(req.body.userage) });
 
             user.save(function (err) {
                 if(err){
