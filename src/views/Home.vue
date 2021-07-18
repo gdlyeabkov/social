@@ -330,7 +330,7 @@ export default {
         
         this.deleteFromRequests(requestFriendName, false)
         
-        fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true&mailclient=${'@' + decoded.useremail.split('@')[1]}`, {
+        fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true&mailclient=@${decoded.useremail.split('@')[1]}`, {
           mode: 'cors',
           method: 'GET'
         }).then(response => response.body).then(rb  => {
@@ -404,7 +404,7 @@ export default {
             return true
           })
           if(dorequest === true){
-            fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false&mailclient=${'@' + decoded.useremail.split('@')[1]}`, {
+            fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false&mailclient=@${decoded.useremail.split('@')[1]}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
