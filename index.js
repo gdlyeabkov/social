@@ -263,12 +263,26 @@ app.post('/users/editsuccess', upload.single('myFile'), async (req, res)=>{
 
 })
 
-app.post('/users/groups/editsuccess', async (req, res)=>{
+app.post('/users/groups/editsuccess', upload.single('myFile'), async (req, res)=>{
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
+    console.log("req.body: ", req.body)
+    let file = req.file
+
+    if(!file){
+        console.log("Error to upload file ")
+        return res.json({ "message": "error" })
+    }
+    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.email.split('@')[0] + ".png", function (err) {
+        if (err) {
+            return res.json({ "message": "Error" })
+        }
+    })
+
+
     await GroupsModel.updateOne({ name: req.query.previousgroupname },
         {
             imageurl: req.query.imageurl,

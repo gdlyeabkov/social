@@ -36,12 +36,11 @@
           <!-- <button style="min-width: 125px;" @click="save()" class="btn btn-lg btn-primary btn-block editBtn">Сохранить</button> -->
           <input style="min-width: 125px;" type="submit" class="btn btn-lg btn-primary btn-block editBtn" value="Сохранить" />
         
-            <input type="hidden" class="sender form-control" disabled required="" autofocus="" v-model="touser">
-          </form>    
-        </div>
-        <!-- footer -->
-        <Footer/>
-    </div>
+          <input type="hidden" class="sender form-control" disabled required="" autofocus="" v-model="touser">
+        </form>    
+      </div>
+      <Footer/>
+  </div>
 </template>
 <script>
 
