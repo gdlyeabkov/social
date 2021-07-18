@@ -233,7 +233,7 @@ app.post('/users/editsuccess', upload.single('myFile'), async (req, res)=>{
                             groups.forEach((g) => {
                                 groupsWithData.push(g)
                             })
-                            nickOfUser = req.query.email.split('@')[0]
+                            let nickOfUser = req.query.email.split('@')[0]
                             const allPosts = []
 
                             await PostModel.updateMany({ sender: req.query.touser.split('@')[0] },
@@ -250,7 +250,7 @@ app.post('/users/editsuccess', upload.single('myFile'), async (req, res)=>{
                             query.exec((err, allPosts) => {
                                 // res.json({ "allPosts": allPosts, "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "groupswithdata": groupsWithData })
                                 // return res.redirect("https://showbellow.herokuapp.com/")
-                                return res.redirect("https://showbellow.herokuapp.com/custompath")
+                                return res.redirect("https://showbellow.herokuapp.com/users/login")
 
                             })
                         })
@@ -281,7 +281,7 @@ app.post('/users/groups/editsuccess', async (req, res)=>{
             } else {
                 // return res.json({ message: 'success' })
                 // return res.redirect("https://showbellow.herokuapp.com/")
-                return res.redirect("https://showbellow.herokuapp.com/custompath")
+                return res.redirect("https://showbellow.herokuapp.com/users/login")
 
             }
         }
@@ -396,7 +396,7 @@ app.post('/users/groups/groupcreatesuccess', upload.single('myFile'), (req, res)
                                 }
                                 // return res.json({ "message": "success" })
                                 // return res.redirect("https://showbellow.herokuapp.com/")
-                                return res.redirect("https://showbellow.herokuapp.com/custompath")
+                                return res.redirect("https://showbellow.herokuapp.com/users/login")
 
                             })
                         } 
