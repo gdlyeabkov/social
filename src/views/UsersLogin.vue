@@ -87,7 +87,7 @@ export default {
                         localStorage.setItem('showbellowtoken', this.token)
 
                         // localStorage.setItem('useremail', this.useremail.split('@')[0])
-                        localStorage.setItem('useremail', this.useremail + '@' + this.custommail)
+                        localStorage.setItem('useremail', this.useremail + this.custommail)
 
                         this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).sender, "guest": 'false'  } })
                     } else if(!isAuth){
