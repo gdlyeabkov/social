@@ -276,7 +276,7 @@ app.post('/users/groups/editsuccess', upload.single('myFile'), async (req, res)=
         console.log("Error to upload file ")
         return res.json({ "message": "error" })
     }
-    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.email.split('@')[0] + ".png", function (err) {
+    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.groupname + ".png", function (err) {
         if (err) {
             return res.json({ "message": "Error" })
         }
