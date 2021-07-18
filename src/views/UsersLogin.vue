@@ -7,16 +7,16 @@
             <h1 class="h3 mb-3 font-weight-normal">Войдите</h1>
             <label for="inputEmail" class="sr-only">Email</label>
             
-            <div class="input-group mb-3" style="width: 405px; margin: auto;">
-                <input style="" type="email" id="inputEmail" v-model="useremail" class="useremail form-control" placeholder="Email address" required="" autofocus="">
-                <select style="max-width: 115px;" class="useremail form-control" v-model="custommail">
+            <div class="input-group mb-3" style="min-width: 115px; max-width: 355px; margin: auto;">
+                <input style="min-width: 25px; max-width: 235px;" type="email" id="inputEmail" v-model="useremail" class="useremail form-control" placeholder="Email address" required="" autofocus="">
+                <select style="min-width: 25px; max-width: 115px;" class="useremail form-control" v-model="custommail">
                     <option value="@gmail.com" selected>@gmail.com</option>
                     <option value="@mail.ru">@mail.ru</option>
                 </select>
             </div>
             
             <label for="inputPassword" class="sr-only">Пароль</label>
-            <input type="password" id="inputPassword" v-model="userpassword" class="userpassword form-control" placeholder="Password" required="">
+            <input style="min-width: 115px; max-width: 355px;" type="password" id="inputPassword" v-model="userpassword" class="userpassword form-control" placeholder="Password" required="">
             <div class="checkbox mb-3">
             </div>
             <button style="min-width: 85px;" class="btn btn-lg btn-primary btn-block loginBtn" @click="login()">Войти</button>
