@@ -13,9 +13,7 @@
               <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="imageurl" />
             </div> -->
             
-            <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${name}`" />
-            
-
+            <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${name}`"  @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/>
 
               <div style="float: left; width: calc(100% - 200px); text-align: center;">
                 <router-link v-if="isPartisipant" style="display: block;" :to="{ name:'GroupEdit', query: {'groupname': name, 'groupdescription': description, 'groupaccess': access, 'imageurl': imageurl, 'touser': touser } }">Редактировать группу</router-link>

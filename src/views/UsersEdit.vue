@@ -11,7 +11,7 @@
           <div v-else-if="imageurl && !imageurl.includes('empty')">
               <img width="85px" height="85px" :src="imageurl" />
           </div> -->
-          <img width="85px" height="85px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${touser.split('@')[0]}`" />
+          <img width="85px" height="85px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${touser.split('@')[0]}`"  @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/>
 
           <label for="inputPhoto" class="sr-only">Фото</label>
           <input name="myFile" type="file" class="userimage form-control" required="" autofocus="">
@@ -71,7 +71,7 @@ export default {
             } else {
               localStorage.setItem("userlogin", "true")
               // fetch(`https://vuesocialnetwork.herokuapp.com/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}&password=${this.password}`, {
-              fetch(`https://showbellow.herokuapp.com/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}`, {
+              fetch(`http://localhost:4000/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}`, {
               mode: 'cors',
               method: 'GET'
             }).then(response => response.body).then(rb  => {

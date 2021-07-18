@@ -50,7 +50,7 @@ export default {
         login(){
             if(!this.useremail.includes("@")){
                 // this.$router.push({ name: '/users/check?useremail=${useremail}&userpassword=${userpassword}' })
-                fetch(`https://showbellow.herokuapp.com/users/check?useremail=${this.useremail + this.custommail}&userpassword=${this.userpassword}`, {
+                fetch(`http://localhost:4000/users/check?useremail=${this.useremail + this.custommail}&userpassword=${this.userpassword}`, {
                     mode: 'cors',
                     method: 'GET'
                 }).then(response => response.body).then(rb  => {
@@ -82,11 +82,13 @@ export default {
                     if(isAuth){
                         
                         this.token = jwt.sign({
-                            useremail: this.useremail
+                            useremail: this.useremail + this.custommail
                             }, 'showbellowsecret', { expiresIn: '5m' })
                         localStorage.setItem('showbellowtoken', this.token)
 
-                        localStorage.setItem('useremail', this.useremail.split('@')[0])
+                        // localStorage.setItem('useremail', this.useremail.split('@')[0])
+                        localStorage.setItem('useremail', this.useremail + '@' + this.custommail)
+
                         this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).sender, "guest": 'false'  } })
                     } else if(!isAuth){
                         //window.location.reload()

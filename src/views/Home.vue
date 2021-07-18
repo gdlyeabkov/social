@@ -37,8 +37,8 @@
               <div v-else-if="!imageurl.includes('empty')">
                   <img width="200px" height="200px" :src="imageurl" style="border-radius: 25%;" />
               </div> -->
-              <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${sender}`" />
-
+              <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${sender}`" @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'" />
+              
             </div>
             <div style="width: calc(100% - 200px); float: left; text-align: center;">
               <h1>{{ name }}</h1>
@@ -117,7 +117,7 @@
             </span>
 
             <!-- <img width="45%" height="45%" :src="request.image" alt=""> -->
-            <img width="45%" height="45%" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${request.name}`" alt="">
+            <img width="45%" height="45%" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${request.name}`" alt=""  @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'">
 
             <p style="font-size: 14px; color: black;">
               {{ request.name }} хочет с вами подружиться
@@ -199,7 +199,7 @@ export default {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
-            fetch(`https://showbellow.herokuapp.com/home?auth=true&guest=false&sender=${this.$route.query.sender}&mailclient=${decoded.useremail.split('@')[1]}`, {
+            fetch(`http://localhost:4000/home?auth=true&guest=false&sender=${this.$route.query.sender}&mailclient=@${decoded.useremail.split('@')[1]}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
@@ -330,7 +330,7 @@ export default {
         
         this.deleteFromRequests(requestFriendName, false)
         
-        fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true&mailclient=${decoded.useremail.split('@')[1]}`, {
+        fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true&mailclient=${'@' + decoded.useremail.split('@')[1]}`, {
           mode: 'cors',
           method: 'GET'
         }).then(response => response.body).then(rb  => {
@@ -404,7 +404,7 @@ export default {
             return true
           })
           if(dorequest === true){
-            fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false&mailclient=${decoded.useremail.split('@')[1]}`, {
+            fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false&mailclient=${'@' + decoded.useremail.split('@')[1]}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {

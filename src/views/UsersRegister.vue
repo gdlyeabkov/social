@@ -56,41 +56,45 @@ export default {
             console.log(this.custommail)
         },
         registerNewUser(){
-            let fulladdress = this.custommail.options[this.custommail.selectedIndex].text
-            // this.$router.push({ name: '/users/check?useremail=${useremail}&userpassword=${userpassword}' })
-            fetch(`https://showbellow.herokuapp.com/users/usercreatesuccess?useremail=${this.useremail.concat(this.custommail)}&userpassword=${this.userpassword}&userage=${this.userage}&username=${this.username}`, {
-        mode: 'cors',
-        method: 'GET'
-        }).then(response => response.body).then(rb  => {
-            const reader = rb.getReader()
-            return new ReadableStream({
-            start(controller) {
-                function push() {
-                reader.read().then( ({done, value}) => {
-                    if (done) {
-                    console.log('done', done);
-                    controller.close();
-                    return;
+            if(!this.useremail.includes("@")){
+                let fulladdress = this.custommail.options[this.custommail.selectedIndex].text
+                // this.$router.push({ name: '/users/check?useremail=${useremail}&userpassword=${userpassword}' })
+                fetch(`https://showbellow.herokuapp.com/users/usercreatesuccess?useremail=${this.useremail.concat(this.custommail)}&userpassword=${this.userpassword}&userage=${this.userage}&username=${this.username}`, {
+                mode: 'cors',
+                method: 'GET'
+                }).then(response => response.body).then(rb  => {
+                    const reader = rb.getReader()
+                    return new ReadableStream({
+                    start(controller) {
+                        function push() {
+                        reader.read().then( ({done, value}) => {
+                            if (done) {
+                            console.log('done', done);
+                            controller.close();
+                            return;
+                            }
+                            controller.enqueue(value);
+                            console.log(done, value);
+                            push();
+                        })
+                        }
+                        push();
                     }
-                    controller.enqueue(value);
-                    console.log(done, value);
-                    push();
+                    });
+                }).then(stream => {
+                    return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
                 })
-                }
-                push();
+                .then(result => {
+                    console.log("this.useremail + this.custommail: ", this.useremail + this.custommail)
+                    if(JSON.parse(result).status.includes('OK')){    
+                        this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).username, "guest": "false"  } })
+                    } else if(!JSON.parse(result).status.includes('OK')){
+                        this.errors = "Такой пользователь уже существует"
+                    }
+                });
+            } else if(this.useremail.includes("@")){
+                this.errors = "Неверный логин или пароль"
             }
-            });
-        }).then(stream => {
-            return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
-        })
-        .then(result => {
-            console.log("this.useremail + this.custommail: ", this.useremail + this.custommail)
-            if(JSON.parse(result).status.includes('OK')){    
-                this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).username, "guest": "false"  } })
-            } else if(!JSON.parse(result).status.includes('OK')){
-                this.errors = "Такой пользователь уже существует"
-            }
-        });
         }
     },
     components: {

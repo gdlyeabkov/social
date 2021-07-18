@@ -107,7 +107,8 @@ app.get('/home', async (req, res)=>{
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
-    
+    console.log("req.query.sender + req.query.mailclient: ", req.query.sender + req.query.mailclient)
+
     // let queryOfFriendsBefore =  UsersModel.findOne({'email': req.query.sender + "@mail.ru"}, function(err, beforeUser){
     let queryOfFriendsBefore =  UsersModel.findOne({'email': req.query.sender + req.query.mailclient }, function(err, beforeUser){
     // let queryOfFriendsBefore =  UsersModel.findOne({ 'email': req.query.decodedcustomtokenvalue }, function(err, beforeUser){
@@ -882,9 +883,14 @@ app.get('/pictures/getpicture', (req, res)=>{
 
 
 app.get('**', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+    
     return res.redirect(`/?redirectroute=${req.path}`)
 })
 
-const port = process.env.PORT || 8080
-// const port = 4000
+// const port = process.env.PORT || 8080
+const port = 4000
 app.listen(port)

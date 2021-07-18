@@ -11,7 +11,7 @@
           <div v-else-if="imageurl && !imageurl.includes('empty')">
             <img width="85px" height="85px" :src="imageurl" />
           </div>   -->
-          <img width="85px" height="85px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${groupname}`" />
+          <img width="85px" height="85px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${groupname}`"  @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/>
 
           <label for="inputPhoto" class="sr-only">Фото</label>
           <input v-model="imageurl" type="text" id="inputPhoto" class="imageurl form-control" placeholder="Photo" required="" autofocus="">
