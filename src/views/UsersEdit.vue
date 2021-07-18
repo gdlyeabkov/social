@@ -25,6 +25,7 @@
           <!-- <label for="inputPassword" class="sr-only">Password</label>
           <input disabled v-model="password" type="password" id="inputPassword" class="userpassword form-control" placeholder="Password" required="" autofocus=""> -->
           
+          <!-- не работает -->
           <!-- <button style="min-width: 125px;" @click="save()" class="btn btn-lg btn-primary btn-block editBtn">Сохранить</button> -->
           <input type="submit" style="min-width: 125px; margin-top: 15px;" class="btn btn-lg btn-primary btn-block editBtn" value="Сохранить">
 
