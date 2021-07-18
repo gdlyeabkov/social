@@ -67,6 +67,7 @@ export default {
         tohome(){
             // window.location = `/?auth=true&guest=false&sender=${sender}`
             window.location = `/?auth=true&guest=false&sender=${this.loginedSender}`
+            // this.$router.push({ name: "Home", query: { auth: 'true', guest: 'false', sender: this.loginedSender } })
         },
         logout(){
             
@@ -80,7 +81,9 @@ export default {
     },
     data(){
         return {
-            loginedSender: localStorage.getItem('useremail')
+            // loginedSender: localStorage.getItem('useremail')
+            loginedSender: localStorage.getItem('useremail').split('@')[0]
+
         }
     },
     props: {
