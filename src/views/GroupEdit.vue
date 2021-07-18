@@ -2,7 +2,7 @@
     <div>
       <Header :auth="'true'" :sender="touser.split('@')[0]" />
       <div class="customCardGroup">
-        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://mercurial-diagnostic-glazer.glitch.me/users/groups/editsuccess?previousgroupname=${previousgroupname}&groupname=${groupname}&groupdescription=${groupdescription}&groupaccess=${groupaccess}&imageurl=${imageurl}&touser=${touser}`">
+        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://mercurial-diagnostic-glazer.glitch.me/users/groups/editsuccess?previousgroupname=${previousgroupname}&groupname=${groupname}&groupdescription=${groupdescription}&groupaccess=${groupaccess}&imageurl=a&touser=${touser}`">
           <input type="hidden" class="previousgroupname form-control" disabled required="" autofocus="" :value="groupname">
           
           <!-- <div v-if="imageurl && imageurl.includes('empty')">
@@ -13,8 +13,11 @@
           </div>   -->
           <img width="85px" height="85px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${groupname}`"  @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/>
 
+          <!-- <label for="inputPhoto" class="sr-only">Фото</label>
+          <input v-model="imageurl" type="text" id="inputPhoto" class="imageurl form-control" placeholder="Photo" required="" autofocus=""> -->
           <label for="inputPhoto" class="sr-only">Фото</label>
-          <input v-model="imageurl" type="text" id="inputPhoto" class="imageurl form-control" placeholder="Photo" required="" autofocus="">
+          <input name="myFile" type="file" class="userimage form-control" required="" autofocus="">
+
           <label for="inputName" class="sr-only">Имя</label>
           <input v-model="groupname" type="text" id="inputName" class="groupname form-control" placeholder="Name" required="" autofocus="">
           <label for="inputDescription" class="sr-only">Описание</label>

@@ -103,7 +103,7 @@
             <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupRegister', query:{ 'userlogin' : 'true', 'touser': this.$route.query.sender + '@mail.ru' }}">
               Добавить новую группу
             </router-link>
-            <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupsList', query:{ 'touser': sender + '@mail.ru', 'groupname': '', 'guest': $route.query.guest }}">
+            <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupsList', query:{ 'touser': sender + mailclient, 'groupname': '', 'guest': $route.query.guest }}">
               Перейти к списку групп
             </router-link>
             </p>
@@ -175,7 +175,8 @@ export default {
         "11": "ноября",
         "12": "декабря"
       },
-      postfixmail: "@mail.ru"
+      postfixmail: "@mail.ru",
+      mailclient: "@mail.ru"
     }
   },
   mounted(){
@@ -244,8 +245,11 @@ export default {
               // this.likedYet = JSON.parse(result).liked.includes(decoded.useremail.split('@')[0])
               this.likedYet = this.liked.findIndex((like) => decoded.useremail.includes(like.name)) >= 0
               
-              this.postfixmail = JSON.parse(result).postfixmail
+              // this.postfixmail = JSON.parse(result).postfixmail
               console.log("json: ", JSON.parse(result))
+
+              this.mailclient = JSON.parse(result).mailclient
+
 
             });
           }
