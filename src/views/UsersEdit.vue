@@ -72,7 +72,7 @@ export default {
             } else {
               localStorage.setItem("userlogin", "true")
               // fetch(`https://vuesocialnetwork.herokuapp.com/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}&password=${this.password}`, {
-              fetch(`http://localhost:4000/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}`, {
+              fetch(`https://showbellow.herokuapp.com/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}`, {
               mode: 'cors',
               method: 'GET'
             }).then(response => response.body).then(rb  => {

@@ -25,18 +25,11 @@ const app = express()
 
 app.use('/', serveStatic(path.join(__dirname, '/dist')))
 
-
-
-var auth = false
 const url = `mongodb+srv://glebClusterUser:glebClusterUserPassword@cluster0.fvfru.mongodb.net/posts?retryWrites=true&w=majority`;
-
-
 
 var options = {
     root: path.join(__dirname, 'views'),
 }   
-
-express.static(path.join(__dirname, 'views'))
 
 const connectionParams={
     useNewUrlParser: true,
@@ -891,6 +884,6 @@ app.get('**', (req, res) => {
     return res.redirect(`/?redirectroute=${req.path}`)
 })
 
-// const port = process.env.PORT || 8080
-const port = 4000
+const port = process.env.PORT || 8080
+// const port = 4000
 app.listen(port)
