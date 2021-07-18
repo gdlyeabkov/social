@@ -249,7 +249,9 @@ app.post('/users/editsuccess', upload.single('myFile'), async (req, res)=>{
                             let query = PostModel.find({ sender: { $eq: req.query.email.split('@')[0] } })
                             query.exec((err, allPosts) => {
                                 // res.json({ "allPosts": allPosts, "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "groupswithdata": groupsWithData })
-                                return res.redirect("https://showbellow.herokuapp.com/")
+                                // return res.redirect("https://showbellow.herokuapp.com/")
+                                return res.redirect("https://showbellow.herokuapp.com/custompath")
+
                             })
                         })
                 
@@ -278,7 +280,9 @@ app.post('/users/groups/editsuccess', async (req, res)=>{
                 return res.json({ message: 'failed' })
             } else {
                 // return res.json({ message: 'success' })
-                return res.redirect("https://showbellow.herokuapp.com/")
+                // return res.redirect("https://showbellow.herokuapp.com/")
+                return res.redirect("https://showbellow.herokuapp.com/custompath")
+
             }
         }
     )
@@ -391,7 +395,9 @@ app.post('/users/groups/groupcreatesuccess', upload.single('myFile'), (req, res)
                                     return res.json({ "message": "error" })
                                 }
                                 // return res.json({ "message": "success" })
-                                return res.redirect("https://showbellow.herokuapp.com/")
+                                // return res.redirect("https://showbellow.herokuapp.com/")
+                                return res.redirect("https://showbellow.herokuapp.com/custompath")
+
                             })
                         } 
                     })
