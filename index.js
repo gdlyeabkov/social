@@ -11,6 +11,39 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 
+const storageForGroups = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/groups')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname)
+        // cb(null, req.query.picturename)
+    }
+})
+const uploadForGroups = multer({ storage: storageForGroups })
+
+const storageForUsers = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/users')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname)
+        // cb(null, req.query.picturename)
+    }
+})
+const uploadForUsers = multer({ storage: storageForUsers })
+
+const storageForPosts = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/posts')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname)
+        // cb(null, req.query.picturename)
+    }
+})
+const uploadForPosts = multer({ storage: storageForPosts })
+
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -250,7 +283,7 @@ app.post('/users/editsuccess', upload.single('myFile'), async (req, res)=>{
                             query.exec((err, allPosts) => {
                                 // res.json({ "allPosts": allPosts, "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "groupswithdata": groupsWithData })
                                 // return res.redirect("https://showbellow.herokuapp.com/")
-                                return res.redirect("https://showbellow.herokuapp.com/users/login")
+                                return res.redirect("https://showbellow.herokuapp.com/")
 
                             })
                         })
@@ -295,7 +328,7 @@ app.post('/users/groups/editsuccess', upload.single('myFile'), async (req, res)=
             } else {
                 // return res.json({ message: 'success' })
                 // return res.redirect("https://showbellow.herokuapp.com/")
-                return res.redirect("https://showbellow.herokuapp.com/users/login")
+                return res.redirect("https://showbellow.herokuapp.com/")
 
             }
         }
@@ -410,7 +443,7 @@ app.post('/users/groups/groupcreatesuccess', upload.single('myFile'), (req, res)
                                 }
                                 // return res.json({ "message": "success" })
                                 // return res.redirect("https://showbellow.herokuapp.com/")
-                                return res.redirect("https://showbellow.herokuapp.com/users/login")
+                                return res.redirect("https://showbellow.herokuapp.com/")
 
                             })
                         } 
@@ -901,7 +934,8 @@ app.get('**', (req, res) => {
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
-    return res.redirect(`/?redirectroute=${req.path}`)
+    // return res.redirect(`/?redirectroute=${req.path}`)
+    return res.redirect(`https://showbellow.herokuapp.com/?redirectroute=${req.path}`)
 })
 
 const port = process.env.PORT || 8080

@@ -37,8 +37,18 @@
               <div v-else-if="!imageurl.includes('empty')">
                   <img width="200px" height="200px" :src="imageurl" style="border-radius: 25%;" />
               </div> -->
-              <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${sender}`" @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'" />
-              
+                <div v-if="$route.query.guest.includes('true') && !likedYet">
+                  <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${sender}`"  class="picturePreLike" @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'" @mouseover="redesign($event, 'hover')" @mouseout="redesign($event, 'hout')"/>
+                  <div ref="wrap" style="display:none; opacity: 0.7; background-color: black; margin: 5px 0px; border-radius: 10%; float: left; width: 200px; height: 200px;">
+                    <span class="material-icons" style="cursor: pointer; font-size: 96px; box-sizing: border-box; padding: 45px;" @click="addLike()">
+                      favorite
+                    </span>
+                  </div>
+                </div>
+                <div v-else>
+                  <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${sender}`"  class="picturePreLike" @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/>
+                </div>
+                
             </div>
             <div style="width: calc(100% - 200px); float: left; text-align: center;">
               <h1>{{ name }}</h1>
@@ -100,11 +110,23 @@
             <p>Вы не создали ещё ни одну группу</p>
           </div>
           <p v-if="$route.query.guest.includes('false')">
-            <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupRegister', query:{ 'userlogin' : 'true', 'touser': this.$route.query.sender + '@mail.ru' }}">
+            <!-- текстом -->
+            <!-- <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupRegister', query:{ 'userlogin' : 'true', 'touser': this.$route.query.sender + '@mail.ru' }}">
               Добавить новую группу
             </router-link>
             <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupsList', query:{ 'touser': sender + mailclient, 'groupname': '', 'guest': $route.query.guest }}">
               Перейти к списку групп
+            </router-link> -->
+            <!-- иконками -->
+            <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupRegister', query:{ 'userlogin' : 'true', 'touser': this.$route.query.sender + '@mail.ru' }}">
+              <span class="material-icons">
+                group_add
+              </span>
+            </router-link>
+            <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupsList', query:{ 'touser': sender + mailclient, 'groupname': '', 'guest': $route.query.guest }}">
+              <span class="material-icons">
+                list
+              </span>
             </router-link>
             </p>
           </div>
@@ -317,6 +339,51 @@ export default {
     }
   },
   methods: {
+    redesign(event, eventType){
+      // if(eventType.includes("hover")) {
+      //   event.target.style = `
+      //     content: '';
+      //     background-color: black;
+      //     position: relative;
+      //     top: 0px;
+      //     left: 0px;
+      //     z-index: 2;
+      //     width: 200px;
+      //     height: 200px;
+      //     display: block;
+      //   `
+      // } else if(eventType.includes("hout")) {
+      //   event.target.style = `
+          
+      //   `
+      // }
+
+      if(eventType.includes("hover")) {
+        event.target.style = `
+          display: none;
+          border-radius: 10%;
+        `
+        this.$refs.wrap.style = `
+          display: block;
+          background-color: black;
+          width: 200px;
+          height: 200px;
+          opacity: 0.7;
+          cursor: pointer;
+          border-radius: 10%;
+        `
+      } else if(eventType.includes("hout")) {
+        event.target.style = `
+          display: block;
+          border-radius: 10%;
+        `
+        this.$refs.wrap.style = `
+          display: none;
+          border-radius: 10%;
+        `
+      }
+
+    },
     refresh(postSender){
       this.$router.push({ name: 'Home', query: { 'auth': 'true', 'guest': this.isLogginedSender(postSender) ? 'false' : 'true', 'sender': postSender } })
       window.location.reload()
@@ -619,5 +686,16 @@ export default {
   }
   .friendCard, .groupCard {
     margin: 5px;
+  }
+  .picturePreLike:before::hover {
+    content: '';
+    background-color: black;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    z-index: 15;
+    width: 200px;
+    height: 200px;
+    display: block;
   }
 </style>
