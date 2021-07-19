@@ -46,6 +46,16 @@ export default {
             custommail: "@gmail.com"
         }
     },
+    mounted(){
+        this.token = localStorage.getItem('showbellowtoken')
+        jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
+            if (err) {
+                
+            } else {
+                this.$router.push({ name: "Home", query: { auth: 'true', sender: decoded.useremail.split('@')[0], guest: 'false' } })
+            }
+        })
+    },
     methods: {
         login(){
             if(!this.useremail.includes("@")){
