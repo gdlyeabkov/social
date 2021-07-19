@@ -283,7 +283,7 @@ app.post('/users/editsuccess', upload.single('myFile'), async (req, res)=>{
                             query.exec((err, allPosts) => {
                                 // res.json({ "allPosts": allPosts, "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "groupswithdata": groupsWithData })
                                 // return res.redirect("https://showbellow.herokuapp.com/")
-                                return res.redirect("https://showbellow.herokuapp.com/")
+                                return res.redirect("https://showbellow.herokuapp.com/users/login")
 
                             })
                         })
@@ -328,7 +328,7 @@ app.post('/users/groups/editsuccess', upload.single('myFile'), async (req, res)=
             } else {
                 // return res.json({ message: 'success' })
                 // return res.redirect("https://showbellow.herokuapp.com/")
-                return res.redirect("https://showbellow.herokuapp.com/")
+                return res.redirect("https://showbellow.herokuapp.com/users/login")
 
             }
         }
@@ -443,7 +443,7 @@ app.post('/users/groups/groupcreatesuccess', upload.single('myFile'), (req, res)
                                 }
                                 // return res.json({ "message": "success" })
                                 // return res.redirect("https://showbellow.herokuapp.com/")
-                                return res.redirect("https://showbellow.herokuapp.com/")
+                                return res.redirect("https://showbellow.herokuapp.com/users/login")
 
                             })
                         } 
@@ -693,7 +693,7 @@ app.post('/users/usercreatesuccess', upload.single('myFile'), async (req, res)=>
                 if(err){
                     return res.json({ "status": "Error" })
                 } else {
-                    return res.redirect("https://showbellow.herokuapp.com/")
+                    return res.redirect("https://showbellow.herokuapp.com/users/login")
                     // res.json({ "status": "OK", "username": user.email.split('@')[0] })
                 }
             })
