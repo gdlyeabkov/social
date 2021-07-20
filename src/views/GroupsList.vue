@@ -36,13 +36,15 @@
                 <div class="card">
                     <h5 class="card-header">
                         <div v-if="auth.includes('true')">
-                            <a href="/users/groups?groupname=<%= group.name %>&groupdescription=<%= group.description %>&groupaccess=<%= group.access %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">{{ group.name }}</a>
+                            <!-- <a href="/users/groups?groupname=<%= group.name %>&groupdescription=<%= group.description %>&groupaccess=<%= group.access %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">{{ group.name }}</a> -->
+                            <router-link :to="{ name:'Group', query: { groupname: group.name, groupdescription: group.description, groupaccess: group.access, imageurl: group.imageurl, touser: touser } }">{{ group.name }}</router-link>
                         </div>
                     </h5>
                     <div class="card-body">
                       <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&touser=<%= touser %>">Вступить в группу</a> -->
                       <p>Вы уже в группе</p>
                       <!-- <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&  touser=<%= touser %>">Выйти из группы</a> -->
+                      <a @click="leaveGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
                     </div> 
                   </div>
             </div>
@@ -61,7 +63,8 @@
                 <div class="card">
                     <h5 class="card-header">
                         <div v-if="auth.includes('true')">
-                            <a href="/users/groups?groupname=<%= group.name %>&groupdescription=<%= group.description %>&groupaccess=<%= group.access %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">{{ group.name }}</a>
+                            <router-link :to="{ name:'Group', query: { groupname: group.name, groupdescription: group.description, groupaccess: group.access, imageurl: group.imageurl, touser: touser } }">{{ group.name }}</router-link>
+                            <!-- <a href="/users/groups?groupname=<%= group.name %>&groupdescription=<%= group.description %>&groupaccess=<%= group.access %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">{{ group.name }}</a> -->
                         </div>
                         <div v-else>
                           
@@ -70,6 +73,7 @@
                     </h5>
                     <div class="card-body">
                       <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">Вступить в группу</a> -->
+                      <a @click="joinGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
                       <p>Вы ещё не в группе</p>
                       <!-- <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&  touser=<%= touser %>">Выйти из группы</a> -->
                     </div> 
@@ -89,7 +93,8 @@
               <div class="card">
                   <h5 class="card-header">
                       <div v-if="auth.includes('true')">
-                          <a href="/users/groups?groupname=<%= group %>&groupdescription=<%= 'group.description' %>&groupaccess=<%= 'group.access' %>&imageurl=<%= 'empty' %>&touser=<%= touser %>">{{ group.name }}</a>
+                          <!-- <a href="/users/groups?groupname=<%= group %>&groupdescription=<%= 'group.description' %>&groupaccess=<%= 'group.access' %>&imageurl=<%= 'empty' %>&touser=<%= touser %>">{{ group.name }}</a> -->
+                          <!-- <router-link :to="{ name:'Group', query: { groupname: group.name, groupdescription: group.description, groupaccess: group.access, imageurl: group.imageurl, touser: touser } }">{{ group.name }}</router-link> -->
                       </div>
                       <div v-else>
                         
@@ -99,8 +104,7 @@
                   <div class="card-body">
                     <p>Вы участник этой группы</p>
                     <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">Вступить в группу</a> -->
-                    
-                    <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl%>&touser=<%= touser %>">Выйти из группы</a>
+                    <a @click="leaveGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
                   </div> 
                 </div>
               </div>
@@ -118,7 +122,8 @@
                 <div class="card">
                     <h5 class="card-header">
                         <div v-if="auth.includes('true')">
-                            <a href="/users/groups?groupname=<%= group.name %>&groupdescription=<%= group.description %>&groupaccess=<%= group.access %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">{{ group.name }}</a>
+                            <!-- <a href="/users/groups?groupname=<%= group.name %>&groupdescription=<%= group.description %>&groupaccess=<%= group.access %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">{{ group.name }}</a> -->
+                            <router-link :to="{ name:'Group', query: { groupname: group.name, groupdescription: group.description, groupaccess: group.access, imageurl: group.imageurl, touser: touser } }">{{ group.name }}</router-link>
                         </div>
                         <div v-else>
                           
@@ -126,9 +131,11 @@
                         
                     </h5>
                     <div class="card-body">
-                      <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">Вступить в группу</a>
+                      <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">Вступить в группу</a> -->
+
                       <p>Вы ещё не участник этой группы</p>
                       <!-- <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&  touser=<%= touser %>">Выйти из группы</a> -->
+                      <a @click="joinGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
                     </div> 
                   </div>
             </div>
@@ -163,12 +170,88 @@ export default {
             token: window.localStorage.getItem("showbellowtoken"),
         }
     },
+    methods: {
+      leaveGroup(groupName, groupDescription, groupAccess, groupImageUrl, user){
+        jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
+        if (err) {
+          this.$router.push({ name: "UsersLogin" })
+        } else {
+          fetch(`https://showbellow.herokuapp.com/users/groups/partisipants/delete?groupnamegroupdescription=${groupDescription}&groupaccess=${groupAccess}&imageurl=${groupImageUrl}&touser=${user}`, {
+            mode: 'cors',
+            method: 'GET'
+          }).then(response => response.body).then(rb  => {
+            const reader = rb.getReader()
+            return new ReadableStream({
+              start(controller) {
+                function push() {
+                  reader.read().then( ({done, value}) => {
+                    if (done) {
+                      console.log('done', done);
+                      controller.close();
+                      return;
+                    }
+                    controller.enqueue(value);
+                    console.log(done, value);
+                    push();
+                  })
+                }
+                push();
+              }
+            });
+          }).then(stream => {
+            return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+          })
+          .then(result => {
+            console.log(JSON.parse(result))
+            this.$router.push({ name: "Home", query: { auth: 'true', guest: 'false', sender: decoded.useremail.split('@')[0] } })
+          });
+        }
+      })
+      },
+      joingroup(){
+                jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
+        if (err) {
+          this.$router.push({ name: "UsersLogin" })
+        } else {
+          fetch(`https://showbellow.herokuapp.com/users/groups/partisipants/add?groupnamegroupdescription=${groupDescription}&groupaccess=${groupAccess}&imageurl=${groupImageUrl}&touser=${user}`, {
+            mode: 'cors',
+            method: 'GET'
+          }).then(response => response.body).then(rb  => {
+            const reader = rb.getReader()
+            return new ReadableStream({
+              start(controller) {
+                function push() {
+                  reader.read().then( ({done, value}) => {
+                    if (done) {
+                      console.log('done', done);
+                      controller.close();
+                      return;
+                    }
+                    controller.enqueue(value);
+                    console.log(done, value);
+                    push();
+                  })
+                }
+                push();
+              }
+            });
+          }).then(stream => {
+            return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+          })
+          .then(result => {
+            console.log(JSON.parse(result))
+            this.$router.push({ name: "Home", query: { auth: 'true', guest: 'false', sender: decoded.useremail.split('@')[0] } })
+          });
+        }
+      })
+      }
+    },
     mounted(){
       jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
         if (err) {
           this.$router.push({ name: "UsersLogin" })
         } else {
-          fetch(`http://localhost:4000/users/groups/list?sender=${this.$route.query.touser}&groupname=${this.$route.query.groupname}`, {
+          fetch(`https://showbellow.herokuapp.com/users/groups/list?sender=${this.$route.query.touser}&groupname=${this.$route.query.groupname}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
