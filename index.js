@@ -938,6 +938,6 @@ app.get('**', (req, res) => {
     return res.redirect(`https://showbellow.herokuapp.com/?redirectroute=${req.path}`)
 })
 
-// const port = process.env.PORT || 8080
+const port = process.env.PORT || 8080
 // const port = 4000
 app.listen(port)
