@@ -58,7 +58,10 @@
               <p>{{ age + ' ' + agePostfix }}</p>
               <p>Лайки: {{ likes }}</p>
               <div style="text-decoration: underline; color: blue; cursor: pointer;" v-if="$route.query.guest.includes('true') && !likedYet">
-                <a @click="addLike()">Нравится</a>
+                <!-- <a "@click="addLike()"">Нравится</a> -->
+                <span @click="addLike()" class="material-icons" title="Нравится">
+                  favorite
+                </span>
               </div>
               <div style="text-decoration: underline; color: blue; cursor: pointer;" v-else-if="$route.query.guest.includes('true') && likedYet">
                 <a>Вы уже оценили</a>
@@ -119,12 +122,12 @@
             </router-link> -->
             <!-- иконками -->
             <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupRegister', query:{ 'userlogin' : 'true', 'touser': this.$route.query.sender + '@mail.ru' }}">
-              <span class="material-icons">
+              <span class="material-icons" title="Добавить новую группу">
                 group_add
               </span>
             </router-link>
             <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupsList', query:{ 'touser': sender + mailclient, 'groupname': '', 'guest': $route.query.guest }}">
-              <span class="material-icons">
+              <span class="material-icons" title="Перейти к списку групп">
                 list
               </span>
             </router-link>

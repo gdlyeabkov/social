@@ -168,7 +168,7 @@ export default {
         if (err) {
           this.$router.push({ name: "UsersLogin" })
         } else {
-          fetch(`https://showbellow.herokuapp.com/users/groups/list?sender=${this.$route.query.touser}&groupname=${this.$route.query.groupname}`, {
+          fetch(`http://localhost:4000/users/groups/list?sender=${this.$route.query.touser}&groupname=${this.$route.query.groupname}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
