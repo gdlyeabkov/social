@@ -44,7 +44,7 @@
                       <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&touser=<%= touser %>">Вступить в группу</a> -->
                       <p>Вы уже в группе</p>
                       <!-- <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&  touser=<%= touser %>">Выйти из группы</a> -->
-                      <a @click="leaveGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
+                      <a style="cusor: pointer;" @click="leaveGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
                     </div> 
                   </div>
             </div>
@@ -73,7 +73,7 @@
                     </h5>
                     <div class="card-body">
                       <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">Вступить в группу</a> -->
-                      <a @click="joinGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
+                      <a style="cusor: pointer;" @click="joinGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
                       <p>Вы ещё не в группе</p>
                       <!-- <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&  touser=<%= touser %>">Выйти из группы</a> -->
                     </div> 
@@ -104,7 +104,7 @@
                   <div class="card-body">
                     <p>Вы участник этой группы</p>
                     <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">Вступить в группу</a> -->
-                    <a @click="leaveGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
+                    <a style="cusor: pointer;" @click="leaveGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
                   </div> 
                 </div>
               </div>
@@ -135,7 +135,7 @@
 
                       <p>Вы ещё не участник этой группы</p>
                       <!-- <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&  touser=<%= touser %>">Выйти из группы</a> -->
-                      <a @click="joinGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
+                      <a style="cusor: pointer;" @click="joinGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
                     </div> 
                   </div>
             </div>
@@ -210,8 +210,8 @@ export default {
         }
       })
       },
-      joingroup(){
-                jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
+      joingroup(groupName, groupDescription, groupAccess, groupImageUrl, user){
+        jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
         if (err) {
           this.$router.push({ name: "UsersLogin" })
         } else {
