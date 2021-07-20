@@ -155,6 +155,8 @@ import Footer from '@/components/Footer.vue'
 
 import * as jwt from 'jsonwebtoken'
 
+// эта страница единственная которая плохо работает
+
 export default {
     data(){
         return {
