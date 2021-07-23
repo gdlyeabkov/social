@@ -36,14 +36,11 @@
                 <div class="card">
                     <h5 class="card-header">
                         <div v-if="auth.includes('true')">
-                            <!-- <a href="/users/groups?groupname=<%= group.name %>&groupdescription=<%= group.description %>&groupaccess=<%= group.access %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">{{ group.name }}</a> -->
                             <router-link :to="{ name:'Group', query: { groupname: group.name, groupdescription: group.description, groupaccess: group.access, imageurl: group.imageurl, touser: touser } }">{{ group.name }}</router-link>
                         </div>
                     </h5>
                     <div class="card-body">
-                      <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&touser=<%= touser %>">Вступить в группу</a> -->
                       <p>Вы уже в группе</p>
-                      <!-- <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&  touser=<%= touser %>">Выйти из группы</a> -->
                       <a style="cusor: pointer;" @click="leaveGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
                     </div> 
                   </div>
@@ -52,9 +49,6 @@
         <div v-else-if="hasGroups != null && hasGroups.length <= 0 && groupfilter === '2'" style="text-align: center;">
           <p style="text-align: center;">Таких групп нет</p>    
         </div>
- 
-        <!-- <br style="clear: both;"/> -->
-        
         
         <div v-if="notHasGroups != null && notHasGroups.length >= 1 && groupfilter === '3'">
             <p style="text-align: center;">Группы которые вы не создали</p>  
@@ -64,7 +58,6 @@
                     <h5 class="card-header">
                         <div v-if="auth.includes('true')">
                             <router-link :to="{ name:'Group', query: { groupname: group.name, groupdescription: group.description, groupaccess: group.access, imageurl: group.imageurl, touser: touser } }">{{ group.name }}</router-link>
-                            <!-- <a href="/users/groups?groupname=<%= group.name %>&groupdescription=<%= group.description %>&groupaccess=<%= group.access %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">{{ group.name }}</a> -->
                         </div>
                         <div v-else>
                           
@@ -72,10 +65,9 @@
                         
                     </h5>
                     <div class="card-body">
-                      <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">Вступить в группу</a> -->
-                      <a style="cusor: pointer;" @click="joinGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
+                      
+                      <a style="cusor: pointer;" @click="joinGroup(group.name, group.description, group.access, group.imageurl, touser)">Вступить в группу</a>
                       <p>Вы ещё не в группе</p>
-                      <!-- <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&  touser=<%= touser %>">Выйти из группы</a> -->
                     </div> 
                   </div>
             </div>
@@ -84,16 +76,12 @@
           <p  style="text-align: center;">Таких групп нет</p>    
         </div>
 
-        <!-- <br style="clear: both;"/> -->
-
-        
         <div v-if="allGroupsWithPartisipants != null && allGroupsWithPartisipants.length >= 1 && groupfilter === '4'">
           <p style="text-align: center;">Группы в которые вы вступили</p> 
           <div v-for="group in allGroupsWithPartisipants">
               <div class="card">
                   <h5 class="card-header">
                       <div v-if="auth.includes('true')">
-                          <!-- <a href="/users/groups?groupname=<%= group %>&groupdescription=<%= 'group.description' %>&groupaccess=<%= 'group.access' %>&imageurl=<%= 'empty' %>&touser=<%= touser %>">{{ group.name }}</a> -->
                           <!-- <router-link :to="{ name:'Group', query: { groupname: group.name, groupdescription: group.description, groupaccess: group.access, imageurl: group.imageurl, touser: touser } }">{{ group.name }}</router-link> -->
                       </div>
                       <div v-else>
@@ -103,7 +91,6 @@
                   </h5>
                   <div class="card-body">
                     <p>Вы участник этой группы</p>
-                    <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">Вступить в группу</a> -->
                     <a style="cusor: pointer;" @click="leaveGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
                   </div> 
                 </div>
@@ -113,16 +100,12 @@
               <p  style="text-align: center;">Таких групп нет</p>    
             </div>
 
-        <!-- <br style="clear: both;"/> -->
-
-        
         <div v-if="allGroupsWithoutPartisipants != null && allGroupsWithoutPartisipants.length >= 1 && groupfilter === '5'">
             <p style="text-align: center;">Группы в которые вы не вступили</p>  
             <div v-for="group in allGroupsWithoutPartisipants">
                 <div class="card">
                     <h5 class="card-header">
                         <div v-if="auth.includes('true')">
-                            <!-- <a href="/users/groups?groupname=<%= group.name %>&groupdescription=<%= group.description %>&groupaccess=<%= group.access %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">{{ group.name }}</a> -->
                             <router-link :to="{ name:'Group', query: { groupname: group.name, groupdescription: group.description, groupaccess: group.access, imageurl: group.imageurl, touser: touser } }">{{ group.name }}</router-link>
                         </div>
                         <div v-else>
@@ -131,11 +114,8 @@
                         
                     </h5>
                     <div class="card-body">
-                      <!-- <a href="/users/groups/partisipants/add?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&imageurl=<%= group.imageurl %>&touser=<%= touser %>">Вступить в группу</a> -->
-
                       <p>Вы ещё не участник этой группы</p>
-                      <!-- <a href="/users/groups/partisipants/delete?groupname=<%= group.name  %>&groupdescription=<%= group.description  %>&groupaccess=<%= group.access  %>&  touser=<%= touser %>">Выйти из группы</a> -->
-                      <a style="cusor: pointer;" @click="joinGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
+                      <a style="cusor: pointer;" @click="joinGroup(group.name, group.description, group.access, group.imageurl, touser)">Вступить в группу</a>
                     </div> 
                   </div>
             </div>
