@@ -58,7 +58,7 @@ export default {
     },
     methods: {
         login(){
-            if(!(this.useremail + this.custommail).includes("@")){
+            if(!this.useremail.includes("@")){
                 // this.$router.push({ name: '/users/check?useremail=${useremail}&userpassword=${userpassword}' })
                 fetch(`https://showbellow.herokuapp.com/users/check?useremail=${this.useremail + this.custommail}&userpassword=${this.userpassword}`, {
                     mode: 'cors',
@@ -105,7 +105,7 @@ export default {
                         this.errors = "Неверный логин или пароль"
                     }
                 });
-            } else if((this.useremail + this.custommail).includes("@")){
+            } else if(this.useremail.includes("@")){
                 this.errors = "Неверный логин или пароль"
             }
         }
