@@ -51,7 +51,7 @@ export default {
         jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
             if (err) {
                 
-            } else {
+            } else { 
                 this.$router.push({ name: "Home", query: { auth: 'true', sender: decoded.useremail.split('@')[0], guest: 'false', 'mailclient': `${this.custommail}` } })
             }
         })
