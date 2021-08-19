@@ -52,13 +52,13 @@ export default {
             if (err) {
                 
             } else {
-                this.$router.push({ name: "Home", query: { auth: 'true', sender: decoded.useremail.split('@')[0], guest: 'false', 'mailclient': `@${this.custommail}` } })
+                this.$router.push({ name: "Home", query: { auth: 'true', sender: decoded.useremail.split('@')[0], guest: 'false', 'mailclient': `${this.custommail}` } })
             }
         })
     },
     methods: {
         login(){
-            if(!this.useremail.includes("@")){
+            if(!(this.useremail + this.custommail).includes("@")){
                 // this.$router.push({ name: '/users/check?useremail=${useremail}&userpassword=${userpassword}' })
                 fetch(`https://showbellow.herokuapp.com/users/check?useremail=${this.useremail + this.custommail}&userpassword=${this.userpassword}`, {
                     mode: 'cors',
@@ -105,7 +105,7 @@ export default {
                         this.errors = "Неверный логин или пароль"
                     }
                 });
-            } else if(this.useremail.includes("@")){
+            } else if((this.useremail + this.custommail).includes("@")){
                 this.errors = "Неверный логин или пароль"
             }
         }
