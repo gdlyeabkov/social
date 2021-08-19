@@ -52,7 +52,7 @@ export default {
             if (err) {
                 
             } else {
-                this.$router.push({ name: "Home", query: { auth: 'true', sender: decoded.useremail.split('@')[0], guest: 'false', 'mailclient': `@${decoded.useremail.split('@')[1]}` } })
+                this.$router.push({ name: "Home", query: { auth: 'true', sender: decoded.useremail.split('@')[0], guest: 'false', 'mailclient': `@${this.custommail}` } })
             }
         })
     },
