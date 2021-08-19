@@ -15,13 +15,13 @@
                   <h6 @click="visitFriend(friend.email.split('@')[0], checkGuest())" class="card-header" style="cursor: pointer;">{{ friend.email }}</h6>
                 </div>
               </div>
-              <router-link :to="{name:'UsersList', query:{ 'touser': sender + '@mail.ru', 'guest': $route.query.guest }}">
+              <router-link :to="{name:'UsersList', query:{ 'touser': sender + this.mailclient, 'guest': $route.query.guest }}">
                 Подружиться с кем-нибудь ещё
               </router-link>
             </div>
             <div v-else>
               У вас нет ещё ни одного друга
-              <router-link :to="{name:'UsersList', query:{ 'touser': sender + '@mail.ru', 'guest': $route.query.guest  }}">
+              <router-link :to="{name:'UsersList', query:{ 'touser': sender + this.mailclient, 'guest': $route.query.guest  }}">
                 Найти себе друга
               </router-link>
             </div>
@@ -52,7 +52,7 @@
             </div>
             <div style="width: calc(100% - 200px); float: left; text-align: center;">
               <h1>{{ name }}</h1>
-              <router-link v-if="$route.query.guest.includes('false')" :to="{name:'UsersEdit', query:{ 'touser': sender + '@mail.ru', 'imageurl': imageurl, 'name': name, 'email': sender + '@mail.ru', 'age': age, 'password': password } }">
+              <router-link v-if="$route.query.guest.includes('false')" :to="{name:'UsersEdit', query:{ 'touser': sender + this.mailclient, 'imageurl': imageurl, 'name': name, 'email': sender + this.mailclient, 'age': age, 'password': password } }">
                 Редактировать профиль
               </router-link>
               <p>{{ age + ' ' + agePostfix }}</p>
@@ -100,7 +100,7 @@
         <div v-if="groupswithdata != null && groupswithdata.length >= 1">
           <div v-for="group in groupswithdata">
             <div class="card groupCard">
-              <router-link :to="{ name: 'Group', query:{ 'touser': sender + '@mail.ru', 'groupname': group.name, 'groupdescription': group.description, 'groupaccess': group.access, 'imageurl': group.imageurl, 'guest': $route.query.guest } }">
+              <router-link :to="{ name: 'Group', query:{ 'touser': sender + this.mailclient, 'groupname': group.name, 'groupdescription': group.description, 'groupaccess': group.access, 'imageurl': group.imageurl, 'guest': $route.query.guest } }">
                 <h6 class="card-header">{{ group.name }}</h6>
               </router-link>
             </div>
@@ -121,7 +121,7 @@
               Перейти к списку групп
             </router-link> -->
             <!-- иконками -->
-            <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupRegister', query:{ 'userlogin' : 'true', 'touser': this.$route.query.sender + '@mail.ru' }}">
+            <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupRegister', query:{ 'userlogin' : 'true', 'touser': this.$route.query.sender + this.mailclient }}">
               <span class="material-icons" title="Добавить новую группу">
                 group_add
               </span>
@@ -404,7 +404,7 @@ export default {
         
         this.deleteFromRequests(requestFriendName, false)
         
-        fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true&mailclient=@${decoded.useremail.split('@')[1]}`, {
+        fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + this.mailclient }&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true&mailclient=@${decoded.useremail.split('@')[1]}`, {
           mode: 'cors',
           method: 'GET'
         }).then(response => response.body).then(rb  => {
@@ -478,7 +478,7 @@ export default {
             return true
           })
           if(dorequest === true){
-            fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + '@mail.ru'}&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false&mailclient=@${decoded.useremail.split('@')[1]}`, {
+            fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + this.mailclient }&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false&mailclient=@${decoded.useremail.split('@')[1]}`, {
             mode: 'cors',
             method: 'GET'
           }).then(response => response.body).then(rb  => {
@@ -627,7 +627,7 @@ export default {
       if (err) {
         this.$router.push({ name: "UsersLogin" })
       } else {
-        fetch(`https://showbellow.herokuapp.com/users/likes?useremail=${this.sender + '@mail.ru'}&touser=${decoded.useremail}`, {
+        fetch(`https://showbellow.herokuapp.com/users/likes?useremail=${this.sender + this.mailclient}&touser=${decoded.useremail}`, {
         mode: 'cors',
         method: 'GET'
       }).then(response => response.body).then(rb  => {

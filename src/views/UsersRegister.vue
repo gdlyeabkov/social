@@ -87,7 +87,7 @@ export default {
                 .then(result => {
                     console.log("this.useremail + this.custommail: ", this.useremail + this.custommail)
                     if(JSON.parse(result).status.includes('OK')){    
-                        this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).username, "guest": "false"  } })
+                        this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).username, "guest": "false", 'mailclient': `${this.custommail}` } })
                     } else if(!JSON.parse(result).status.includes('OK')){
                         this.errors = "Такой пользователь уже существует"
                     }

@@ -52,7 +52,7 @@ export default {
             if (err) {
                 
             } else {
-                this.$router.push({ name: "Home", query: { auth: 'true', sender: decoded.useremail.split('@')[0], guest: 'false' } })
+                this.$router.push({ name: "Home", query: { auth: 'true', sender: decoded.useremail.split('@')[0], guest: 'false', 'mailclient': `@${decoded.useremail.split('@')[1]}` } })
             }
         })
     },
@@ -99,7 +99,7 @@ export default {
                         // localStorage.setItem('useremail', this.useremail.split('@')[0])
                         localStorage.setItem('useremail', this.useremail + this.custommail)
 
-                        this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).sender, "guest": 'false'  } })
+                        this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).sender, "guest": 'false', 'mailclient': `@${JSON.parse(result).sender.split('@')[1]}` } })
                     } else if(!isAuth){
                         //window.location.reload()
                         this.errors = "Неверный логин или пароль"
