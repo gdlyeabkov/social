@@ -928,7 +928,7 @@ app.get('/pictures/getpicture', (req, res)=>{
 })
 
 
-app.get('**', (req, res) => {
+app.get('**', (req, res) => { 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
