@@ -58,16 +58,27 @@
 import * as jwt from 'jsonwebtoken'
 
 export default {
-    data(){
-        return {
-            token: ''
-        }
+    mounted(){
+
     },
     methods: {
         tohome(){
-            // window.location = `/?auth=true&guest=false&sender=${sender}`
-            window.location = `/?auth=true&guest=false&sender=${this.loginedSender}`
-            // this.$router.push({ name: "Home", query: { auth: 'true', guest: 'false', sender: this.loginedSender } })
+            
+            jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
+                if (err) {
+                    
+                } else {
+                    
+                    // this.loginedSender = decoded.useremail.split('@')[0]
+                    
+                    // window.location = `/?auth=true&guest=false&sender=${sender}`
+                    
+                    // window.location = `/?auth=true&guest=false&sender=${this.loginedSender.split('@')[0]}`
+                    window.location = `/?auth=true&guest=false&sender=${decoded.useremail.split('@')[0]}&mailclient=@${decoded.useremail.split('@')[1]}`
+
+                    // this.$router.push({ name: "Home", query: { auth: 'true', guest: 'false', sender: this.loginedSender } })
+                }
+            })
         },
         logout(){
             
@@ -76,14 +87,16 @@ export default {
             }, 'showbellowsecret', { expiresIn: 1 })
             window.localStorage.setItem("showbellowtoken", this.token)
 
-            this.$router.push({ name: "UsersLogin" })
+            this.$router.push({ 'name': "UsersLogin" })
         }
     },
     data(){
         return {
             // loginedSender: localStorage.getItem('useremail')
-            loginedSender: localStorage.getItem('useremail').split('@')[0]
-
+            // loginedSender: localStorage.getItem('useremail').split('@')[0]
+            loginedSender: localStorage.getItem('showbellowuseremail'),
+            
+            token: window.localStorage.getItem("showbellowtoken"),
         }
     },
     props: {

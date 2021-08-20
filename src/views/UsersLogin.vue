@@ -60,6 +60,8 @@ export default {
         login(){
             if(!this.useremail.includes("@")){
                 // this.$router.push({ name: '/users/check?useremail=${useremail}&userpassword=${userpassword}' })
+                
+                // fetch(`http://localhost:4000/users/check?useremail=${this.useremail + this.custommail}&userpassword=${this.userpassword}`, {
                 fetch(`https://showbellow.herokuapp.com/users/check?useremail=${this.useremail + this.custommail}&userpassword=${this.userpassword}`, {
                     mode: 'cors',
                     method: 'GET'
@@ -97,9 +99,9 @@ export default {
                         localStorage.setItem('showbellowtoken', this.token)
 
                         // localStorage.setItem('useremail', this.useremail.split('@')[0])
-                        localStorage.setItem('useremail', this.useremail + this.custommail)
+                        localStorage.setItem('showbellowuseremail', this.useremail + this.custommail)
 
-                        this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).sender, "guest": 'false', 'mailclient': `@${JSON.parse(result).sender.split('@')[1]}` } })
+                        this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": JSON.parse(result).sender, "guest": 'false', 'mailclient': `${this.custommail}` } })
                     } else if(!isAuth){
                         //window.location.reload()
                         this.errors = "Неверный логин или пароль"

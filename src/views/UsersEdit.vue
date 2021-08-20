@@ -2,7 +2,10 @@
     <div>
       <Header :auth="'true'" :sender="touser.split('@')[0]" />
       <div class="customCardGroup">
-        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://mercurial-diagnostic-glazer.glitch.me/users/editsuccess?touser=${$route.query.touser}&imageurl=a&name=${this.name}&age=${this.age}&email=${$route.query.email}`">
+        
+        <!-- <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://mercurial-diagnostic-glazer.glitch.me/users/editsuccess?touser=${$route.query.touser}&imageurl=a&name=${this.name}&age=${this.age}&email=${$route.query.email}`"> -->
+        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`http://localhost:4000/users/editsuccess?touser=${$route.query.touser}&imageurl=a&name=${this.name}&age=${this.age}&email=${$route.query.email}`">
+
           <input type="hidden" class="touser form-control" disabled required="" autofocus="" v-model="touser">
           
           <!-- <div v-if="imageurl && imageurl.includes('empty')">
@@ -14,7 +17,7 @@
           <img width="85px" height="85px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${touser.split('@')[0]}`"  @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/>
 
           <label for="inputPhoto" class="sr-only">Фото</label>
-          <input name="myFile" type="file" class="userimage form-control" required="" autofocus="">
+          <input name="myFile" type="file" class="userimage form-control" autofocus="">
           <!-- <input v-model="imageurl" type="text" id="inputPhoto" class="userphoto form-control" placeholder="Photo" required="" autofocus=""> -->
           <label for="inputName" class="sr-only">Имя</label>
           <input v-model="name" type="text" id="inputName" class="username form-control" placeholder="Name" required="" autofocus="">
@@ -72,10 +75,12 @@ export default {
             } else {
               localStorage.setItem("userlogin", "true")
               // fetch(`https://vuesocialnetwork.herokuapp.com/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}&password=${this.password}`, {
+              
+              // fetch(`http://localhost:4000/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}`, {
               fetch(`https://showbellow.herokuapp.com/users/editsuccess?touser=${this.$route.query.touser}&imageurl=${this.imageurl}&name=${this.name}&age=${this.age}&email=${this.$route.query.email}`, {
-              mode: 'cors',
-              method: 'GET'
-            }).then(response => response.body).then(rb  => {
+                mode: 'cors',
+                method: 'GET'
+              }).then(response => response.body).then(rb  => {
                 const reader = rb.getReader()
                 return new ReadableStream({
                   start(controller) {

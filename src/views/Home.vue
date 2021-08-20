@@ -12,16 +12,16 @@
                   <!-- <router-link :to="{ name: 'Home', query: { auth: 'true', guest: 'true', sender: friend.email.split('@')[0] } }">
                     <h6 class="card-header">{{ friend.email }}</h6>
                   </router-link> -->
-                  <h6 @click="visitFriend(friend.email.split('@')[0], checkGuest())" class="card-header" style="cursor: pointer;">{{ friend.email }}</h6>
+                  <h6 @click="visitFriend(friend.email.split('@')[0], checkGuest(), `@${friend.email.split('@')[1]}`)" class="card-header" style="cursor: pointer;">{{ friend.email }}</h6>
                 </div>
               </div>
-              <router-link :to="{name:'UsersList', query:{ 'touser': sender + this.mailclient, 'guest': $route.query.guest }}">
+              <router-link :to="{name:'UsersList', query:{ 'touser': sender + this.mailclient, 'guest': guest }}">
                 Подружиться с кем-нибудь ещё
               </router-link>
             </div>
             <div v-else>
               У вас нет ещё ни одного друга
-              <router-link :to="{name:'UsersList', query:{ 'touser': sender + this.mailclient, 'guest': $route.query.guest  }}">
+              <router-link :to="{name:'UsersList', query:{ 'touser': sender + this.mailclient, 'guest': guest  }}">
                 Найти себе друга
               </router-link>
             </div>
@@ -37,7 +37,7 @@
               <div v-else-if="!imageurl.includes('empty')">
                   <img width="200px" height="200px" :src="imageurl" style="border-radius: 25%;" />
               </div> -->
-                <div v-if="$route.query.guest.includes('true') && !likedYet">
+                <div v-if="guest.includes('true') && !likedYet">
                   <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${sender}`"  class="picturePreLike" @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'" @mouseover="redesign($event, 'hover')" @mouseout="redesign($event, 'hout')"/>
                   <div ref="wrap" style="display:none; opacity: 0.7; background-color: black; margin: 5px 0px; border-radius: 10%; float: left; width: 200px; height: 200px;">
                     <span class="material-icons" style="cursor: pointer; font-size: 96px; box-sizing: border-box; padding: 45px;" @click="addLike()">
@@ -46,24 +46,27 @@
                   </div>
                 </div>
                 <div v-else>
+                  
+                  <!-- <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`http://localhost:4000/pictures/getpicture?picturename=${sender}`"  class="picturePreLike" @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/> -->
                   <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${sender}`"  class="picturePreLike" @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/>
+                
                 </div>
                 
             </div>
             <div style="width: calc(100% - 200px); float: left; text-align: center;">
               <h1>{{ name }}</h1>
-              <router-link v-if="$route.query.guest.includes('false')" :to="{name:'UsersEdit', query:{ 'touser': sender + this.mailclient, 'imageurl': imageurl, 'name': name, 'email': sender + this.mailclient, 'age': age, 'password': password } }">
+              <router-link v-if="guest.includes('false')" :to="{name:'UsersEdit', query:{ 'touser': sender + this.mailclient, 'imageurl': imageurl, 'name': name, 'email': sender + this.mailclient, 'age': age, 'password': password } }">
                 Редактировать профиль
               </router-link>
               <p>{{ age + ' ' + agePostfix }}</p>
               <p>Лайки: {{ likes }}</p>
-              <div style="text-decoration: underline; color: blue; cursor: pointer;" v-if="$route.query.guest.includes('true') && !likedYet">
+              <div style="text-decoration: underline; color: blue; cursor: pointer;" v-if="guest.includes('true') && !likedYet">
                 <!-- <a "@click="addLike()"">Нравится</a> -->
                 <span @click="addLike()" class="material-icons" title="Нравится">
                   favorite
                 </span>
               </div>
-              <div style="text-decoration: underline; color: blue; cursor: pointer;" v-else-if="$route.query.guest.includes('true') && likedYet">
+              <div style="text-decoration: underline; color: blue; cursor: pointer;" v-else-if="guest.includes('true') && likedYet">
                 <a>Вы уже оценили</a>
               </div>
             </div>
@@ -71,16 +74,16 @@
             <!-- <label  for="inputSender" class="sr-only">Sender</label> -->
             <input type="hidden" :value="sender" id="inputSender" disabled class="sender form-control" placeholder="Sender" required="" autofocus="">
             <label for="inputContent" class="sr-only">Текст: </label>
-            <textarea style="height: 155px; margin-bottom: 5px;" v-model="content" id="inputContent" class="content form-control" placeholder="Введите текст сообщения..." required="" :disabled="$route.query.guest.includes('true')"></textarea>
-            <button :disabled="$route.query.guest.includes('true')" @click="addPost()" class="btn btn-lg btn-primary btn-block sendBtn">Отправить</button>
+            <textarea style="height: 155px; margin-bottom: 5px;" v-model="content" id="inputContent" class="content form-control" placeholder="Введите текст сообщения..." required="" :disabled="guest.includes('true')"></textarea>
+            <button :disabled="guest.includes('true')" @click="addPost()" class="btn btn-lg btn-primary btn-block sendBtn">Отправить</button>
           <!-- <p>Посты:</p> -->
           <div v-if="allPosts != null && allPosts.length >= 1">
               <div v-for="post in allPosts">
                   <div class="card postStyle">
                       <h5 class="card-header">
-                        <div v-if="$route.query.auth.includes('true')">
+                        <div v-if="auth.includes('true')">
                           <!-- <router-link :to="{ name: 'Home', query: { 'auth': 'true', 'guest': isLogginedSender(post.sender) ? 'false' : 'true', 'sender': post.sender } }" @click="refresh()">{{ post.sender }}</router-link> -->
-                          <a style="cursor: pointer;" @click="refresh(post.sender)">{{ post.sender }}</a>
+                          <a style="cursor: pointer;" @click="refresh(post.sender, post.mailclient)">{{ post.sender }}</a>
                           <p style="font-size: 14px; float: right;">Опубликовано в {{ new Date(post.created).getHours() + ":" + new Date(post.created).getMinutes() }}<br/>{{ post.created.split("T")[0].split("-")[2] + " " + months[post.created.split("T")[0].split("-")[1]] + " " + post.created.split("T")[0].split("-")[0] }}</p>
                           
                         </div>
@@ -100,7 +103,7 @@
         <div v-if="groupswithdata != null && groupswithdata.length >= 1">
           <div v-for="group in groupswithdata">
             <div class="card groupCard">
-              <router-link :to="{ name: 'Group', query:{ 'touser': sender + this.mailclient, 'groupname': group.name, 'groupdescription': group.description, 'groupaccess': group.access, 'imageurl': group.imageurl, 'guest': $route.query.guest } }">
+              <router-link :to="{ name: 'Group', query:{ 'touser': sender + mailclient, 'groupname': group.name, 'groupdescription': group.description, 'groupaccess': group.access, 'imageurl': group.imageurl, 'guest': guest } }">
                 <h6 class="card-header">{{ group.name }}</h6>
               </router-link>
             </div>
@@ -112,7 +115,7 @@
           <div v-else-if="groupswithdata != null && groupswithdata.length <= 0">
             <p>Вы не создали ещё ни одну группу</p>
           </div>
-          <p v-if="$route.query.guest.includes('false')">
+          <p v-if="guest.includes('false')">
             <!-- текстом -->
             <!-- <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupRegister', query:{ 'userlogin' : 'true', 'touser': this.$route.query.sender + '@mail.ru' }}">
               Добавить новую группу
@@ -121,12 +124,12 @@
               Перейти к списку групп
             </router-link> -->
             <!-- иконками -->
-            <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupRegister', query:{ 'userlogin' : 'true', 'touser': this.$route.query.sender + this.mailclient }}">
+            <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupRegister', query:{ 'userlogin' : 'true', 'touser': sender + mailclient }}">
               <span class="material-icons" title="Добавить новую группу">
                 group_add
               </span>
             </router-link>
-            <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupsList', query:{ 'touser': sender + mailclient, 'groupname': '', 'guest': $route.query.guest }}">
+            <router-link tag="p" style="color: blue; cursor: pointer; text-decoration: underline;" :to="{name:'GroupsList', query:{ 'touser': sender + mailclient, 'groupname': '', 'guest': guest }}">
               <span class="material-icons" title="Перейти к списку групп">
                 list
               </span>
@@ -135,7 +138,7 @@
           </div>
         </div>
 
-        <div v-if="$route.query.guest.includes('false')" v-for="request in requests">
+        <div v-if="guest.includes('false')" v-for="request in requests">
           <div style="box-sizing: border-box; padding: 10px; overflow:scroll-y; background-color: white; position: absolute; top: 0px; left: 0px; width: 175px; height: 175px;">
             <span @click="deleteFromRequests(request.name)" style="float: right; cursor: pointer; color: red;" class="material-icons">
               close
@@ -167,6 +170,7 @@ export default {
   name: 'Home',
   data(){
     return {
+      guest: 'false',
       imageurl: '',
       name: '',
       age: 0,
@@ -215,20 +219,30 @@ export default {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
-            this.$router.push({ name: "Home", query: { auth: 'true', sender: decoded.useremail.split('@')[0], guest: 'false' } })
+            this.$router.push({ name: "Home", query: { auth: 'true', sender: decoded.useremail.split('@')[0], guest: 'false', mailclient: `@${decoded.useremail.split('@')[1]}` } })
           }
         })
       }
     } else {
         // стало так и работало
         jwt.verify(this.token, 'showbellowsecret', (err, decoded) => {
-          if (err) {
+          if (err || decoded.useremail.includes('admin')) {
             this.$router.push({ name: "UsersLogin" })
           } else {
-            fetch(`https://showbellow.herokuapp.com/home?auth=true&guest=false&sender=${this.$route.query.sender}&mailclient=@${decoded.useremail.split('@')[1]}`, {
-            mode: 'cors',
-            method: 'GET'
-          }).then(response => response.body).then(rb  => {
+            if(this.$route.query.sender !== null && this.$route.query.sender !== undefined){
+              this.sender = this.$route.query.sender
+              this.mailclient = this.$route.query.mailclient
+            } else if(this.$route.query.sender === null && this.$route.query.sender === undefined){
+              this.sender = decoded.useremail.split('@')[0]
+              this.mailclient = `@${decoded.useremail.split('@')[1]}`
+            }
+            // fetch(`http://localhost:4000/home?auth=true&guest=false&sender=${this.$route.query.sender}&mailclient=${this.$route.query.mailclient}`, {
+            // fetch(`http://localhost:4000/home?auth=true&guest=false&sender=${decoded.useremail.split('@')[0]}&mailclient=@${decoded.useremail.split('@')[1]}`, {
+            
+            fetch(`https://showbellow.herokuapp.com/home?auth=true&guest=false&sender=${this.sender}&mailclient=${this.mailclient}`, {
+              mode: 'cors',
+              method: 'GET'
+            }).then(response => response.body).then(rb  => {
               const reader = rb.getReader()
               return new ReadableStream({
                 start(controller) {
@@ -252,10 +266,9 @@ export default {
             })
             .then(result => {
               console.log(JSON.parse(result))
-              this.name = JSON.parse(result).name
               this.sender = JSON.parse(result).sender
               this.age = JSON.parse(result).age
-              this.agePostfix = !this.age.toString()[this.age.toString().length - 1].includes('1') && !this.age.toString()[this.age.toString().length - 1].includes('2') && !this.age.toString()[this.age.toString().length - 1].includes('3') && !this.age.toString()[this.age.toString().length - 1].includes('4') ? 'лет' : !this.age.toString()[this.age.toString().length - 1].includes('1') && (this.age.toString()[this.age.toString().length - 1].includes('2') || this.age.toString()[this.age.toString().length - 1].includes('3') || this.age.toString()[this.age.toString().length - 1].includes('4')) ? 'года' : this.age.toString()[this.age.toString().length - 1].includes('1') && (!this.age.toString()[this.age.toString().length - 1].includes('2') && !this.age.toString()[this.age.toString().length - 1].includes('3') && !this.age.toString()[this.age.toString().length - 1].includes('4')) ? 'год' : '' 
+              this.agePostfix = !this.age.toString()[this.age.toString().length - 1].includes('1') && !this.age.toString()[this.age.toString().length - 1].includes('2') && !this.age.toString()[this.age.toString().length - 1].includes('3') && !this.age.toString()[this.age.toString().length - 1].includes('4') ? 'лет' : !this.age.toString()[this.age.toString().length - 1].includes('1') && this.age.toString()[this.age.toString().length - 1].includes('2') || this.age.toString()[this.age.toString().length - 1].includes('3') || this.age.toString()[this.age.toString().length - 1].includes('4') ? 'года' : this.age.toString()[this.age.toString().length - 1].includes('1') && (!this.age.toString()[this.age.toString().length - 1].includes('2') && !this.age.toString()[this.age.toString().length - 1].includes('3') && !this.age.toString()[this.age.toString().length - 1].includes('4')) ? 'год' : '' 
               this.allFriends = JSON.parse(result).allFriends
               this.allGroups = JSON.parse(result).allGroups
               this.groupswithdata = JSON.parse(result).groupswithdata
@@ -275,6 +288,23 @@ export default {
 
               this.mailclient = JSON.parse(result).mailclient
 
+              if(this.$route.query.guest !== null && this.$route.query.guest !== undefined){
+                this.guest = this.$route.query.guest
+              } else if(this.$route.query.guest === null && this.$route.query.guest === undefined){
+                this.guest = JSON.parse(result).guest
+              }
+
+              if(this.guest.includes("false")){
+                this.name = JSON.parse(result).name
+              } else if(this.guest.includes("true")){
+                this.name = this.$route.query.sender
+              }
+
+              if(this.$route.query.auth !== null && this.$route.query.auth !== undefined){
+                this.auth = this.$route.query.auth
+              } else if(this.$route.query.auth === null && this.$route.query.auth === undefined){
+                this.auth = JSON.parse(result).auth
+              }
 
             });
           }
@@ -387,8 +417,8 @@ export default {
       }
 
     },
-    refresh(postSender){
-      this.$router.push({ name: 'Home', query: { 'auth': 'true', 'guest': this.isLogginedSender(postSender) ? 'false' : 'true', 'sender': postSender } })
+    refresh(postSender, postMailclient){
+      this.$router.push({ name: 'Home', query: { 'auth': 'true', 'guest': this.isLogginedSender(postSender) ? 'false' : 'true', 'sender': postSender, 'mailclient': postMailclient } })
       window.location.reload()
     },
     isLogginedSender(senderOfPost){
@@ -403,7 +433,7 @@ export default {
       } else {
         
         this.deleteFromRequests(requestFriendName, false)
-        
+        // fetch(`http://localhost:4000/users/requests/delete?touser=${this.sender + this.mailclient }&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true&mailclient=@${decoded.useremail.split('@')[1]}`, {
         fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + this.mailclient }&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=true&mailclient=@${decoded.useremail.split('@')[1]}`, {
           mode: 'cors',
           method: 'GET'
@@ -478,10 +508,12 @@ export default {
             return true
           })
           if(dorequest === true){
+            
+            // fetch(`http://localhost:4000/users/requests/delete?touser=${this.sender + this.mailclient }&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false&mailclient=@${decoded.useremail.split('@')[1]}`, {
             fetch(`https://showbellow.herokuapp.com/users/requests/delete?touser=${this.sender + this.mailclient }&sender=${requestFriendName}&userage=${requestFriendAge}&acceptrequest=false&mailclient=@${decoded.useremail.split('@')[1]}`, {
-            mode: 'cors',
-            method: 'GET'
-          }).then(response => response.body).then(rb  => {
+              mode: 'cors',
+              method: 'GET'
+            }).then(response => response.body).then(rb  => {
               const reader = rb.getReader()
               return new ReadableStream({
                 start(controller) {
@@ -515,10 +547,10 @@ export default {
       return this.touser.includes(this.sender) ? 'true' : 'false'
 
     },
-    visitFriend(friendname, isGuest){
+    visitFriend(friendname, isGuest, friendmailclient){
       
       // this.$router.push(friend)
-      this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": friendname, "guest": isGuest } })
+      this.$router.push({ name: 'Home', query: { "auth": 'true', "sender": friendname, "mailclient": friendmailclient, "guest": isGuest } })
       // window.location.relaod()
       // location = `/?auth=true&sender=${friendname}&guest=true`
       
@@ -588,10 +620,11 @@ export default {
       if (err) {
         this.$router.push({ name: "UsersLogin" })
       } else {
-        fetch(`https://showbellow.herokuapp.com/postadd?sender=${this.sender}&content=${this.content}`, {
-        mode: 'cors',
-        method: 'GET'
-      }).then(response => response.body).then(rb  => {
+        // fetch(`http://localhost:4000/postadd?sender=${this.sender}&mailclient=${this.mailclient}&content=${this.content}`, {
+        fetch(`https://showbellow.herokuapp.com/postadd?sender=${this.sender}&mailclient=${this.mailclient}&content=${this.content}`, {
+          mode: 'cors',
+          method: 'GET'
+        }).then(response => response.body).then(rb  => {
           const reader = rb.getReader()
           return new ReadableStream({
             start(controller) {
@@ -627,10 +660,12 @@ export default {
       if (err) {
         this.$router.push({ name: "UsersLogin" })
       } else {
+        
+        // fetch(`http://localhost:4000/users/likes?useremail=${this.sender + this.mailclient}&touser=${decoded.useremail}`, {
         fetch(`https://showbellow.herokuapp.com/users/likes?useremail=${this.sender + this.mailclient}&touser=${decoded.useremail}`, {
-        mode: 'cors',
-        method: 'GET'
-      }).then(response => response.body).then(rb  => {
+          mode: 'cors',
+          method: 'GET'
+        }).then(response => response.body).then(rb  => {
           const reader = rb.getReader()
           return new ReadableStream({
             start(controller) {

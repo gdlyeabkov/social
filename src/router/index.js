@@ -30,12 +30,12 @@ const routes = [
     component: UsersRegister
   },
   {
-    path: '/users/list',
+    path: '/users/listing',
     name: 'UsersList',
     component: UsersList
   },
   {
-    path: '/users/edit',
+    path: '/users/editing',
     name: 'UsersEdit',
     component: UsersEdit
   },

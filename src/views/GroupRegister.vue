@@ -6,7 +6,10 @@
       <div class="customCardGroup">
         <img class="mb-4" src="https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/vue-dot-js-256.png" alt="" width="72" height="72">
         <h1 class="h3 mb-3 font-weight-normal">Создание новой группы</h1>
-        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://mercurial-diagnostic-glazer.glitch.me/users/groups/groupcreatesuccess`">
+        
+        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`http://localhost:4000/users/groups/groupcreatesuccess?touser=${this.$route.query.touser}&groupaccess=${this.access}&groupdescription=${this.description}&groupname=${this.name}&imageurl=${this.imageurl}`">
+        <!-- <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://mercurial-diagnostic-glazer.glitch.me/users/groups/groupcreatesuccess`"> -->
+        
           <label for="inputName" class="sr-only">Имя</label>
           <input name="groupname" v-model="name" type="text" id="inputDescription" class="groupname form-control" placeholder="Name" required="" autofocus="">
           <label for="inputDescription" class="sr-only">Описание</label>
@@ -30,7 +33,9 @@
           </div>
           
           <!-- <button style="min-width: 125px" @click="createGroup()" class="btn btn-lg btn-primary btn-block createBtn">Создать группу</button> -->
-          <input style="min-width: 185px; max-width: 205px;" class="btn btn-lg btn-primary btn-block createBtn" value="Создать группу"/>
+          <button style="min-width: 125px" type="submit" class="btn btn-lg btn-primary btn-block createBtn">Создать группу</button>
+
+          <!-- <input style="min-width: 185px; max-width: 205px;" class="btn btn-lg btn-primary btn-block createBtn" value="Создать группу" type="submit" /> -->
         </form>
 
       </div>
@@ -66,6 +71,8 @@ export default {
             } else {
               localStorage.setItem("userlogin", "true")
               // location.href = `/users/groups/groupcreatesuccess?touser=${touser}&groupaccess=${groupaccess}&groupdescription=${groupdescription}&groupname=${groupname}&imageurl=${groupimageurl}`
+              
+              // fetch(`http://localhost:4000/users/groups/groupcreatesuccess?touser=${this.$route.query.touser}&groupaccess=${this.access}&groupdescription=${this.description}&groupname=${this.name}&imageurl=${this.imageurl}`, {
               fetch(`https://showbellow.herokuapp.com/users/groups/groupcreatesuccess?touser=${this.$route.query.touser}&groupaccess=${this.access}&groupdescription=${this.description}&groupname=${this.name}&imageurl=${this.imageurl}`, {
                 mode: 'cors',
                 method: 'GET'

@@ -81,6 +81,7 @@ mongoose.connect(url, connectionParams)
 const PostSchema = new mongoose.Schema({
     content: String,
     sender: String,
+    mailclient: String,
     created: {
         type: Date,
         default: Date.now
@@ -95,6 +96,7 @@ const GroupSchema = new mongoose.Schema({
     name: String,
     description: String,
     access: String,
+    owner: String,
     imageurl: {
         type: String,
         default: 'empty'
@@ -134,64 +136,70 @@ app.get('/home', async (req, res)=>{
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
     console.log("req.query.sender + req.query.mailclient: ", req.query.sender + req.query.mailclient)
-
+    
     // let queryOfFriendsBefore =  UsersModel.findOne({'email': req.query.sender + "@mail.ru"}, function(err, beforeUser){
-    let queryOfFriendsBefore =  UsersModel.findOne({'email': req.query.sender + req.query.mailclient }, function(err, beforeUser){
-    // let queryOfFriendsBefore =  UsersModel.findOne({ 'email': req.query.decodedcustomtokenvalue }, function(err, beforeUser){
+    console.log(`req.query: ${Object.keys(req.query)}`)
+    console.log(`req.query.sender: ${req.query.sender}`)
+    if(`${req.query.sender}` !== `undefined`){
+        let queryOfFriendsBefore =  UsersModel.findOne({'email': req.query.sender + req.query.mailclient }, function(err, beforeUser){
+        // let queryOfFriendsBefore =  UsersModel.findOne({ 'email': req.query.decodedcustomtokenvalue }, function(err, beforeUser){
 
-        if(err){
-            return res.json({ "status": 'error'})
-        } else {
-            const friendsPosts = []
-            beforeUser.friends.map((friendKey, friendValue) => {
-                friendsPosts.push(new Map(friendKey).get('email').split('@')[0])
-            })
-            
-            // let query = PostModel.find({ $or:[ {  sender: { $eq: req.query.sender } }, { sender: { $in: friendsPosts }  } ] }, null, { sort: { created: -1 } }).select(['content', 'sender', 'created']);
-            let query = PostModel.find({ $or:[ {  sender: { $eq: req.query.sender } }, { sender: { $in: friendsPosts }  } ] }, ['content', 'sender', 'created'], { sort: { created: -1 } });
-            query.exec((err, allPosts) => {
-                if (err){
-                    return res.json({ "status": 'error'})
-                }
-                if(Array(req.query.auth)[0] === undefined){
-                    return res.json({ "status": 'error'})
-                }
-                let nickOfUser = req.query.sender
+            if(err){
+                return res.json({ "status": 'error'})
+            } else {
+                const friendsPosts = []
+                beforeUser.friends.map((friendKey, friendValue) => {
+                    friendsPosts.push(new Map(friendKey).get('email').split('@')[0])
+                })
                 
-                // let queryOfFriends =  UsersModel.findOne({ 'email': req.query.decodedcustomtokenvalue }, function(err, user){
-                // let queryOfFriends =  UsersModel.findOne({'email': req.query.sender + "@mail.ru"}, function(err, user){
-                let queryOfFriends =  UsersModel.findOne({'email': req.query.sender + req.query.mailclient}, function(err, user){
-                    
+                // let query = PostModel.find({ $or:[ {  sender: { $eq: req.query.sender } }, { sender: { $in: friendsPosts }  } ] }, null, { sort: { created: -1 } }).select(['content', 'sender', 'created']);
+                let query = PostModel.find({ $or:[ {  sender: { $eq: req.query.sender } }, { sender: { $in: friendsPosts }  } ] }, ['content', 'sender', 'created'], { sort: { created: -1 } });
+                query.exec((err, allPosts) => {
                     if (err){
                         return res.json({ "status": 'error'})
-                    } else {
-                        
-                        let userGroupsArray = []
-                        user.groups.map((groupKey, groupValue) => {
-                            userGroupsArray.push(new Map(groupKey).get('id'))
-                        })
-                        let groupsWithData = []
-                        
-                        let queryOfGroupsWithData = GroupsModel.find({ _id: { $in: userGroupsArray } }).select(['name', 'description', 'access', 'imageurl', 'partisipants' ])
-                        
-                        queryOfGroupsWithData.exec((error, groups) => {
-                            if(error){
-                                return res.json({ "status": 'error'})
-                            }
-                            groups.forEach((g) => {
-                                groupsWithData.push(g)
-                            })
-                            if(req.query.guest.includes('true')){
-                                return res.json({ "allPosts": allPosts, "auth": 'true', "guest": 'true', "touser":req.query.touser, "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "imageurl": user.imageurl, "name": user.name, "age": user.age, "password": user.password, "groupswithdata": groupsWithData, "liked": user.liked, "mailclient": req.query.mailclient })
-                            } else if(req.query.guest.includes('false')){
-                                return res.json({ "allPosts": allPosts, "auth": 'true', "guest": 'false', "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "imageurl": user.imageurl, "name": user.name, "age": user.age, "password": user.password, "groupswithdata": groupsWithData, "requests": user.requests, "liked": user.liked, "mailclient": req.query.mailclient })
-                            }  
-                        })                            
                     }
+                    if(Array(req.query.auth)[0] === undefined){
+                        return res.json({ "status": 'error'})
+                    }
+                    let nickOfUser = req.query.sender
+                    
+                    // let queryOfFriends =  UsersModel.findOne({ 'email': req.query.decodedcustomtokenvalue }, function(err, user){
+                    // let queryOfFriends =  UsersModel.findOne({'email': req.query.sender + "@mail.ru"}, function(err, user){
+                    let queryOfFriends =  UsersModel.findOne({'email': req.query.sender + req.query.mailclient}, function(err, user){
+                        
+                        if (err){
+                            return res.json({ "status": 'error'})
+                        } else {
+                            
+                            let userGroupsArray = []
+                            user.groups.map((groupKey, groupValue) => {
+                                userGroupsArray.push(new Map(groupKey).get('id'))
+                            })
+                            let groupsWithData = []
+                            
+                            let queryOfGroupsWithData = GroupsModel.find({ _id: { $in: userGroupsArray } }).select(['name', 'description', 'access', 'imageurl', 'partisipants' ])
+                            
+                            queryOfGroupsWithData.exec((error, groups) => {
+                                if(error){
+                                    return res.json({ "status": 'error'})
+                                }
+                                groups.forEach((g) => {
+                                    groupsWithData.push(g)
+                                })
+                                if(req.query.guest.includes('true')){
+                                    return res.json({ "allPosts": allPosts, "auth": 'true', "guest": 'true', "touser": req.query.touser, "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "imageurl": user.imageurl, "name": user.name, "age": user.age, "password": user.password, "groupswithdata": groupsWithData, "liked": user.liked, "mailclient": req.query.mailclient })
+                                } else if(req.query.guest.includes('false')){
+                                    return res.json({ "allPosts": allPosts, "auth": 'true', "guest": 'false', "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "imageurl": user.imageurl, "name": user.name, "age": user.age, "password": user.password, "groupswithdata": groupsWithData, "requests": user.requests, "liked": user.liked, "mailclient": req.query.mailclient })
+                                }  
+                            })                            
+                        }
+                    })
                 })
-            })
-        }
-    })
+            }
+        })
+    } else {
+        return res.redirect('/?redirectroute=users/login')
+    }
 })
 
 app.get('/post/:postID',(req, res)=>{
@@ -220,24 +228,13 @@ app.get('/users/edit',(req, res)=>{
 })
 
 app.post('/users/editsuccess', upload.single('myFile'), async (req, res)=>{
+    
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
 
     console.log("req.body: ", req.body)
-    let file = req.file
-
-    if(!file){
-        console.log("Error to upload file ")
-        return res.json({ "message": "error" })
-    }
-    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.email.split('@')[0] + ".png", function (err) {
-        if (err) {
-            return res.json({ "message": "Error" })
-        }
-    })
-
 
     await UsersModel.updateOne({ email: req.query.touser },
         {
@@ -283,7 +280,6 @@ app.post('/users/editsuccess', upload.single('myFile'), async (req, res)=>{
                             query.exec((err, allPosts) => {
                                 // res.json({ "allPosts": allPosts, "sender": nickOfUser, "allFriends": user.friends, "likes": user.likes, "allGroups": user.groups, "groupswithdata": groupsWithData })
                                 // return res.redirect("https://showbellow.herokuapp.com/")
-                                return res.redirect("https://showbellow.herokuapp.com/users/login")
 
                             })
                         })
@@ -291,8 +287,41 @@ app.post('/users/editsuccess', upload.single('myFile'), async (req, res)=>{
                     }
                 }
             )
+            // return res.redirect("https://showbellow.herokuapp.com/users/login")
         }
     })
+
+    let file = req.file
+
+    if(!file){
+        console.log("Error to upload file ")
+        
+        // return res.json({ "message": "error" })
+        
+        return res.redirect("https://showbellow.herokuapp.com/users/login")
+        // return res.redirect("http://localhost:4000/users/login")
+
+    } else if(file){
+        
+        console.log(`req.file.path: ${req.file.path}`)
+        console.log(`req.file: ${req.file}`)
+        console.log(`req.query.email: ${req.query.email}`)
+
+        fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.email.split('@')[0] + ".png", function (err) {
+            if (err) {
+                
+                // return res.json({ "message": "Error" })
+
+            }
+
+            // return res.json({ "message": "error" })
+            
+            return res.redirect("https://showbellow.herokuapp.com/users/login")
+            // return res.redirect("http://localhost:4000/users/login")
+
+        })   
+
+    }
 
 })
 
@@ -303,19 +332,7 @@ app.post('/users/groups/editsuccess', upload.single('myFile'), async (req, res)=
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
     console.log("req.body: ", req.body)
-    let file = req.file
-
-    if(!file){
-        console.log("Error to upload file ")
-        return res.json({ "message": "error" })
-    }
-    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.groupname + ".png", function (err) {
-        if (err) {
-            return res.json({ "message": "Error" })
-        }
-    })
-
-
+    
     await GroupsModel.updateOne({ name: req.query.previousgroupname },
         {
             imageurl: req.query.imageurl,
@@ -328,11 +345,40 @@ app.post('/users/groups/editsuccess', upload.single('myFile'), async (req, res)=
             } else {
                 // return res.json({ message: 'success' })
                 // return res.redirect("https://showbellow.herokuapp.com/")
-                return res.redirect("https://showbellow.herokuapp.com/users/login")
+                
+                // return res.redirect("https://showbellow.herokuapp.com/users/login")
 
             }
         }
     )
+
+    let file = req.file
+
+    if(!file){
+        
+        console.log("Error to upload file ")
+
+        return res.redirect("https://showbellow.herokuapp.com/users/login")
+        // return res.redirect("http://localhost:4000/users/login")
+        
+        // return res.json({ "message": "error" })
+
+    } else if(file){
+        
+        fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.groupname + ".png", function (err) {
+            if (err) {
+                return res.json({ "message": "Error" })
+            }
+
+            // return res.redirect("http://localhost:4000/users/login")
+            return res.redirect("https://showbellow.herokuapp.com/users/login")
+        
+        })
+        
+        // return res.json({ "message": "error" })
+
+    }
+
 })
 
 app.get('/postadd', async (req, res)=>{
@@ -341,7 +387,7 @@ app.get('/postadd', async (req, res)=>{
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
    
-    await new PostModel({ sender: req.query.sender, content: req.query.content }).save(function (err) {
+    await new PostModel({ sender: req.query.sender, mailclient: req.query.mailclient, content: req.query.content }).save(function (err) {
         if(err){
             return
         } else {
@@ -361,7 +407,40 @@ app.get('/users/groups', async (req, res)=>{
         if (err){
             return res.json({ "auth": 'false' })
         }
-        return res.json({ "auth": 'true', "name": req.query.groupname, "access": req.query.groupaccess, "description": req.query.groupdescription, "partisipants": group.partisipants, "imageurl": req.query.imageurl, "touser": req.query.touser, "posts": group.posts })
+      
+        let queryOfOwner = UsersModel.findOne({ email: req.query.touser });
+        queryOfOwner.exec((err, user) => {
+            if (err){
+                return res.json({ "auth": 'false' })
+            }
+            
+            // if(user.groups.some((somegroup) => {
+            //     if(somegroup.name === group.name){
+            //         return true
+            //     } else if(somegroup.name !== group.name){
+            //         return false 
+            //     }
+            // })){
+            //     return res.json({ "auth": 'true', "name": req.query.groupname, "access": req.query.groupaccess, "description": req.query.groupdescription, "partisipants": group.partisipants, "imageurl": req.query.imageurl, "touser": req.query.touser, "posts": group.posts, "owner": "true" })
+            // } else {
+            //     return res.json({ "auth": 'true', "name": req.query.groupname, "access": req.query.groupaccess, "description": req.query.groupdescription, "partisipants": group.partisipants, "imageurl": req.query.imageurl, "touser": req.query.touser, "posts": group.posts, "owner": "false" })
+            // }
+
+            // if(user.groups.findIndex((somegroup, somegroupIndex, somegroups) => {
+            //     if(somegroup.name === req.query.groupname){
+            //         return true
+            //     } else if(somegroup.name !== req.query.groupname){
+            //         return false 
+            //     }
+            // }) >= 0){
+            //     return res.json({ "auth": 'true', "name": req.query.groupname, "access": req.query.groupaccess, "description": req.query.groupdescription, "partisipants": group.partisipants, "imageurl": req.query.imageurl, "touser": req.query.touser, "posts": group.posts, "owner": "true" })
+            // } else {
+            //     return res.json({ "auth": 'true', "name": req.query.groupname, "access": req.query.groupaccess, "description": req.query.groupdescription, "partisipants": group.partisipants, "imageurl": req.query.imageurl, "touser": req.query.touser, "posts": group.posts, "owner": "false" })
+            // }
+
+            return res.json({ "auth": 'true', "name": req.query.groupname, "access": req.query.groupaccess, "description": req.query.groupdescription, "partisipants": group.partisipants, "imageurl": req.query.imageurl, "touser": req.query.touser, "posts": group.posts, "owner": group.owner })
+
+        })
     })
 })
 
@@ -389,7 +468,7 @@ app.post('/users/groups/groupcreatesuccess', upload.single('myFile'), (req, res)
         console.log("Error to upload file ")
         return res.json({ "message": "error" })
     }
-    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.touser.split('@')[0] + ".png", function (err) {
+    fs.rename(req.file.path, path.join(__dirname, '/uploads') + "/" + req.query.groupname + ".png", function (err) {
         if (err) {
             return res.json({ "message": "error" })
         }
@@ -405,7 +484,7 @@ app.post('/users/groups/groupcreatesuccess', upload.single('myFile'), (req, res)
             return res.json({ "message": "error" })
         } else {
             // const group = new GroupsModel({ name: req.query.groupname, description:req.query.groupdescription, access: req.query.groupaccess, imageurl: req.query.imageurl });
-            const group = new GroupsModel({ name: req.body.groupname, description: req.body.groupdescription, access: req.body.groupaccess });
+            const group = new GroupsModel({ name: req.body.groupname, description: req.body.groupdescription, access: req.body.groupaccess, owner: req.query.touser });
 
             group.save(function (err, group) {
                 if(err){
@@ -443,7 +522,10 @@ app.post('/users/groups/groupcreatesuccess', upload.single('myFile'), (req, res)
                                 }
                                 // return res.json({ "message": "success" })
                                 // return res.redirect("https://showbellow.herokuapp.com/")
+                                
                                 return res.redirect("https://showbellow.herokuapp.com/users/login")
+                                // return res.redirect("http://localhost:4000/users/login")
+
 
                             })
                         } 
@@ -679,7 +761,12 @@ app.post('/users/usercreatesuccess', upload.single('myFile'), async (req, res)=>
             }
         });
         if(userExists){
-            return res.json({ "status": "Error" })
+            
+            // return res.json({ "status": "Error" })
+
+            // return res.redirect("http://localhost:4000/users/register?status=error")
+            return res.redirect("https://showbellow.herokuapp.com/users/register?status=error")
+
         } else {
             let encodedPassword = "#"
             const salt = bcrypt.genSalt(saltRounds)
@@ -693,8 +780,12 @@ app.post('/users/usercreatesuccess', upload.single('myFile'), async (req, res)=>
                 if(err){
                     return res.json({ "status": "Error" })
                 } else {
+                    
+                    // return res.redirect("http://localhost:4000/users/login")
                     return res.redirect("https://showbellow.herokuapp.com/users/login")
+                    
                     // res.json({ "status": "OK", "username": user.email.split('@')[0] })
+                
                 }
             })
         }
@@ -813,6 +904,7 @@ app.get('/users/groups/posts/add', (req, res)=>{
                 posts: {
                     name: req.query.name,
                     content: req.query.content,
+                    mailclient: req.query.mailclient,
                     // created: Date.now
                     created: new Date().toLocaleString(),
                 }
@@ -934,8 +1026,8 @@ app.get('**', (req, res) => {
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
-    // return res.redirect(`/?redirectroute=${req.path}`)
-    return res.redirect(`https://showbellow.herokuapp.com/?redirectroute=${req.path}`)
+    return res.redirect(`/?redirectroute=${req.path}`)
+    // return res.redirect(`https://showbellow.herokuapp.com/?redirectroute=${req.path}`)
 })
 
 const port = process.env.PORT || 8080

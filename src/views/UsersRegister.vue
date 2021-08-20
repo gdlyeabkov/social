@@ -5,6 +5,8 @@
         <div class="customCardGroup">
             <img class="mb-4" src="https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/vue-dot-js-256.png" alt="" width="72" height="72">
             <h1 class="h3 mb-3 font-weight-normal headerform">Зарегестрируйтесь</h1>
+            
+            <!-- <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`http://localhost:4000/users/usercreatesuccess?useremail=${useremail + custommail}&userpassword=${userpassword}&userage=${userage}&username=${username}`"> -->
             <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://mercurial-diagnostic-glazer.glitch.me/users/usercreatesuccess?useremail=${useremail + custommail}&userpassword=${userpassword}&userage=${userage}&username=${username}`">
                 
                 <label class="sr-only">Email</label>
@@ -49,7 +51,15 @@ export default {
         }
     },
     mounted(){
+        
         this.mydebug()
+        
+        if(this.$route.query.status !== null && this.$route.query.status !== undefined){
+            if(this.$route.query.status.includes('error')){
+                this.errors = "Такой пользователь уже существует"
+            }
+        }
+    
     },
     methods: {
         mydebug(){
@@ -59,9 +69,11 @@ export default {
             if(!this.useremail.includes("@")){
                 let fulladdress = this.custommail.options[this.custommail.selectedIndex].text
                 // this.$router.push({ name: '/users/check?useremail=${useremail}&userpassword=${userpassword}' })
+                
+                // fetch(`http://localhost:4000/users/usercreatesuccess?useremail=${this.useremail.concat(this.custommail)}&userpassword=${this.userpassword}&userage=${this.userage}&username=${this.username}`, {
                 fetch(`https://showbellow.herokuapp.com/users/usercreatesuccess?useremail=${this.useremail.concat(this.custommail)}&userpassword=${this.userpassword}&userage=${this.userage}&username=${this.username}`, {
-                mode: 'cors',
-                method: 'GET'
+                    mode: 'cors',
+                    method: 'GET'
                 }).then(response => response.body).then(rb  => {
                     const reader = rb.getReader()
                     return new ReadableStream({

@@ -16,7 +16,7 @@
                 <div class="card">
                     <h5 class="card-header">
                         <div v-if="auth.includes('true')">
-                            <router-link :to="{ name: 'Group', query: { 'groupname': group.name, 'groupdescription': group.description, 'groupaccess': group.access, 'imageurl': group.imageurl, 'touser': $route.query.touser, 'guest': $route.query.guest  } }">{{ group.name }}</router-link>
+                            <router-link :to="{ name: 'Group', query: { 'groupname': group.name, 'groupdescription': group.description, 'groupaccess': group.access, 'imageurl': group.imageurl, 'touser': $route.query.touser, 'guest': $route.query.guest, owner: group.owner  } }">{{ group.name }}</router-link>
                         </div>
                         <div v-else>
 
@@ -36,12 +36,12 @@
                 <div class="card">
                     <h5 class="card-header">
                         <div v-if="auth.includes('true')">
-                            <router-link :to="{ name:'Group', query: { groupname: group.name, groupdescription: group.description, groupaccess: group.access, imageurl: group.imageurl, touser: touser } }">{{ group.name }}</router-link>
+                            <router-link :to="{ name:'Group', query: { groupname: group.name, groupdescription: group.description, groupaccess: group.access, imageurl: group.imageurl, touser: touser, owner: group.owner } }">{{ group.name }}</router-link>
                         </div>
                     </h5>
                     <div class="card-body">
                       <p>Вы уже в группе</p>
-                      <a style="cusor: pointer;" @click="leaveGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
+                      <!-- <a style="cusor: pointer;" @click="leaveGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a> -->
                     </div> 
                   </div>
             </div>
@@ -57,7 +57,7 @@
                 <div class="card">
                     <h5 class="card-header">
                         <div v-if="auth.includes('true')">
-                            <router-link :to="{ name:'Group', query: { groupname: group.name, groupdescription: group.description, groupaccess: group.access, imageurl: group.imageurl, touser: touser } }">{{ group.name }}</router-link>
+                            <router-link :to="{ name:'Group', query: { groupname: group.name, groupdescription: group.description, groupaccess: group.access, imageurl: group.imageurl, touser: touser, owner: group.owner } }">{{ group.name }}</router-link>
                         </div>
                         <div v-else>
                           
@@ -66,7 +66,7 @@
                     </h5>
                     <div class="card-body">
                       
-                      <a style="cusor: pointer;" @click="joinGroup(group.name, group.description, group.access, group.imageurl, touser)">Вступить в группу</a>
+                      <!-- <a style="cusor: pointer;" @click="joinGroup(group.name, group.description, group.access, group.imageurl, touser)">Вступить в группу</a> -->
                       <p>Вы ещё не в группе</p>
                     </div> 
                   </div>
@@ -91,7 +91,7 @@
                   </h5>
                   <div class="card-body">
                     <p>Вы участник этой группы</p>
-                    <a style="cusor: pointer;" @click="leaveGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a>
+                    <!-- <a style="cusor: pointer;" @click="leaveGroup(group.name, group.description, group.access, group.imageurl, touser)">Выйти из группы</a> -->
                   </div> 
                 </div>
               </div>
@@ -106,7 +106,7 @@
                 <div class="card">
                     <h5 class="card-header">
                         <div v-if="auth.includes('true')">
-                            <router-link :to="{ name:'Group', query: { groupname: group.name, groupdescription: group.description, groupaccess: group.access, imageurl: group.imageurl, touser: touser } }">{{ group.name }}</router-link>
+                            <router-link :to="{ name:'Group', query: { groupname: group.name, groupdescription: group.description, groupaccess: group.access, imageurl: group.imageurl, touser: touser, owner: group.owner  } }">{{ group.name }}</router-link>
                         </div>
                         <div v-else>
                           
@@ -115,7 +115,7 @@
                     </h5>
                     <div class="card-body">
                       <p>Вы ещё не участник этой группы</p>
-                      <a style="cusor: pointer;" @click="joinGroup(group.name, group.description, group.access, group.imageurl, touser)">Вступить в группу</a>
+                      <!-- <a style="cusor: pointer;" @click="joinGroup(group.name, group.description, group.access, group.imageurl, touser)">Вступить в группу</a> -->
                     </div> 
                   </div>
             </div>
@@ -149,7 +149,7 @@ export default {
             auth:'true',
             touser: '',
             sender: '',
-            token: window.localStorage.getItem("showbellowtoken"),
+            token: window.localStorage.getItem("showbellowtoken")
         }
     },
     methods: {
@@ -158,6 +158,7 @@ export default {
         if (err) {
           this.$router.push({ name: "UsersLogin" })
         } else {
+          // fetch(`http://localhost:4000/users/groups/partisipants/delete?groupnamegroupdescription=${groupDescription}&groupaccess=${groupAccess}&imageurl=${groupImageUrl}&touser=${user}`, {
           fetch(`https://showbellow.herokuapp.com/users/groups/partisipants/delete?groupnamegroupdescription=${groupDescription}&groupaccess=${groupAccess}&imageurl=${groupImageUrl}&touser=${user}`, {
             mode: 'cors',
             method: 'GET'
@@ -195,6 +196,7 @@ export default {
         if (err) {
           this.$router.push({ name: "UsersLogin" })
         } else {
+          // fetch(`http://localhost:4000/users/groups/partisipants/add?groupnamegroupdescription=${groupDescription}&groupaccess=${groupAccess}&imageurl=${groupImageUrl}&touser=${user}`, {
           fetch(`https://showbellow.herokuapp.com/users/groups/partisipants/add?groupnamegroupdescription=${groupDescription}&groupaccess=${groupAccess}&imageurl=${groupImageUrl}&touser=${user}`, {
             mode: 'cors',
             method: 'GET'
@@ -233,6 +235,7 @@ export default {
         if (err) {
           this.$router.push({ name: "UsersLogin" })
         } else {
+          // fetch(`http://localhost:4000/users/groups/list?sender=${this.$route.query.touser}&groupname=${this.$route.query.groupname}`, {
           fetch(`https://showbellow.herokuapp.com/users/groups/list?sender=${this.$route.query.touser}&groupname=${this.$route.query.groupname}`, {
             mode: 'cors',
             method: 'GET'

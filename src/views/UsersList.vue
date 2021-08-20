@@ -14,7 +14,7 @@
           <div v-for="user in allUsers">
             <div class="card">
                     <h5  style="text-align:center; min-width: 185px;" class="card-header">  
-                      <router-link :to="{ name: 'Home', query: { guest: 'true', touser: touser, auth: 'true', sender: user.email.split('@')[0] } }">{{ user.email.split('@')[0] }}</router-link>
+                      <router-link :to="{ name: 'Home', query: { guest: 'true', touser: touser, auth: 'true', sender: user.email.split('@')[0], mailclient: `@${user.email.split('@')[1]}` } }">{{ user.email.split('@')[0] }}</router-link>
                     </h5>
                     <div style="min-height: 110px;" class="card-body">
                       <p>Ещё не в друзьях</p>
@@ -24,7 +24,7 @@
           </div>
         </div>
         <div v-else>
-            <p>Недругов нет</p>    
+            <p style="text-align: center;">Недругов нет</p>    
         </div>
 
         <div v-if="friendsOfUser != null && friendsOfUser.length >= 1" >
@@ -82,6 +82,7 @@ export default {
       this.loginedSender = decoded.useremail.split('@')[0]
       this.touser = this.$route.query.touser
       this.guest = this.$route.query.guest
+      // fetch(`http://localhost:4000/users/list?touser=${this.touser}`, {
       fetch(`https://showbellow.herokuapp.com/users/list?touser=${this.touser}`, {
         mode: 'cors',
         method: 'GET'
@@ -121,10 +122,12 @@ export default {
           this.$router.push({ name: "UsersLogin" })
         } else {
           // href="/users/friends/delete?touser=<%= touser %>&useremail=<%= friend  %>"
+          
+          // fetch(`https://localhost:4000/users/friends/delete?touser=${this.touser}&useremail=${oldFriend}`, {
           fetch(`https://showbellow.herokuapp.com/users/friends/delete?touser=${this.touser}&useremail=${oldFriend}`, {
-          mode: 'cors',
-          method: 'GET'
-        }).then(response => response.body).then(rb  => {
+            mode: 'cors',
+            method: 'GET'
+          }).then(response => response.body).then(rb  => {
             const reader = rb.getReader()
             return new ReadableStream({
               start(controller) {
@@ -194,6 +197,7 @@ export default {
         
         // fetch(`http://localhost:4000/users/requests/add?touser=${newFriend.email}&name=${localStorage.getItem('useremail').split('@')[0]}&image=${newFriend.imageurl}&age=${newFriend.age}`, {
 
+        // fetch(`https://localhost:4000/users/requests/add?touser=${newFriend.email}&name=${this.loginedSender.split('@')[0]}&image=${newFriend.imageurl}&age=${newFriend.age}&mailclient=@${this.touser.split('@')[1]}`, {
         fetch(`https://showbellow.herokuapp.com/users/requests/add?touser=${newFriend.email}&name=${this.loginedSender.split('@')[0]}&image=${newFriend.imageurl}&age=${newFriend.age}&mailclient=@${this.touser.split('@')[1]}`, {
 
           mode: 'cors',

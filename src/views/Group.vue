@@ -14,16 +14,17 @@
             </div> -->
             
             <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${name}`"  @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/>
+            <!-- <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`http://localhost:4000/pictures/getpicture?picturename=${name}`"  @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/> -->
 
               <div style="float: left; width: calc(100% - 200px); text-align: center;">
-                <router-link v-if="isPartisipant" style="display: block;" :to="{ name:'GroupEdit', query: {'groupname': name, 'groupdescription': description, 'groupaccess': access, 'imageurl': imageurl, 'touser': touser } }">Редактировать группу</router-link>
+                <router-link v-if="isPartisipant && isOwner.includes(touser)" style="display: block;" :to="{ name:'GroupEdit', query: {'groupname': name, 'groupdescription': description, 'groupaccess': access, 'imageurl': imageurl, 'touser': touser } }">Редактировать группу</router-link>
                 <div v-if="access.includes('public')">
                   <a v-if="!isPartisipant" style="color: blue; cursor: pointer; text-decoration: underline;;" @click="enterToGroup()">Вступить в группу</a>
                 </div>
                 <div v-else-if="access.includes('private')">
                   <p>Эта группа приватная</p>
                 </div>
-                <a v-if="isPartisipant" style="color: blue; cursor: pointer; text-decoration: underline;" @click="leaveFromGroup()">Выйти из группы</a>
+                <a v-if="isPartisipant && !isOwner.includes(touser)" style="color: blue; cursor: pointer; text-decoration: underline;" @click="leaveFromGroup()">Выйти из группы</a>
                 <h1>{{ name }}</h1>
                 <p>Описание группы: {{ description }}</p>
                 <p>Количество участников: {{ partisipants.length }}</p>
@@ -39,7 +40,9 @@
               <div class="card postStyle">
                 <h5 class="card-header">
                   <span style="color: black;">{{ post.name }}</span>
-                  <span style="font-size: 14px; color:black; float: right;">Опубликовано в {{ post.created.split(", ")[1].split(":")[0] + ":" + post.created.split(", ")[1].split(":")[1] }}<br/>{{ post.created.split(", ")[0].split("/")[1] + " " + months[post.created.split(", ")[0].split("/")[0]] + " " + post.created.split(", ")[0].split("/")[2] }}</span>
+                  <!-- <span style="font-size: 14px; color:black; float: right;">Опубликовано в {{ post.created.split(", ")[1].split(":")[0] + ":" + post.created.split(", ")[1].split(":")[1] }}<br/>{{ post.created.split(", ")[0].split("/")[1] + " " + months[post.created.split(", ")[0].split("/")[0]] + " " + post.created.split(", ")[0].split("/")[2] }}</span> -->
+                  <span style="font-size: 14px; color:black; float: right;">Опубликовано в {{ post.created.split(" ")[1].split(":")[0] + ":" + post.created.split(" ")[1].split(":")[1] }}<br/>{{ post.created.split(" ")[0].split("-")[2] + " " + months[post.created.split(" ")[0].split("-")[1]] + " " + post.created.split(" ")[0].split("-")[0] }}</span>
+
                 </h5>
                 <div class="card-body">
                   <h5 style="color: black;" class="card-title">{{ post.content }}</h5>
@@ -76,6 +79,7 @@ export default {
           username: '',
           auth: 'true',
           isPartisipant: false,
+          isOwner: "false",
           posts: [],
           groupPostContent: '',
           token: window.localStorage.getItem("showbellowtoken"),
@@ -100,10 +104,11 @@ export default {
       if (err) {
         this.$router.push({ name: "UsersLogin" })
       } else {
+          // fetch(`http://localhost:4000/users/groups?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&imageurl=${this.$route.query.imageurl}&touser=${this.$route.query.touser}`, {
           fetch(`https://showbellow.herokuapp.com/users/groups?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&imageurl=${this.$route.query.imageurl}&touser=${this.$route.query.touser}`, {
-          mode: 'cors',
-          method: 'GET'
-        }).then(response => response.body).then(rb  => {
+            mode: 'cors',
+            method: 'GET'
+          }).then(response => response.body).then(rb  => {
             const reader = rb.getReader()
             return new ReadableStream({
               start(controller) {
@@ -145,6 +150,10 @@ export default {
             this.isPartisipant = possiblePartisipants.includes(this.$route.query.touser)
             console.log('this.isPartisipant: ', this.isPartisipant)
 
+            // this.isOwner = JSON.parse(result).owner
+            this.isOwner = JSON.parse(result).owner
+            console.log('this.isOwner: ', this.isOwner)
+
             console.log('json: ', JSON.parse(result))
 
           });
@@ -158,10 +167,11 @@ export default {
             this.$router.push({ name: "UsersLogin" })
           } else {
             console.log("отпраляю пост")
-            fetch(`https://showbellow.herokuapp.com/users/groups/posts/add?groupname=${this.name}&name=${this.$route.query.touser.split('@')[0]}&content=${this.groupPostContent}`, {
-            mode: 'cors',
-            method: 'GET'
-          }).then(response => response.body).then(rb  => {
+            // fetch(`http://localhost:4000/users/groups/posts/add?groupname=${this.name}&name=${this.$route.query.touser.split('@')[0]}&content=${this.groupPostContent}&mailclient=@${this.$route.query.touser.split('@')[1]}`, {
+            fetch(`https://showbellow.herokuapp.com/users/groups/posts/add?groupname=${this.name}&name=${this.$route.query.touser.split('@')[0]}&content=${this.groupPostContent}&mailclient=@${this.$route.query.touser.split('@')[1]}`, {
+              mode: 'cors',
+              method: 'GET'
+            }).then(response => response.body).then(rb  => {
               const reader = rb.getReader()
               return new ReadableStream({
                 start(controller) {
@@ -186,7 +196,7 @@ export default {
             .then(result => {
               console.log(JSON.parse(result))
               // window.location.reload()
-              this.$router.push({ name: "Home", query: { auth: 'true', guest: 'false', sender: this.$route.query.touser.split('@')[0] } })
+              this.$router.push({ name: "Home", query: { auth: 'true', guest: 'false', sender: this.$route.query.touser.split('@')[0], mailclient: `@${this.$route.query.touser.split('@')[1]}` } })
             });
           }
         })
@@ -196,10 +206,11 @@ export default {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
+            // fetch(`http://localhost:4000/users/groups/partisipants/add?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&touser=${this.$route.query.touser}`, {
             fetch(`https://showbellow.herokuapp.com/users/groups/partisipants/add?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&touser=${this.$route.query.touser}`, {
-            mode: 'cors',
-            method: 'GET'
-          }).then(response => response.body).then(rb  => {
+              mode: 'cors',
+              method: 'GET'
+            }).then(response => response.body).then(rb  => {
               const reader = rb.getReader()
               return new ReadableStream({
                 start(controller) {
@@ -226,7 +237,7 @@ export default {
               // JSON.parse(result).message   
               // window.location.reload()
               // this.$router.push({ name: 'Home', query: { auth: 'true', guest: 'false', sender: window.localStorage.getItem('useremail') } })
-              this.$router.push({ name: 'Home', query: { auth: 'true', guest: 'false', sender: decoded.useremail.split('@')[0] } })
+              this.$router.push({ name: 'Home', query: { auth: 'true', guest: 'false', sender: decoded.useremail.split('@')[0], mailclient: `@${decoded.useremail.split('@')[1]}` } })
 
             });
           }
@@ -237,10 +248,11 @@ export default {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
+            // fetch(`http://localhost:4000/users/groups/partisipants/delete?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&touser=${this.$route.query.touser}`, {
             fetch(`https://showbellow.herokuapp.com/users/groups/partisipants/delete?groupname=${this.$route.query.groupname}&groupdescription=${this.$route.query.groupdescription}&groupaccess=${this.$route.query.groupaccess}&touser=${this.$route.query.touser}`, {
-            mode: 'cors',
-            method: 'GET'
-          }).then(response => response.body).then(rb  => {
+              mode: 'cors',
+              method: 'GET'
+            }).then(response => response.body).then(rb  => {
               const reader = rb.getReader()
               return new ReadableStream({
                 start(controller) {
@@ -267,7 +279,7 @@ export default {
               // JSON.parse(result).message
               // window.location.reload()
               // this.$router.push({ name: 'Home', query: { auth: 'true', guest: 'false', sender: window.localStorage.getItem('useremail') } })
-              this.$router.push({ name: 'Home', query: { auth: 'true', guest: 'false', sender: decoded.useremail.split('@')[0] } })
+              this.$router.push({ name: 'Home', query: { auth: 'true', guest: 'false', sender: decoded.useremail.split('@')[0], mailclient: `@${decoded.useremail.split('@')[1]}` } })
             });
           }
         })

@@ -32,6 +32,8 @@ export default {
         this.$router.push({ name: "UsersLogin" })
       } else {
         console.log(this.$route.params.postid)
+        
+        // fetch(`http://localhost:4000/post/${this.$route.params.postid}`, {
         fetch(`https://showbellow.herokuapp.com/post/${this.$route.params.postid}`, {
           mode: 'cors',
           method: 'GET'

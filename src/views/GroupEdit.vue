@@ -2,7 +2,10 @@
     <div>
       <Header :auth="'true'" :sender="touser.split('@')[0]" />
       <div class="customCardGroup">
+        
         <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://mercurial-diagnostic-glazer.glitch.me/users/groups/editsuccess?previousgroupname=${previousgroupname}&groupname=${groupname}&groupdescription=${groupdescription}&groupaccess=${groupaccess}&imageurl=a&touser=${touser}`">
+        <!-- <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`http://localhost:4000/users/groups/editsuccess?previousgroupname=${previousgroupname}&groupname=${groupname}&groupdescription=${groupdescription}&groupaccess=${groupaccess}&imageurl=a&touser=${touser}`"> -->
+        
           <input type="hidden" class="previousgroupname form-control" disabled required="" autofocus="" :value="groupname">
           
           <!-- <div v-if="imageurl && imageurl.includes('empty')">
@@ -11,12 +14,14 @@
           <div v-else-if="imageurl && !imageurl.includes('empty')">
             <img width="85px" height="85px" :src="imageurl" />
           </div>   -->
-          <img width="85px" height="85px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${groupname}`"  @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/>
+          
+          <!-- <img width="85px" height="85px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${groupname}`"  @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/> -->
+          <img width="85px" height="85px" :src="`http://:4000/pictures/getpicture?picturename=${groupname}`"  @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/>
 
           <!-- <label for="inputPhoto" class="sr-only">Фото</label>
           <input v-model="imageurl" type="text" id="inputPhoto" class="imageurl form-control" placeholder="Photo" required="" autofocus=""> -->
           <label for="inputPhoto" class="sr-only">Фото</label>
-          <input name="myFile" type="file" class="userimage form-control" required="" autofocus="">
+          <input name="myFile" type="file" class="userimage form-control" autofocus="">
 
           <label for="inputName" class="sr-only">Имя</label>
           <input v-model="groupname" type="text" id="inputName" class="groupname form-control" placeholder="Name" required="" autofocus="">
@@ -76,6 +81,7 @@ export default {
           if (err) {
             this.$router.push({ name: "UsersLogin" })
           } else {
+            // fetch(`http://localhost:4000/users/groups/editsuccess?previousgroupname=${this.previousgroupname}&groupname=${this.groupname}&groupdescription=${this.groupdescription}&groupaccess=${this.groupaccess}&imageurl=${this.imageurl}&touser=${this.touser}`, {
             fetch(`https://showbellow.herokuapp.com/users/groups/editsuccess?previousgroupname=${this.previousgroupname}&groupname=${this.groupname}&groupdescription=${this.groupdescription}&groupaccess=${this.groupaccess}&imageurl=${this.imageurl}&touser=${this.touser}`, {
               mode: 'cors',
               method: 'GET'
