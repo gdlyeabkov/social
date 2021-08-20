@@ -3,8 +3,8 @@
       <Header :auth="'true'" :sender="touser.split('@')[0]" />
       <div class="customCardGroup">
         
-        <!-- <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://mercurial-diagnostic-glazer.glitch.me/users/editsuccess?touser=${$route.query.touser}&imageurl=a&name=${this.name}&age=${this.age}&email=${$route.query.email}`"> -->
-        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`http://localhost:4000/users/editsuccess?touser=${$route.query.touser}&imageurl=a&name=${this.name}&age=${this.age}&email=${$route.query.email}`">
+        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://mercurial-diagnostic-glazer.glitch.me/users/editsuccess?touser=${$route.query.touser}&imageurl=a&name=${this.name}&age=${this.age}&email=${$route.query.email}`">
+        <!-- <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`http://localhost:4000/users/editsuccess?touser=${$route.query.touser}&imageurl=a&name=${this.name}&age=${this.age}&email=${$route.query.email}`"> -->
 
           <input type="hidden" class="touser form-control" disabled required="" autofocus="" v-model="touser">
           
