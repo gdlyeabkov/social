@@ -151,7 +151,7 @@ export default {
           })
           .then(result => {
             if(JSON.parse(result).message.includes('success')){
-              this.$router.push({ "name": "Home", query: { "auth": 'true', "guest": 'false', sender: this.touser.split('@')[0] } })
+              this.$router.push({ "name": "Home", query: { "auth": 'true', "guest": 'false', sender: this.touser.split('@')[0], mailclient: `@${this.touser.split('@')[1]}` } })
             }
           });
         }
@@ -226,7 +226,7 @@ export default {
           })
           .then(result => {
             if(JSON.parse(result).message.includes('success')){
-              this.$router.push({ "name": "Home", query: { "auth": 'true', "guest": 'false', sender: this.touser.split('@')[0] } })
+              this.$router.push({ "name": "Home", query: { "auth": 'true', "guest": 'false', sender: this.touser.split('@')[0], mailclient: `@${this.touser.split('@')[1]}` } })
             }
           });
         }
