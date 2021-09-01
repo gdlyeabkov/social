@@ -7,7 +7,7 @@
             <h1 class="h3 mb-3 font-weight-normal headerform">Зарегестрируйтесь</h1>
             
             <!-- <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`http://localhost:4000/users/usercreatesuccess?useremail=${useremail + custommail}&userpassword=${userpassword}&userage=${userage}&username=${username}`"> -->
-            <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://mercurial-diagnostic-glazer.glitch.me/users/usercreatesuccess?useremail=${useremail + custommail}&userpassword=${userpassword}&userage=${userage}&username=${username}`">
+            <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://opalescent-nostalgic-feet.glitch.me/users/usercreatesuccess?useremail=${useremail + custommail}&userpassword=${userpassword}&userage=${userage}&username=${username}`">
                 
                 <label class="sr-only">Email</label>
                 <div class="input-group mb-3" style="width: 405px; margin: auto;">

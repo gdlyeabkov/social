@@ -7,8 +7,8 @@
         <img class="mb-4" src="https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/vue-dot-js-256.png" alt="" width="72" height="72">
         <h1 class="h3 mb-3 font-weight-normal">Создание новой группы</h1>
         
-        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`http://localhost:4000/users/groups/groupcreatesuccess?touser=${this.$route.query.touser}&groupaccess=${this.access}&groupdescription=${this.description}&groupname=${this.name}&imageurl=${this.imageurl}`">
-        <!-- <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://mercurial-diagnostic-glazer.glitch.me/users/groups/groupcreatesuccess`"> -->
+        <!-- <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`http://localhost:4000/users/groups/groupcreatesuccess?touser=${this.$route.query.touser}&groupaccess=${this.access}&groupdescription=${this.description}&groupname=${this.name}&imageurl=${this.imageurl}`"> -->
+        <form style="max-width: 650px; min-width: 400px; margin: auto;" class="registerForm" enctype="multipart/form-data"  method="POST" :action="`https://opalescent-nostalgic-feet.glitch.me/users/groups/groupcreatesuccess`">
         
           <label for="inputName" class="sr-only">Имя</label>
           <input name="groupname" v-model="name" type="text" id="inputDescription" class="groupname form-control" placeholder="Name" required="" autofocus="">

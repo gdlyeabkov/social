@@ -298,8 +298,8 @@ app.post('/users/editsuccess', upload.single('myFile'), async (req, res)=>{
         
         // return res.json({ "message": "error" })
         
-        return res.redirect("https://showbellow.herokuapp.com/users/login")
-        // return res.redirect("http://localhost:4000/users/login")
+        // return res.redirect("https://showbellow.herokuapp.com/users/login")
+        return res.redirect("http://localhost:4000/users/login")
 
     } else if(file){
         
@@ -316,8 +316,8 @@ app.post('/users/editsuccess', upload.single('myFile'), async (req, res)=>{
 
             // return res.json({ "message": "error" })
             
-            return res.redirect("https://showbellow.herokuapp.com/users/login")
-            // return res.redirect("http://localhost:4000/users/login")
+            // return res.redirect("https://showbellow.herokuapp.com/users/login")
+            return res.redirect("http://localhost:4000/users/login")
 
         })   
 
@@ -358,8 +358,8 @@ app.post('/users/groups/editsuccess', upload.single('myFile'), async (req, res)=
         
         console.log("Error to upload file ")
 
-        return res.redirect("https://showbellow.herokuapp.com/users/login")
-        // return res.redirect("http://localhost:4000/users/login")
+        // return res.redirect("https://showbellow.herokuapp.com/users/login")
+        return res.redirect("http://localhost:4000/users/login")
         
         // return res.json({ "message": "error" })
 
@@ -370,8 +370,8 @@ app.post('/users/groups/editsuccess', upload.single('myFile'), async (req, res)=
                 return res.json({ "message": "Error" })
             }
 
-            // return res.redirect("http://localhost:4000/users/login")
-            return res.redirect("https://showbellow.herokuapp.com/users/login")
+            return res.redirect("http://localhost:4000/users/login")
+            // return res.redirect("https://showbellow.herokuapp.com/users/login")
         
         })
         
@@ -764,8 +764,8 @@ app.post('/users/usercreatesuccess', upload.single('myFile'), async (req, res)=>
             
             // return res.json({ "status": "Error" })
 
-            // return res.redirect("http://localhost:4000/users/register?status=error")
-            return res.redirect("https://showbellow.herokuapp.com/users/register?status=error")
+            return res.redirect("http://localhost:4000/users/register?status=error")
+            // return res.redirect("https://showbellow.herokuapp.com/users/register?status=error")
 
         } else {
             let encodedPassword = "#"
@@ -781,8 +781,8 @@ app.post('/users/usercreatesuccess', upload.single('myFile'), async (req, res)=>
                     return res.json({ "status": "Error" })
                 } else {
                     
-                    // return res.redirect("http://localhost:4000/users/login")
-                    return res.redirect("https://showbellow.herokuapp.com/users/login")
+                    return res.redirect("http://localhost:4000/users/login")
+                    // return res.redirect("https://showbellow.herokuapp.com/users/login")
                     
                     // res.json({ "status": "OK", "username": user.email.split('@')[0] })
                 
@@ -1026,8 +1026,8 @@ app.get('**', (req, res) => {
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Access-Token, X-Socket-ID, Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     
-    return res.redirect(`/?redirectroute=${req.path}`)
-    // return res.redirect(`https://showbellow.herokuapp.com/?redirectroute=${req.path}`)
+    // return res.redirect(`/?redirectroute=${req.path}`)
+    return res.redirect(`https://showbellow.herokuapp.com/?redirectroute=${req.path}`)
 })
 
 const port = process.env.PORT || 8080

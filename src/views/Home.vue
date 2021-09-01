@@ -239,6 +239,7 @@ export default {
             // fetch(`http://localhost:4000/home?auth=true&guest=false&sender=${this.$route.query.sender}&mailclient=${this.$route.query.mailclient}`, {
             // fetch(`http://localhost:4000/home?auth=true&guest=false&sender=${decoded.useremail.split('@')[0]}&mailclient=@${decoded.useremail.split('@')[1]}`, {
             
+            // fetch(`http://localhost:4000/home?auth=true&guest=false&sender=${this.sender}&mailclient=${this.mailclient}`, {
             fetch(`https://showbellow.herokuapp.com/home?auth=true&guest=false&sender=${this.sender}&mailclient=${this.mailclient}`, {
               mode: 'cors',
               method: 'GET'
