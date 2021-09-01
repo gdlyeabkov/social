@@ -38,7 +38,7 @@
                   <img width="200px" height="200px" :src="imageurl" style="border-radius: 25%;" />
               </div> -->
                 <div v-if="guest.includes('true') && !likedYet">
-                  <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${sender}`"  class="picturePreLike" @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'" @mouseover="redesign($event, 'hover')" @mouseout="redesign($event, 'hout')"/>
+                  <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://opalescent-nostalgic-feet.glitch.me/pictures/getpicture?picturename=${sender}`"  class="picturePreLike" @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'" @mouseover="redesign($event, 'hover')" @mouseout="redesign($event, 'hout')"/>
                   <div ref="wrap" style="display:none; opacity: 0.7; background-color: black; margin: 5px 0px; border-radius: 10%; float: left; width: 200px; height: 200px;">
                     <span class="material-icons" style="cursor: pointer; font-size: 96px; box-sizing: border-box; padding: 45px;" @click="addLike()">
                       favorite
@@ -48,7 +48,7 @@
                 <div v-else>
                   
                   <!-- <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`http://localhost:4000/pictures/getpicture?picturename=${sender}`"  class="picturePreLike" @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/> -->
-                  <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${sender}`"  class="picturePreLike" @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/>
+                  <img style="margin: 5px 0px; border-radius: 10%; float: left;" width="200px" height="200px" :src="`https://opalescent-nostalgic-feet.glitch.me/pictures/getpicture?picturename=${sender}`"  class="picturePreLike" @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"/>
                 
                 </div>
                 
@@ -145,7 +145,7 @@
             </span>
 
             <!-- <img width="45%" height="45%" :src="request.image" alt=""> -->
-            <img width="45%" height="45%" :src="`https://mercurial-diagnostic-glazer.glitch.me/pictures/getpicture?picturename=${request.name}`" alt=""  @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'">
+            <img width="45%" height="45%" :src="`https://opalescent-nostalgic-feet.glitch.me/pictures/getpicture?picturename=${request.name}`" alt=""  @error="$event.target.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'">
 
             <p style="font-size: 14px; color: black;">
               {{ request.name }} хочет с вами подружиться
